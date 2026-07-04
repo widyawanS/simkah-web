@@ -1,6 +1,6 @@
 # Readme
 
-Thank you for downloading this template. To get started, open Help Docs link to read the instructions on the documentation. The main project files are located in the _astroship_ folder.
+Thank you for downloading this template. To get started, open Help Docs link to read the instructions on the documentation. The main project files are located in the _astroship_ folder...
 
 ## License
 
