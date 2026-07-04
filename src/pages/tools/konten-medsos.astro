@@ -1,0 +1,1413 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+---
+
+<Layout title="Konten Medsos - Prompt Generator">
+  
+  <Container>
+    <div class="konten-medsos-app">
+      
+
+    
+    <div class="text-center mb-12 mt-8">
+        <span class="inline-block px-4 py-2 bg-violet-500/20 text-violet-400 rounded-full text-sm font-bold mb-4">
+          ✨ AI Prompt Generator
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          Generator Prompt <span class="text-gradient">Konten Sosial</span>
+        </h1>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          12 langkah sistematis · klik kartu untuk membuka form · salin prompt atau ekspor JSON per langkah
+        </p>
+    </div>
+
+
+    <div class="config-strip">
+        <div class="cfg">
+            <label>👤 Profesi Anda</label>
+            <input type="text" id="profesi" placeholder="guru, dokter, chef…" value="guru">
+        </div>
+        <div class="cfg">
+            <label>📱 Platform</label>
+            <select id="platform">
+                <option value="Facebook (FB Pro)">Facebook (FB Pro)</option>
+                <option value="Instagram">Instagram</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="TikTok">TikTok</option>
+                <option value="Twitter / X">Twitter / X</option>
+                <option value="Threads">Threads</option>
+                <option value="YouTube">YouTube</option>
+            </select>
+        </div>
+        <div class="cfg">
+            <label>🎯 Target Audiens</label>
+            <input type="text" id="audiens" placeholder="sesama guru, pasien…" value="sesama guru">
+        </div>
+        <div class="cfg">
+            <label>🏷️ Niche / Topik Utama</label>
+            <input type="text" id="niche" placeholder="pengalaman mengajar…" value="pengalaman mengajar">
+        </div>
+    </div>
+
+    <div class="grid-wrapper">
+        <div class="section-eyebrow">— Klik kartu untuk membuka dan menyalin prompt —</div>
+        <div class="cards-grid" id="cardsGrid"></div>
+    </div>
+
+    
+    </div>
+  </Container>
+</Layout>
+
+<style is:global>
+.konten-medsos-app {
+    --bg-app: transparent;
+    --surface: #1e293b; /* slate-800 */
+    --card: rgba(30, 41, 59, 0.5); /* glass-like */
+    --border: #334155; /* slate-700 */
+    --border-hi: #475569; /* slate-600 */
+    --gold: #8b5cf6; /* violet-500 */
+    --gold-dim: rgba(139, 92, 246, 0.15);
+    --gold-glow: rgba(139, 92, 246, 0.25);
+    --text-app: #f8fafc; /* slate-50 */
+    --text-dim: #94a3b8; /* slate-400 */
+    --text-muted: #64748b; /* slate-500 */
+    --accent: #a855f7; /* purple-500 */
+    --green: #10b981; /* emerald-500 */
+    --green-dim: rgba(78, 147, 104, 0.12);
+    --red: #a05a4a;
+
+    
+    background: var(--bg-app);
+    color: var(--text-app);
+    
+    border-radius: 1.5rem;
+    padding-bottom: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.konten-medsos-app *,
+.konten-medsos-app *::before,
+.konten-medsos-app *::after {
+    box-sizing: border-box;
+}
+
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: transparent;
+            --surface: #1e293b; /* slate-800 */
+            --card: rgba(30, 41, 59, 0.5); /* glass-like */
+            --border: #334155; /* slate-700 */
+            --border-hi: #475569; /* slate-600 */
+            --gold: #8b5cf6; /* violet-500 */
+            --gold-dim: rgba(139, 92, 246, 0.15);
+            --gold-glow: rgba(139, 92, 246, 0.25);
+            --text: #f8fafc;
+            --text-dim: #94a3b8; /* slate-400 */
+            --text-muted: #64748b; /* slate-500 */
+            --accent: #a855f7; /* purple-500 */
+            --green: #10b981; /* emerald-500 */
+            --green-dim: rgba(78, 147, 104, 0.12);
+            --red: #a05a4a;
+        }
+
+        
+
+        
+
+        /* ── HEADER ── */
+        /* ── CONFIG ── */
+        .config-strip {
+            display: flex;
+            gap: 0.9rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 1.6rem 2rem;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.012);
+            margin-bottom: 2.5rem;
+        }
+
+        .cfg {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            min-width: 170px;
+            flex: 1;
+            max-width: 240px;
+        }
+
+        .cfg label {
+            font-size: 0.62rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .cfg input,
+        .cfg select {
+            padding: 0.58rem 0.85rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            
+            font-size: 0.84rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .cfg input:focus,
+        .cfg select:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-glow);
+        }
+
+        .cfg select option {
+            background: #1e293b;
+        }
+
+        .cfg input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* ── GRID ── */
+        .grid-wrapper {
+            padding: 0 1.5rem 5rem;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .section-eyebrow {
+            text-align: center;
+            font-size: 0.62rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1.4rem;
+            font-weight: 600;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 0.9rem;
+            align-items: start;
+        }
+
+        /* ── STEP CARD ── */
+        .step-card {
+            
+            
+            border-radius: 14px;
+            padding: 1.2rem 1.2rem 1rem;
+            cursor: pointer;
+            transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s;
+            position: relative;
+            overflow: hidden;
+         
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+        .step-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at top left, var(--gold-glow), transparent 65%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .step-card:hover {
+            border-color: var(--border-hi);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .step-card:hover::after {
+            opacity: 1;
+        }
+
+        .step-card.selected {
+            border-color: var(--gold);
+            background: rgba(139, 92, 246, 0.15);
+            box-shadow: 0 0 0 1px var(--gold), 0 10px 36px rgba(201, 165, 90, 0.1);
+        }
+
+        .step-card.selected::after {
+            opacity: 1;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .step-card.done .card-badge {
+            opacity: 1;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+        }
+
+        .step-num {
+            
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .step-card:hover .step-num,
+        .step-card.selected .step-num {
+            color: var(--gold);
+        }
+
+        .card-icon {
+            font-size: 1.2rem;
+            opacity: 0.65;
+        }
+
+        .card-title-sm {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+            line-height: 1.3;
+        }
+
+        .card-desc {
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-weight: 300;
+        }
+
+        /* ── EXPAND PANEL ── */
+        .expand-panel {
+            grid-column: 1 / -1;
+            background: var(--surface);
+            border: 1px solid var(--gold);
+            border-radius: 16px;
+            padding: 1.8rem 2rem;
+            animation: slideDown 0.28s cubic-bezier(.4, 0, .2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .expand-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold) 40%, transparent);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.9rem;
+        }
+
+        .panel-title {
+            
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .panel-close {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .panel-close:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 1.3rem;
+        }
+
+        .skill-tag {
+            font-size: 0.63rem;
+            padding: 0.18rem 0.55rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        .panel-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.4rem;
+        }
+
+        @media (max-width: 680px) {
+            .panel-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .panel-right {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .extra-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .extra-field label {
+            font-size: 0.63rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .extra-field textarea {
+            padding: 0.7rem 0.9rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            color: var(--text);
+            
+            font-size: 0.82rem;
+            font-weight: 300;
+            resize: vertical;
+            min-height: 85px;
+            outline: none;
+            line-height: 1.6;
+            transition: border-color 0.2s;
+        }
+
+        .extra-field textarea:focus {
+            border-color: var(--gold);
+        }
+
+        .extra-field textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .preview-label {
+            font-size: 0.63rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .prompt-preview {
+            background: rgba(0, 0, 0, 0.28);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 0.9rem 1.1rem;
+            font-size: 0.82rem;
+            line-height: 1.85;
+            color: var(--text);
+            font-weight: 300;
+            white-space: pre-wrap;
+            word-break: break-word;
+            flex: 1;
+            min-height: 140px;
+            overflow-y: auto;
+            max-height: 340px;
+        }
+
+        .prompt-preview .var {
+            background: var(--gold-dim);
+            color: var(--accent);
+            border-radius: 3px;
+            padding: 0 4px;
+            font-weight: 500;
+        }
+
+        .prompt-preview .fill {
+            color: var(--text-muted);
+            font-style: italic;
+            opacity: 0.7;
+        }
+
+        .tip-box {
+            background: var(--gold-dim);
+            border: 1px solid rgba(201, 165, 90, 0.18);
+            border-radius: 9px;
+            padding: 0.75rem 0.9rem;
+            font-size: 0.77rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .tip-box strong {
+            color: var(--gold);
+        }
+
+        /* ── ACTION BUTTONS ── */
+        .panel-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.3rem;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.52rem 1rem;
+            border-radius: 8px;
+            
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            border: none;
+        }
+
+        /* Gold — Salin Prompt */
+        .btn-gold {
+            background: var(--gold);
+            color: #ffffff;
+         background: rgba(139, 92, 246, 0.2); border-color: #8b5cf6; color: #c4b5fd;}
+
+        .btn-gold:hover {
+            background: var(--accent);
+            transform: translateY(-1px);
+         background: #8b5cf6; color: #ffffff;}
+
+        .btn-gold.success {
+            background: var(--green);
+            color: white;
+        }
+
+        /* Green — Salin JSON */
+        .btn-green {
+            background: var(--green-dim);
+            color: var(--green);
+            border: 1px solid rgba(78, 147, 104, 0.3);
+         background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #a7f3d0;}
+
+        .btn-green:hover {
+            background: rgba(78, 147, 104, 0.2);
+            border-color: var(--green);
+            transform: translateY(-1px);
+         background: #10b981; color: #ffffff;}
+
+        .btn-green.success {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+
+        /* Download JSON */
+        .btn-outline-green {
+            background: transparent;
+            color: var(--green);
+            border: 1px solid rgba(78, 147, 104, 0.3);
+        }
+
+        .btn-outline-green:hover {
+            border-color: var(--green);
+            background: var(--green-dim);
+        }
+
+        .btn-outline-green.success {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+
+        /* Ghost */
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--border-hi);
+            color: var(--text);
+        }
+
+        /* Divider in actions */
+        .btn-divider {
+            width: 1px;
+            height: 28px;
+            background: var(--border);
+            margin: 0 0.1rem;
+            align-self: center;
+        }
+
+        /* ── JSON PREVIEW (inside panel) ── */
+        .json-preview-wrap {
+            margin-top: 0.3rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .json-preview-wrap.open {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .json-preview-label {
+            font-size: 0.63rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--green);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .json-preview-label::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+
+        .json-preview-box {
+            background: #0f172a;
+            border: 1px solid rgba(78, 147, 104, 0.2);
+            border-radius: 9px;
+            padding: 0.9rem 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.73rem;
+            line-height: 1.7;
+            color: #94a3b8;
+            overflow-x: auto;
+            max-height: 260px;
+            overflow-y: auto;
+            white-space: pre;
+        }
+
+        .jk {
+            color: #93c5fd;
+        }
+
+        .jv {
+            color: #fde047;
+        }
+
+        .jvs {
+            color: #86efac;
+        }
+
+        .jn {
+            color: #fdba74;
+        }
+
+        .jb {
+            color: #6ee7b7;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 99px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+            .config-strip {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .cfg {
+                max-width: 100%;
+            }
+
+            .grid-wrapper {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.65rem;
+            }
+
+            .app-header {
+                padding: 2rem 1rem 1.5rem;
+            }
+
+            .expand-panel {
+                padding: 1.3rem 1rem;
+            }
+        }
+    
+</style>
+
+<script is:inline>
+
+        // ── PROMPT DATA ──────────────────────────────────────────────────────────────
+        const STEPS = [
+            {
+                id: 1, icon: '🧭',
+                title: 'Arah & Konsep Akun',
+                desc: 'Bangun identitas, positioning, dan pilar konten',
+                skills: ['Brand Strategy', 'Positioning', 'Tone of Voice'],
+                inputs: [],
+                template: `Saya seorang {profesi} aktif yang ingin membangun kehadiran profesional di {platform}.
+Target pembaca: {audiens} | Niche utama: {niche}
+
+Bantu saya merancang BLUEPRINT AKUN dengan detail berikut:
+
+① POSITIONING UNIK
+Apa "sudut pandang" saya sebagai {profesi} yang membedakan akun ini dari ribuan {profesi} lain di {platform}? Tentukan 1 kalimat positioning yang tajam.
+
+② PILAR KONTEN (4–5 kategori)
+Sebutkan kategori konten yang akan menjadi fondasi konsisten akun ini — masing-masing dengan deskripsi singkat dan contoh judul 1 buah.
+
+③ KARAKTER TULISAN
+Deskripsikan gaya bahasa, nada, dan ritme yang ideal untuk {audiens} di {platform}.
+Berikan contoh perbandingan:
+— SALAH: [contoh kalimat dengan gaya yang harus dihindari]
+— TEPAT: [contoh kalimat dengan gaya yang direkomendasikan]
+
+④ NILAI UNIK YANG DITAWARKAN
+Apa yang bisa saya berikan kepada {audiens} yang TIDAK bisa mereka dapatkan dari akun {profesi} lain? Jawab spesifik, bukan klise.
+
+⑤ METRIK KEBERHASILAN (3 bulan pertama)
+Berikan 3 indikator sederhana yang menandakan arah akun saya sudah benar.
+
+Format: gunakan heading per poin, berikan contoh konkret.`,
+                tip: 'Jalankan prompt ini SEKALI di awal. Simpan hasilnya — ini "konstitusi" akun Anda. Semua keputusan konten ke depan merujuk ke dokumen ini.'
+            },
+            {
+                id: 2, icon: '🔬',
+                title: 'Riset Audiens Mendalam',
+                desc: 'Gali pain points, psikografi, dan bahasa internal audiens',
+                skills: ['Audience Research', 'Empathy Mapping', 'Behavioral Psychology'],
+                inputs: [],
+                template: `Saya {profesi} yang membuat konten {niche} di {platform} untuk {audiens}.
+
+Lakukan RISET AUDIENS MENDALAM dengan format berikut:
+
+① PAIN POINTS TERSEMBUNYI (7 poin)
+Masalah nyata yang sering dirasakan {audiens} — bukan yang tertulis di buku teks, tapi yang mereka bisikkan di grup WhatsApp atau ruang istirahat. Sertakan situasi spesifik untuk tiap poin.
+
+② KEINGINAN YANG TIDAK TERUCAP
+Apa yang sebenarnya diimpikan {audiens} dalam pekerjaan mereka — yang tidak pernah mereka tulis dalam laporan atau ungkapkan ke atasan?
+
+③ TRIGGER EMOSIONAL
+Kata, kalimat, atau skenario apa yang membuat {audiens} BERHENTI scroll dan berkata dalam hati "ini tentang saya"? Berikan 8–10 contoh.
+
+④ POLA KONSUMSI KONTEN
+— Jam dan kondisi terbaik {audiens} mengonsumsi konten di {platform}
+— Format konten yang paling nyaman untuk mereka (panjang/pendek/visual/teks)
+— Device dominan yang digunakan
+
+⑤ BAHASA INTERNAL (20 frasa)
+Kumpulkan istilah, frasa, atau "bahasa gaul" yang digunakan {audiens} sehari-hari dalam konteks {niche} — yang TIDAK ditemukan dalam dokumen resmi atau bahasa formal.
+
+Gunakan bahasa ini sebagai bahan baku judul dan hook konten Anda.`,
+                tip: 'Simpan hasil riset ini sebagai dokumen referensi. Bagian "Bahasa Internal" adalah harta karun — masukkan langsung ke judul dan hook Anda.'
+            },
+            {
+                id: 3, icon: '💡',
+                title: 'Ide Konten 30 Hari',
+                desc: 'Bank konten 1 bulan dengan kalender editorial seimbang',
+                skills: ['Content Planning', 'Editorial Calendar', 'Content Pillars'],
+                inputs: [],
+                template: `Saya {profesi} yang aktif di {platform} untuk {audiens} dengan niche {niche}.
+
+Buatkan KALENDER KONTEN 30 HARI dengan distribusi editorial yang seimbang:
+
+📅 MINGGU 1 — KONEKSI EMOSIONAL (7 ide)
+Konten yang membuat {audiens} merasa dipahami. Fokus pada pengalaman yang sangat relatable.
+
+📅 MINGGU 2 — EDUKASI PRAKTIS (7 ide)
+Tips, cara, atau insight yang bisa langsung diaplikasikan {audiens} keesokan harinya.
+
+📅 MINGGU 3 — CERITA & REFLEKSI (7 ide)
+Narasi personal sebagai {profesi} yang mengandung pelajaran universal.
+
+📅 MINGGU 4 — KOMUNITAS & DISKUSI (7 ide)
+Konten yang memancing {audiens} berbagi, berefleksi, atau berdebat secara sehat.
+
+🚀 BONUS: 2 IDE VIRAL POTENSIAL
+Ide dengan potensi reach luas karena menyentuh isu lebih besar dari sekadar {niche}.
+
+Untuk SETIAP ide, sertakan:
+• Hook/judul (maks 10 kata)
+• Format konten: teks panjang / pendek / thread / list / pertanyaan
+• Tingkat emosi dominan: haru / frustrasi / bangga / penasaran / tawa
+• Difficulty: Mudah / Sedang / Tinggi`,
+                tip: 'Setelah dapat 30 ide, pilih 5–7 yang paling Anda kuasai. Minta AI kembangkan masing-masing lebih detail. Jangan eksekusi semua sekaligus.'
+            },
+            {
+                id: 4, icon: '✍️',
+                title: 'Judul yang Menarik Perhatian',
+                desc: 'Headline dengan daya henti tinggi untuk berbagai tipe konten',
+                skills: ['Headline Writing', 'Copywriting', 'Pattern Interrupt'],
+                inputs: [
+                    { key: 'tema', label: '🎯 Tema / topik spesifik (opsional)', placeholder: 'contoh: murid yang diam ternyata paling butuh perhatian…' }
+                ],
+                template: `Saya {profesi} yang menulis di {platform} untuk {audiens}.
+Tema konten: {tema}
+
+Buatkan 15 JUDUL dengan teknik yang beragam:
+
+【TIPE 1 — PATTERN INTERRUPT】 (3 judul)
+Melawan ekspektasi pembaca. Format: "Bukan [A], ternyata [B]"
+
+【TIPE 2 — IDENTITAS & PENGAKUAN】 (3 judul)
+Membuat {audiens} berkata "ini gue banget". Gunakan situasi sangat spesifik yang hanya dirasakan {profesi}.
+
+【TIPE 3 — RASA INGIN TAHU】 (3 judul)
+Membuka pertanyaan tanpa menjawabnya. Pembaca HARUS klik untuk tahu lanjutannya.
+
+【TIPE 4 — ANGKA & FAKTA KONKRET】 (3 judul)
+Gunakan angka spesifik, durasi, atau data yang terasa nyata bagi {audiens}.
+
+【TIPE 5 — EMOSI & EMPATI】 (3 judul)
+Menyentuh rasa lelah, frustrasi tersembunyi, harapan kecil, atau kebanggaan {profesi}.
+
+Aturan wajib:
+✗ Tidak ada bahasa akademik atau formal
+✗ Tidak ada clickbait murahan atau sensasional berlebihan
+✓ Tulis seperti {profesi} berbicara kepada sesama {profesi}
+✓ Bisa langsung di-posting tanpa edit`,
+                tip: 'Buat banyak judul sekaligus, lalu pilih yang paling membuat Anda sendiri ingin membacanya. Instinct Anda adalah filter terbaik.'
+            },
+            {
+                id: 5, icon: '🎣',
+                title: 'Hook — Kalimat Pembuka',
+                desc: 'Kalimat pertama yang membuat scroll berhenti seketika',
+                skills: ['Hook Writing', 'Attention Economy', 'First-Line Psychology'],
+                inputs: [
+                    { key: 'topik', label: '📌 Topik postingan Anda', placeholder: 'contoh: saat murid bilang "bu, terima kasih ya" di hari terakhir ujian…' }
+                ],
+                template: `Saya {profesi} di {platform}, menulis untuk {audiens}.
+Topik: {topik}
+
+Buatkan 8 HOOK (kalimat pembuka) dengan pendekatan berbeda-beda:
+
+① HOOK KONFESIONAL
+Dimulai dengan pengakuan jujur yang mengejutkan — kelemahan, kekeliruan, atau momen memalukan yang terasa sangat manusiawi.
+
+② HOOK STATISTIK / ANGKA
+Fakta atau angka yang membuat dahi berkerut dan kepala bertanya-tanya.
+
+③ HOOK PARADOKS
+Pernyataan yang terdengar salah, tapi ternyata sangat benar. Contoh struktur: "Semakin saya [A], semakin saya sadar bahwa [B yang bertentangan]"
+
+④ HOOK SKENARIO LANGSUNG
+Lempar pembaca ke tengah situasi nyata tanpa pengantar. Mulai dengan aksi, bukan deskripsi.
+
+⑤ HOOK PERTANYAAN TAJAM
+Bukan "apakah kamu pernah...?" — tapi pertanyaan yang menusuk ke inti masalah {audiens}.
+
+⑥ HOOK KONTROVERSIAL (AMAN)
+Sudut pandang yang tidak populer tapi bisa dipertahankan dengan logika kuat.
+
+⑦ HOOK NOSTALGIA
+Kembali ke momen atau era yang familiar bagi {audiens} — yang membuat mereka senyum sekaligus berefleksi.
+
+⑧ HOOK IDENTITAS
+Langsung menyebut pembaca berdasarkan pengalaman atau identitas mereka sebagai {audiens}.
+
+Untuk setiap hook:
+→ Tulis hook-nya (1–2 baris)
+→ Jelaskan mekanisme psikologis di baliknya (1 kalimat)
+→ Berikan 1 kalimat lanjutan yang memperkuat hook tersebut`,
+                tip: 'Simpan semua hook yang berhasil dalam "swipe file". Pola yang efektif bisa digunakan berulang dengan topik berbeda.'
+            },
+            {
+                id: 6, icon: '📖',
+                title: 'Kembangkan Cerita',
+                desc: 'Ubah momen sederhana menjadi narasi yang berkesan dan bermakna',
+                skills: ['Storytelling', 'Narrative Arc', 'Emotional Resonance'],
+                inputs: [
+                    { key: 'cerita', label: '✏️ Cerita / momen singkat Anda', placeholder: 'Ceritakan apa yang terjadi — sesederhana apa pun, 2–5 kalimat sudah cukup…' }
+                ],
+                template: `Saya {profesi} di {platform}, menulis untuk {audiens}.
+
+Momen yang ingin saya kembangkan:
+---
+{cerita}
+---
+
+Kembangkan menjadi postingan {platform} yang powerful menggunakan STRUKTUR NARASI ini:
+
+【PEMBUKA — HOOK + KONTEKS】
+Mulai dari titik paling dramatis atau intim dari cerita. Bukan dari awal kronologis. Langsung taruh pembaca di tengah momen.
+
+【BANGUNAN CERITA — DETAIL SENSORIS】
+Hidupkan cerita dengan: apa yang saya lihat, dengar, rasakan? Suasana ruangan, ekspresi wajah, kata-kata yang terucap? Detail kecil yang autentik membuat pembaca percaya bahwa ini nyata.
+
+【TITIK BALIK — MOMEN AHA】
+Di mana persepsi atau perasaan saya berubah? Realisasi apa yang muncul? Ini adalah inti emosional cerita.
+
+【REFLEKSI — INSIGHT YANG JUJUR】
+Pelajaran atau perspektif baru yang relevan bagi {audiens}. Sampaikan dengan tulus, bukan menggurui. Bukan "moral cerita" yang klise, tapi kebenaran yang ditemukan secara organik.
+
+【PENUTUP — KALIMAT YANG MEMBUKA RUANG】
+Akhiri dengan kalimat yang membuat pembaca merenung atau ingin merespons — bukan kesimpulan, tapi undangan.
+
+Gaya: bahasa {profesi} ke sesama {profesi}. Jujur, mengalir, tidak kaku. Paragraf pendek. Zero jargon akademik.`,
+                tip: 'Semakin spesifik ceritamu, semakin kuat hasilnya. Nama kelas, ekspresi wajah, jam di dinding — detail kecil yang autentik lebih kuat dari drama yang dipaksakan.'
+            },
+            {
+                id: 7, icon: '🔄',
+                title: 'Ubah Bahasa',
+                desc: 'Transformasi tulisan formal menjadi bahasa manusia yang hangat',
+                skills: ['Plain Language', 'Voice Transformation', 'Humanizing Copy'],
+                inputs: [
+                    { key: 'tulisan', label: '📄 Tulisan yang ingin diubah bahasanya', placeholder: 'Paste tulisan formal / akademik / kaku di sini…' }
+                ],
+                template: `Saya {profesi} yang menulis di {platform} untuk {audiens}.
+
+Tulisan yang perlu ditransformasi:
+---
+{tulisan}
+---
+
+Lakukan TRANSFORMASI BAHASA dengan panduan ini:
+
+ATURAN TRANSFORMASI:
+1. Ganti SEMUA istilah akademik/teknis dengan padanan bahasa sehari-hari
+2. Pecah kalimat panjang → max 15 kata per kalimat
+3. Ganti kata ganti impersonal ("penulis", "peserta didik") → "saya", "kamu", "kita"
+4. Tambahkan "napas manusia" — tanda bahwa ini ditulis orang, bukan lembaga
+5. Pertahankan 100% makna, fakta, dan pesan inti — tidak boleh ada informasi yang hilang atau ditambah
+
+OUTPUT YANG DIHARAPKAN:
+
+▸ VERSI A — HANGAT & BERBOBOT
+Cocok untuk {platform}. Tetap substansial tapi terasa seperti ngobrol dengan teman yang lebih berpengalaman.
+
+▸ VERSI B — SANGAT CONVERSATIONAL
+Seperti berbicara di koridor atau grup WhatsApp — ringan, langsung, tanpa jarak.
+
+▸ TABEL PERBANDINGAN (min. 12 baris):
+| Kata/Frasa Asli | Transformasi |
+|---|---|
+[isi dengan pasangan kata dari tulisan di atas]
+
+▸ CATATAN REDAKSI:
+Bagian mana dari tulisan asli yang paling perlu diperhatikan dan mengapa?`,
+                tip: 'Setelah transformasi, baca ulang dengan keras. Jika terdengar seperti Anda bicara, berarti berhasil. Jika masih kaku, minta satu iterasi lagi dengan feedback spesifik.'
+            },
+            {
+                id: 8, icon: '✨',
+                title: 'Rapikan Tulisan',
+                desc: 'Poles alur dan struktur tanpa mengubah suara asli penulis',
+                skills: ['Copy Editing', 'Flow Optimization', 'Voice Preservation'],
+                inputs: [
+                    { key: 'tulisan', label: '📝 Tulisan yang ingin dirapikan', placeholder: 'Paste tulisan Anda di sini…' }
+                ],
+                template: `Saya {profesi} yang menulis di {platform} untuk {audiens}.
+
+Tulisan saya:
+---
+{tulisan}
+---
+
+Rapikan tulisan ini dengan PRINSIP EDITORIAL ketat — TANPA mengubah gaya bahasa, sudut pandang, atau makna sedikit pun.
+
+✅ BOLEH DIUBAH:
+• Urutan paragraf jika logika alur bisa diperkuat
+• Kalimat ambigu atau repetitif
+• Transisi antar paragraf yang terasa tiba-tiba atau janggal
+• Panjang paragraf (ideal 2–3 kalimat untuk {platform})
+• Kata penghubung yang berlebihan atau tidak perlu
+
+❌ TIDAK BOLEH DIUBAH:
+• Pilihan kata khas / unik milik penulis
+• Sudut pandang dan posisi penulis terhadap topik
+• Humor, ironi, atau ekspresi emosional yang sudah intentional
+• Fakta, angka, dan detail spesifik
+• Gaya bahasa yang sudah terasa seperti "tanda tangan" penulis
+
+FORMAT OUTPUT:
+① Tulisan yang sudah dirapikan (langsung siap posting)
+② Catatan editor — apa yang diubah dan mengapa (format bullet singkat, max 7 poin)
+③ 1 saran opsional untuk memperkuat tulisan ini lebih jauh (boleh ditolak)`,
+                tip: 'Beritahu AI bagian mana yang paling Anda suka dari tulisan asli — agar editor tahu apa yang harus dipertahankan.'
+            },
+            {
+                id: 9, icon: '📐',
+                title: 'Sesuaikan Gaya Platform',
+                desc: 'Optimalkan format dan ritme konten sesuai karakter platform',
+                skills: ['Platform Strategy', 'Format Design', 'Content Adaptation'],
+                inputs: [
+                    { key: 'tulisan', label: '📋 Tulisan yang akan dioptimasi', placeholder: 'Paste tulisan Anda di sini…' }
+                ],
+                template: `Saya {profesi} di {platform}, menulis untuk {audiens}.
+
+Tulisan yang perlu dioptimasi:
+---
+{tulisan}
+---
+
+Optimalkan tulisan ini khusus untuk karakter dan algoritma {platform}:
+
+① FORMAT & STRUKTUR
+• Panjang ideal per paragraf untuk {platform} (berikan angka konkret)
+• Cara menggunakan line break dan white space secara strategis
+• Apakah perlu heading atau subheading? Jelaskan berdasarkan konvensi {platform}
+• Urutan elemen: hook → konflik → insight → CTA
+
+② RITME & PACING
+• Variasikan panjang kalimat untuk menciptakan irama membaca
+• Identifikasi di mana perlu "kalimat napas" — jeda emosional sebelum insight penting
+• Transisi yang terasa natural dan tidak memutus alur
+
+③ OPTIMASI ENGAGEMENT
+• Apakah 2 kalimat pembuka cukup kuat menahan pembaca dari scroll? Jika tidak, perbaiki
+• Kata atau frasa mana yang berpotensi memancing reaksi (like / comment / share) di {platform}?
+• Rekomendasi 3–5 hashtag strategis (jika relevan di {platform}) beserta alasannya
+
+④ VERSI FINAL
+Tulisan yang sudah sepenuhnya dioptimasi untuk {platform} — langsung bisa di-copy dan diposting.`,
+                tip: 'Konten yang bagus di satu platform belum tentu optimal di platform lain. Selalu sesuaikan ritme dan panjang per platform.'
+            },
+            {
+                id: 10, icon: '💬',
+                title: 'Ajakan Interaksi (CTA)',
+                desc: 'Pertanyaan penutup yang memancing komentar berkualitas',
+                skills: ['Community Building', 'CTA Design', 'Engagement Psychology'],
+                inputs: [
+                    { key: 'tulisan', label: '💬 Postingan yang akan ditambahkan CTA', placeholder: 'Paste postingan Anda di sini…' }
+                ],
+                template: `Saya {profesi} di {platform}, menulis untuk {audiens}.
+
+Postingan saya:
+---
+{tulisan}
+---
+
+Tambahkan elemen INTERAKSI yang organik, genuine, dan tidak terasa seperti minta komentar paksa:
+
+① ANALISIS EMOSI DOMINAN
+Apa emosi utama yang ditinggalkan postingan ini kepada {audiens}? (rasa relate / nostalgia / frustrasi / harapan / kebanggaan)
+
+② TIGA VARIASI CTA:
+
+▸ CTA-A — BERBAGI PENGALAMAN
+Mengundang {audiens} bercerita pengalaman serupa. Spesifik dan kontekstual — bukan "bagaimana menurutmu?"
+
+▸ CTA-B — REFLEKTIF & PERSONAL
+Mengajak {audiens} merenung tentang situasi mereka sendiri. Tidak ada jawaban benar atau salah, tidak ada tekanan.
+
+▸ CTA-C — RINGAN & PLAYFUL
+CTA yang bisa dijawab dengan 1 kata, 1 emoji, atau 1 pilihan. Cocok untuk {audiens} yang pemalu berkomentar.
+
+Untuk setiap CTA:
+→ Tulis kalimatnya
+→ Jelaskan psikologi di baliknya (1 kalimat)
+→ Perkirakan jenis komentar yang kemungkinan muncul
+
+③ KALIMAT JEMBATAN
+1 kalimat yang membuat transisi dari isi tulisan ke CTA terasa mulus dan tidak tiba-tiba.`,
+                tip: 'CTA terbaik terasa seperti kelanjutan percakapan alami — bukan permintaan. Test semua 3 variasi di postingan berbeda dan perhatikan hasilnya.'
+            },
+            {
+                id: 11, icon: '🌱',
+                title: 'Mengolah Inspirasi Tulisan',
+                desc: 'Ubah inspirasi dari orang lain menjadi karya autentik Anda sendiri',
+                skills: ['Authentic Voice', 'Creative Transformation', 'Originality'],
+                inputs: [
+                    { key: 'inspirasi', label: '💫 Konten / tulisan yang menginspirasi Anda', placeholder: 'Ceritakan apa yang Anda baca/tonton dan mengapa itu menginspirasi Anda…' },
+                    { key: 'pengalaman', label: '🌟 Pengalaman pribadi Anda yang relevan', placeholder: 'Momen atau situasi dari hidup Anda yang berkaitan dengan tema tersebut…' }
+                ],
+                template: `Saya membaca tulisan sesama {profesi} lain dan terinspirasi. Tolong bantu saya membuat tulisan baru di {platform} untuk {audiens} dengan gaya saya sendiri, sudut pandang saya sebagai {profesi}, serta masukkan pengalaman pribadi berikut ini:
+
+Tulisan yang menginspirasi saya:
+---
+{inspirasi}
+---
+
+Pengalaman pribadi saya yang relevan:
+---
+{pengalaman}
+---
+
+Pastikan gaya tulisan tetap natural dan tidak kaku.
+Catatan etika: Tambahkan kalimat "Terinspirasi dari tulisan rekan {profesi}." di bagian akhir tulisan.`,
+                tip: 'Inspirasi bukan plagiarisme jika Anda mengambil TEMA, bukan KATA. Pengalaman spesifik Anda sebagai profesi adalah yang membuat karya ini benar-benar milik Anda.'
+            },
+            {
+                id: 12, icon: '🌍',
+                title: 'Menyederhanakan Ide Besar',
+                desc: 'Ubah pemikiran besar/kompleks jadi tulisan yang membumi',
+                skills: ['Simplification', 'Storytelling', 'Relatability'],
+                inputs: [
+                    { key: 'ide', label: '💡 Ide besar pemikiran Anda', placeholder: 'Tuliskan ide besar atau konsep yang ingin disederhanakan...' },
+                    { key: 'contoh', label: '🎯 Contoh nyata (opsional)', placeholder: 'Contoh nyata dari pengalaman Anda...' }
+                ],
+                template: `Saya punya pemikiran besar tentang pendidikan berikut ini:
+
+Ide/Pemikiran:
+---
+{ide}
+---
+
+Tolong sederhanakan jadi tulisan di {platform} untuk {audiens} yang membumi, mudah dipahami, dan memakai contoh nyata dari pengalaman saya sebagai {profesi}.
+
+Contoh nyata yang bisa dipakai:
+---
+{contoh}
+---
+
+Pastikan gaya bahasanya tidak kaku, humanis, dan relevan dengan audiens.`,
+                tip: 'Konsep yang rumit butuh contoh konkret agar mudah dicerna pembaca di platform sosial.'
+            }
+        ];
+
+        // ── STATE ────────────────────────────────────────────────────────────────────
+        let openId = null;
+        const extras = {};      // { stepId: { key: value } }
+        const jsonOpen = {};    // { stepId: bool }
+
+        // ── HELPERS ──────────────────────────────────────────────────────────────────
+        function cfg() {
+            return {
+                profesi: document.getElementById('profesi').value.trim() || 'profesi Anda',
+                platform: document.getElementById('platform').value,
+                audiens: document.getElementById('audiens').value.trim() || 'audiens Anda',
+                niche: document.getElementById('niche').value.trim() || 'niche Anda',
+            };
+        }
+
+        function buildPrompt(template, ex = {}) {
+            const c = cfg();
+            let t = template
+                .replace(/\{profesi\}/g, c.profesi)
+                .replace(/\{platform\}/g, c.platform)
+                .replace(/\{audiens\}/g, c.audiens)
+                .replace(/\{niche\}/g, c.niche);
+            Object.entries(ex).forEach(([k, v]) => {
+                t = t.replace(new RegExp(`\\{${k}\\}`, 'g'), v || `[${k} belum diisi]`);
+            });
+            t = t.replace(/\{[^}]+\}/g, m => `[${m.slice(1, -1)} belum diisi]`);
+            return t;
+        }
+
+        function hlPrompt(text) {
+            const c = cfg();
+            const vars = [c.profesi, c.platform, c.audiens, c.niche].filter(x => x && x.length > 2);
+            let out = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            vars.forEach(v => {
+                const esc = v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                out = out.replace(new RegExp(esc, 'g'), `<span class="var">${v}</span>`);
+            });
+            out = out.replace(/\[([^\]]+)\]/g, '<span class="fill">[$1]</span>');
+            return out;
+        }
+
+        function buildJson(step) {
+            const c = cfg();
+            const ex = extras[step.id] || {};
+            return {
+                step: step.id,
+                title: step.title,
+                skills: step.skills,
+                config: { profesi: c.profesi, platform: c.platform, audiens: c.audiens, niche: c.niche },
+                requires_input: step.inputs.length > 0,
+                input_fields: step.inputs.map(i => ({ key: i.key, value: ex[i.key] || null })),
+                prompt: buildPrompt(step.template, ex)
+            };
+        }
+
+        function hlJson(raw) {
+            return raw
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"([^"\n]+)":/g, '<span class="jk">"$1"</span>:')
+                .replace(/: (\d+)/g, ': <span class="jn">$1</span>')
+                .replace(/: (true|false|null)/g, ': <span class="jb">$1</span>')
+                .replace(/: "([^"]*?)"/g, (m, v) => v.length > 60
+                    ? `: <span class="jvs">"${v}"</span>`
+                    : `: <span class="jv">"${v}"</span>`);
+        }
+
+        // ── RENDER ───────────────────────────────────────────────────────────────────
+        function renderGrid() {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+
+            STEPS.forEach((step, i) => {
+                // CARD
+                const card = document.createElement('div');
+                card.className = 'step-card' + (openId === step.id ? ' selected' : '');
+                card.style.order = i * 2;
+                card.innerHTML = `
+      <div class="card-badge">✓</div>
+      <div class="card-top">
+        <span class="step-num">${String(step.id).padStart(2, '0')}</span>
+        <span class="card-icon">${step.icon}</span>
+      </div>
+      <div class="card-title-sm">${step.title}</div>
+      <div class="card-desc">${step.desc}</div>
+    `;
+                card.addEventListener('click', () => {
+                    openId = openId === step.id ? null : step.id;
+                    renderGrid();
+                    if (openId) setTimeout(() => {
+                        document.querySelector('.expand-panel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 60);
+                });
+                grid.appendChild(card);
+
+                // PANEL (spans full row)
+                if (openId === step.id) {
+                    const panel = buildPanel(step);
+                    panel.style.order = i * 2 + 1;
+                    grid.appendChild(panel);
+                }
+            });
+        }
+
+        function buildPanel(step) {
+            const ex = extras[step.id] || {};
+            const promptText = buildPrompt(step.template, ex);
+
+            const panel = document.createElement('div');
+            panel.className = 'expand-panel';
+
+            // ── Build input fields HTML
+            const inputsHTML = step.inputs.map(inp => `
+    <div class="extra-field">
+      <label>${inp.label}</label>
+      <textarea data-key="${inp.key}" placeholder="${inp.placeholder}" rows="4">${ex[inp.key] || ''}</textarea>
+    </div>
+  `).join('');
+
+            panel.innerHTML = `
+    <div class="panel-header">
+      <div class="panel-title">${step.icon} ${step.title}</div>
+      <button class="panel-close">✕</button>
+    </div>
+    <div class="skill-tags">
+      ${step.skills.map(s => `<span class="skill-tag">${s}</span>`).join('')}
+    </div>
+    <div class="panel-body">
+      <div class="panel-left">
+        ${inputsHTML}
+        <div class="tip-box"><strong>💡 Tips:</strong><br>${step.tip}</div>
+        <div class="panel-actions">
+          <button class="btn btn-gold btn-copy-prompt">📋 Salin Prompt</button>
+          <div class="btn-divider"></div>
+          <button class="btn btn-green btn-copy-json">{ } Salin JSON</button>
+          <button class="btn btn-outline-green btn-dl-json">⬇ JSON</button>
+        </div>
+        <div class="json-preview-wrap" id="jsonWrap_${step.id}">
+          <div class="json-preview-label">Output JSON — Langkah ${step.id}</div>
+          <div class="json-preview-box" id="jsonBox_${step.id}"></div>
+        </div>
+      </div>
+      <div class="panel-right">
+        <div class="preview-label">Preview Prompt</div>
+        <div class="prompt-preview preview-area">${hlPrompt(promptText)}</div>
+      </div>
+    </div>
+  `;
+
+            // ── Close
+            panel.querySelector('.panel-close').addEventListener('click', e => {
+                e.stopPropagation();
+                openId = null;
+                renderGrid();
+            });
+
+            // ── Textarea live update
+            panel.querySelectorAll('textarea[data-key]').forEach(ta => {
+                ta.addEventListener('input', () => {
+                    if (!extras[step.id]) extras[step.id] = {};
+                    extras[step.id][ta.dataset.key] = ta.value;
+                    const updated = buildPrompt(step.template, extras[step.id]);
+                    panel.querySelector('.preview-area').innerHTML = hlPrompt(updated);
+                    // If JSON preview is open, refresh it too
+                    refreshJsonPreview(step, panel);
+                });
+            });
+
+            // ── Salin Prompt
+            panel.querySelector('.btn-copy-prompt').addEventListener('click', function () {
+                const text = buildPrompt(step.template, extras[step.id] || {});
+                navigator.clipboard.writeText(text).then(() => {
+                    this.textContent = '✅ Tersalin!';
+                    this.classList.add('success');
+                    setTimeout(() => { this.innerHTML = '📋 Salin Prompt'; this.classList.remove('success'); }, 2200);
+                });
+            });
+
+            // ── Salin JSON — toggle preview + copy
+            panel.querySelector('.btn-copy-json').addEventListener('click', function () {
+                const raw = JSON.stringify(buildJson(step), null, 2);
+                const wrap = panel.querySelector(`#jsonWrap_${step.id}`);
+                const box = panel.querySelector(`#jsonBox_${step.id}`);
+
+                // Show/refresh preview
+                box.innerHTML = hlJson(raw);
+                box.dataset.raw = raw;
+                wrap.classList.add('open');
+
+                // Copy to clipboard
+                navigator.clipboard.writeText(raw).then(() => {
+                    this.textContent = '✅ JSON Tersalin!';
+                    this.classList.add('success');
+                    setTimeout(() => { this.innerHTML = '{ } Salin JSON'; this.classList.remove('success'); }, 2400);
+                });
+            });
+
+            // ── Download JSON
+            panel.querySelector('.btn-dl-json').addEventListener('click', function () {
+                const c = cfg();
+                const raw = JSON.stringify(buildJson(step), null, 2);
+                const blob = new Blob([raw], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `prompt_step${step.id}_${c.profesi}_${c.platform.replace(/[\s/]/g, '_')}.json`;
+                a.click();
+                this.textContent = '✅ Downloaded';
+                this.classList.add('success');
+                setTimeout(() => { this.innerHTML = '⬇ JSON'; this.classList.remove('success'); }, 2200);
+            });
+
+            // ── Mark done
+            panel.querySelector('.panel-close') // reuse close listener above
+
+            return panel;
+        }
+
+        function refreshJsonPreview(step, panel) {
+            const wrap = panel.querySelector(`#jsonWrap_${step.id}`);
+            const box = panel.querySelector(`#jsonBox_${step.id}`);
+            if (wrap && wrap.classList.contains('open') && box) {
+                const raw = JSON.stringify(buildJson(step), null, 2);
+                box.innerHTML = hlJson(raw);
+                box.dataset.raw = raw;
+            }
+        }
+
+        // ── LIVE CONFIG UPDATE ────────────────────────────────────────────────────────
+        ['profesi', 'platform', 'audiens', 'niche'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                if (openId) {
+                    // Patch live without full re-render for smoothness
+                    const step = STEPS.find(s => s.id === openId);
+                    const preview = document.querySelector('.preview-area');
+                    if (step && preview) {
+                        const updated = buildPrompt(step.template, extras[openId] || {});
+                        preview.innerHTML = hlPrompt(updated);
+                        const panel = document.querySelector('.expand-panel');
+                        if (panel) refreshJsonPreview(step, panel);
+                    }
+                } else {
+                    renderGrid();
+                }
+            });
+        });
+
+        // ── INIT ─────────────────────────────────────────────────────────────────────
+        renderGrid();
+    
+</script>

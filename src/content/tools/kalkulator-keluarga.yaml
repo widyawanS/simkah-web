@@ -1,0 +1,10 @@
+title: Kalkulator Keluarga
+shortDescription: Rencanakan kebutuhan finansial keluarga. Hitung pendapatan, pengeluaran, biaya pendidikan, dan rekomendasi tabungan bulanan.
+category: calculator
+icon: 👨‍👩‍👧‍👦
+colorFrom: green-500
+colorTo: emerald-500
+link: /tools/kalkulator-keluarga
+isActive: true
+showInMenu: true
+order: 1

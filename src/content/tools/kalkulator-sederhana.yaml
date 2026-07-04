@@ -1,0 +1,10 @@
+title: Kalkulator Sederhana
+shortDescription: Kalkulator dasar untuk perhitungan matematika cepat. Penjumlahan, pengurangan, perkalian, dan pembagian.
+category: calculator
+icon: 🔢
+colorFrom: blue-500
+colorTo: cyan-500
+link: /tools/calculator
+isActive: true
+showInMenu: false
+order: 4

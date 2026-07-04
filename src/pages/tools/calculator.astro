@@ -1,0 +1,17 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import CalculatorComponent from "@components/tools/Calculator.tsx";
+---
+
+<Layout title="Smart Calculator">
+  <Container>
+    <div class="py-20 animate-fade-in">
+        <header class="text-center mb-16">
+            <h1 class="text-5xl font-bold mb-4">Precision <span class="text-gradient">Tools</span></h1>
+            <p class="text-slate-400">Gunakan alat hitung kami untuk menunjang produktivitas Anda.</p>
+        </header>
+        <CalculatorComponent client:load />
+    </div>
+  </Container>
+</Layout>

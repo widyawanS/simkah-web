@@ -1,0 +1,197 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import { getPosts } from "@lib/content.ts";
+import { getHomepage } from "@lib/keystatic";
+import AdSlot from "@components/ui/AdSlot.astro";
+import { Image } from "astro:assets";
+
+const latestPosts = await getPosts();
+const featuredPost = latestPosts[0];
+const homepageData = await getHomepage();
+
+const heroTitle = homepageData?.heroTitle || "Build with Intelligence";
+const heroSubtitle = homepageData?.heroSubtitle || "Kumpulan artikel mendalam, alat produktivitas pintar, dan generator prompt untuk masa depan kreatif Anda.";
+const heroButtonText = homepageData?.heroButtonText;
+const heroButtonLink = homepageData?.heroButtonLink;
+---
+
+<Layout title="simkah.web.id">
+  <main class="py-12 relative">
+    <!-- Hero Section -->
+    <section class="mb-20 text-center animate-fade-in px-4">
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight max-w-4xl mx-auto leading-[1.1]">
+        {heroTitle.includes(' ') ? (
+          <>
+            {heroTitle.split(' ').slice(0, -1).join(' ')} <span class="text-gradient">{heroTitle.split(' ').slice(-1)}</span>
+          </>
+        ) : heroTitle}
+      </h1>
+      <p class="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto whitespace-pre-line mb-10">
+        {heroSubtitle}
+      </p>
+
+      {heroButtonText && (
+        <a 
+          href={heroButtonLink || "#"} 
+          class="inline-flex items-center justify-center px-10 py-4 bg-brand-primary text-white rounded-full font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-brand-primary/20"
+        >
+          {heroButtonText}
+          <span class="ml-3 text-2xl">→</span>
+        </a>
+      )}
+    </section>
+
+    <!-- Bento Grid Section -->
+    <Container>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Featured Post -->
+        {featuredPost && (
+          <div class="md:col-span-2 md:row-span-2 glass bento-item group relative overflow-hidden">
+            <a href={`/blog/${featuredPost.slug}`}>
+                <div class="p-8 h-full flex flex-col justify-end relative z-10 bg-gradient-to-t from-slate-950 to-transparent">
+                  <span class="text-brand-primary font-bold mb-2 uppercase tracking-widest text-xs">{featuredPost.category}</span>
+                  <h2 class="text-3xl font-bold mb-4 text-white group-hover:text-brand-primary transition-colors">{featuredPost.title}</h2>
+                  <p class="text-slate-300 line-clamp-2 mb-6">{featuredPost.description}</p>
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center text-xs font-bold text-white uppercase">
+                      {featuredPost.author[0]}
+                    </div>
+                    <span class="text-sm font-medium text-white">{featuredPost.author}</span>
+                  </div>
+                </div>
+                {featuredPost.image && (
+                   typeof featuredPost.image === 'string' ? (
+                     <img 
+                      src={featuredPost.image} 
+                      class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-40" 
+                      alt={featuredPost.title}
+                      loading="eager"
+                     />
+                   ) : (
+                     <Image 
+                      src={featuredPost.image} 
+                      class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-40" 
+                      alt={featuredPost.title}
+                      width={1200}
+                      height={675}
+                      loading="eager"
+                     />
+                   )
+                )}
+            </a>
+          </div>
+        )}
+
+        <!-- Tools Card 1: Calculator -->
+        <div class="glass bento-item p-8 flex flex-col justify-between hover:border-brand-primary cursor-pointer group">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-brand-primary/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+               </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Smart Calculators</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">Kalkulator Keluarga, Wedding, Undangan, dan berbagai keperluan lainnya.</p>
+          </div>
+          <a href="/tools/calculators" class="text-brand-primary font-bold text-sm flex items-center gap-2 group-hover:gap-4 transition-all">
+            Explore <span class="text-lg">→</span>
+          </a>
+        </div>
+
+        <!-- Tools Card 2: Tool AI Penghulu -->
+        <div class="glass bento-item p-8 flex flex-col justify-between hover:border-brand-secondary cursor-pointer group">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-brand-secondary/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-brand-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+               </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Tool AI Penghulu</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">Hasilkan prompt AI Khutbah Nikah, Khutbah Jumat dll.</p>
+          </div>
+          <a href="/tools/prompt-penghulu" class="text-brand-secondary font-bold text-sm flex items-center gap-2 group-hover:gap-4 transition-all">
+            Open Tool <span class="text-lg">→</span>
+          </a>
+        </div>
+
+        <!-- Right Side: Small Cards -->
+        <div class="glass bento-item p-6 flex flex-col justify-center text-center">
+            <h4 class="text-4xl font-bold text-gradient">99+</h4>
+            <p class="text-xs uppercase tracking-tighter text-slate-500 font-bold">Prompts Generated</p>
+        </div>
+
+        <div class="glass bento-item p-6 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            </div>
+            <div>
+                <p class="text-sm font-bold">Server Status</p>
+                <p class="text-xs text-slate-600 dark:text-slate-400">All systems operational</p>
+            </div>
+        </div>
+
+        <!-- Prompt Generator -->
+        <div class="md:col-span-2 glass bento-item p-8 flex items-center gap-8 bg-gradient-to-br from-white dark:from-slate-900 to-brand-primary/5 dark:to-brand-primary/10 border-slate-200 dark:border-brand-primary/30">
+            <div class="flex-1">
+                <h3 class="text-2xl font-bold mb-2 text-slate-900 dark:text-white">AI Prompt Studio</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Ciptakan prompt berkualitas tinggi untuk Gemini, ChatGPT, dan lainnya.</p>
+                <a href="/tools/prompt-generator" class="inline-block px-6 py-2 bg-brand-primary rounded-full hover:bg-indigo-700 transition-colors font-bold text-sm text-white">Start Creating</a>
+            </div>
+            <div class="hidden md:block w-32 h-32 opacity-20 transform rotate-12">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="text-white">
+                    <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" />
+                </svg>
+            </div>
+        </div>
+      </div>
+
+      <!-- Ad Slot -->
+      <AdSlot type="home" class="mt-32 -mb-20" />
+
+      <!-- Recent Blog Feed -->
+      <section class="mt-32">
+        <div class="flex justify-between items-end mb-12">
+            <div>
+                <h2 class="text-4xl font-bold mb-2">Berita & Insights</h2>
+                <p class="text-slate-600 dark:text-slate-400">Eksplorasi info nikah, berita, dan catatan lainnya.</p>
+            </div>
+            <a href="/blog" class="px-6 py-2 border border-slate-700 rounded-full hover:bg-slate-800 transition-colors text-sm font-bold">View Archive</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {latestPosts.slice(1, 4).map(post => (
+                <article class="group">
+                    <a href={`/blog/${post.slug}`}>
+                        <div class="aspect-video rounded-3xl overflow-hidden mb-6 bg-slate-800 relative">
+                             {post.image && (
+                               typeof post.image === 'string' ? (
+                                <img 
+                                  src={post.image} 
+                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                  alt={post.title} 
+                                  loading="lazy"
+                                />
+                               ) : (
+                                <Image 
+                                  src={post.image} 
+                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                  alt={post.title} 
+                                  width={600}
+                                  height={338}
+                                  loading="lazy"
+                                />
+                               )
+                             )}
+                             <div class="absolute inset-0 bg-transparent group-hover:bg-brand-primary/10 transition-colors"></div>
+                        </div>
+                        <p class="text-brand-primary text-xs font-bold uppercase tracking-widest mb-3">{post.category}</p>
+                        <h3 class="text-2xl font-bold group-hover:text-brand-primary transition-colors mb-3 line-clamp-2 leading-tight">{post.title}</h3>
+                        <p class="text-slate-600 dark:text-slate-400 line-clamp-2 text-sm leading-relaxed">{post.description}</p>
+                    </a>
+                </article>
+            ))}
+        </div>
+      </section>
+    </Container>
+  </main>
+</Layout>

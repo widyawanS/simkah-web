@@ -1,0 +1,156 @@
+---
+import { getSiteSettings } from "@lib/keystatic";
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalURL?: URL;
+  ogType?: string;
+}
+
+const {
+  title,
+  description,
+  image,
+  canonicalURL = new URL(Astro.url.pathname, Astro.site),
+  ogType = "website",
+} = Astro.props;
+
+const settings = await getSiteSettings();
+
+// Fallback data if settings are not set in Keystatic yet
+const metadata = settings?.metadata || {
+  siteName: "SIMKAH Tools",
+  description: "Kumpulan tool gratis untuk membantu urusan SIMKAH dan pernikahan.",
+  ogImage: "/opengraph.jpg"
+};
+const ads = settings?.ads || { isActive: false };
+const analytics = settings?.analytics || {};
+
+const seoTitle = title ? `${title} | ${metadata.siteName}` : metadata.siteName;
+const seoDescription = description || metadata.description;
+const seoImage = new URL(image || metadata.ogImage || "/images/og-default.jpg", Astro.site).toString();
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="generator" content={Astro.generator} />
+<meta name="profiton-domain-verification" content="50382d253cb280faf75095f4c840222162836e8c38822978e97020858016140c" />
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Primary Meta Tags -->
+<title>{seoTitle}</title>
+<meta name="title" content={seoTitle} />
+<meta name="description" content={seoDescription} />
+
+<!-- Adsense Global (Optimized Loading) -->
+{ads.isActive && ads.adClient && (
+  <script is:inline define:vars={{ adClient: ads.adClient }}>
+    function loadAdsense() {
+      if (window.adsenseLoaded) return;
+      const script = document.createElement('script');
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`;
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      document.head.appendChild(script);
+      window.adsenseLoaded = true;
+    }
+
+    // Load after 3 seconds or on user interaction
+    const timer = setTimeout(loadAdsense, 3500);
+    const triggerEvents = ['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'];
+    
+    triggerEvents.forEach(event => {
+      window.addEventListener(event, () => {
+        clearTimeout(timer);
+        loadAdsense();
+      }, { once: true, passive: true });
+    });
+  </script>
+)}
+
+<!-- Custom Injected Header -->
+{ads.customInjectedHeader && <Fragment set:html={ads.customInjectedHeader} />}
+
+<!-- Analytics (Optimized Loading) -->
+{(analytics.googleAnalyticsId || analytics.umamiWebsiteId) && (
+  <script is:inline define:vars={{ gaId: analytics.googleAnalyticsId, umamiId: analytics.umamiWebsiteId }}>
+    function loadAnalytics() {
+      if (window.analyticsLoaded) return;
+      
+      // Google Analytics
+      if (gaId) {
+        const gaScript = document.createElement('script');
+        gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+        gaScript.async = true;
+        document.head.appendChild(gaScript);
+        
+        gaScript.onload = () => {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', gaId);
+        };
+      }
+      
+      // Umami
+      if (umamiId) {
+        const umamiScript = document.createElement('script');
+        umamiScript.src = "https://cloud.umami.is/script.js";
+        umamiScript.async = true;
+        umamiScript.defer = true;
+        umamiScript.setAttribute('data-website-id', umamiId);
+        document.head.appendChild(umamiScript);
+      }
+      
+      window.analyticsLoaded = true;
+    }
+
+    // Load after 5 seconds or on user interaction
+    const analyticsTimer = setTimeout(loadAnalytics, 5000);
+    const analyticsEvents = ['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'];
+    
+    analyticsEvents.forEach(event => {
+      window.addEventListener(event, () => {
+        clearTimeout(analyticsTimer);
+        loadAnalytics();
+      }, { once: true, passive: true });
+    });
+  </script>
+)}
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={seoTitle} />
+<meta property="og:description" content={seoDescription} />
+<meta property="og:image" content={seoImage} />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:title" content={seoTitle} />
+<meta property="twitter:description" content={seoDescription} />
+<meta property="twitter:image" content={seoImage} />
+
+<!-- Theme Script (Prevent Flash) -->
+<script is:inline>
+  const theme = (() => {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+      return localStorage.getItem('theme');
+    }
+    // Default to 'dark' for this site
+    return 'dark';
+  })();
+  
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+  window.localStorage.setItem('theme', theme);
+</script>

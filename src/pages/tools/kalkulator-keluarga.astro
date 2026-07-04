@@ -1,0 +1,270 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+import AdSlot from "@components/ui/AdSlot.astro";
+---
+
+<Layout title="Kalkulator Keluarga - Perencanaan Biaya Keluarga">
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">Kalkulator Keluarga</Fragment>
+      <Fragment slot="desc">Rencanakan kebutuhan finansial keluarga Anda dengan akurat</Fragment>
+    </Sectionhead>
+
+    <div class="max-w-4xl mx-auto mt-8">
+      <AdSlot type="tools" />
+    </div>
+
+    <div class="max-w-4xl mx-auto mt-16">
+      <!-- Calculator Card -->
+      <div class="glass rounded-3xl p-8 md:p-12">
+        <form id="familyCalculator" class="space-y-8">
+          <!-- Income Section -->
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </span>
+              Pendapatan Bulanan
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Pendapatan Suami</label>
+                <div class="relative">
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
+                  <input type="number" id="husbandIncome" value="10000000" 
+                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Pendapatan Istri</label>
+                <div class="relative">
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
+                  <input type="number" id="wifeIncome" value="5000000"
+                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Family Members Section -->
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+              </span>
+              Anggota Keluarga
+            </h3>
+            <div class="grid md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Jumlah Anak</label>
+                <input type="number" id="childrenCount" value="2" min="0" max="10"
+                  class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Anak Sekolah</label>
+                <input type="number" id="schoolChildren" value="1" min="0" max="10"
+                  class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Anak Kuliah</label>
+                <input type="number" id="collegeChildren" value="0" min="0" max="10"
+                  class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+              </div>
+            </div>
+          </div>
+
+          <!-- Monthly Expenses Section -->
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+              </span>
+              Pengeluaran Bulanan
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Kebutuhan Pokok</label>
+                <div class="relative">
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
+                  <input type="number" id="groceries" value="3000000"
+                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Listrik & Air</label>
+                <div class="relative">
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
+                  <input type="number" id="utilities" value="500000"
+                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Transportasi</label>
+                <div class="relative">
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
+                  <input type="number" id="transport" value="1000000"
+                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Internet & Telepon</label>
+                <div class="relative">
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
+                  <input type="number" id="internet" value="300000"
+                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" id="calculateBtn" 
+            class="w-full py-4 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-xl font-bold text-white hover:opacity-90 transition-opacity">
+            Hitung Kebutuhan Keluarga
+          </button>
+        </form>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden mt-10 pt-10 border-t border-slate-700">
+          <h3 class="text-2xl font-bold text-white mb-6">📊 Hasil Perhitungan</h3>
+          
+          <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-green-500/10 border border-green-500/30 rounded-2xl p-6">
+              <p class="text-sm text-green-400 mb-1">Total Pendapatan</p>
+              <p id="totalIncome" class="text-3xl font-bold text-green-400">Rp 0</p>
+            </div>
+            <div class="bg-red-500/10 border border-red-500/30 rounded-2xl p-6">
+              <p class="text-sm text-red-400 mb-1">Total Pengeluaran</p>
+              <p id="totalExpense" class="text-3xl font-bold text-red-400">Rp 0</p>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex justify-between items-center py-3 border-b border-slate-700">
+              <span class="text-slate-400">Biaya Pendidikan (estimasi)</span>
+              <span id="educationCost" class="font-bold text-white">Rp 0</span>
+            </div>
+            <div class="flex justify-between items-center py-3 border-b border-slate-700">
+              <span class="text-slate-400">Sisa untuk Tabungan</span>
+              <span id="savings" class="font-bold text-white">Rp 0</span>
+            </div>
+            <div class="flex justify-between items-center py-3 border-b border-slate-700">
+              <span class="text-slate-400">Persentase Tabungan</span>
+              <span id="savingsPercent" class="font-bold text-white">0%</span>
+            </div>
+          </div>
+
+          <div id="recommendation" class="mt-8 p-6 rounded-2xl">
+            <!-- Recommendation will be inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>
+
+<script>
+  document.getElementById('calculateBtn')?.addEventListener('click', calculate);
+  
+  function formatRupiah(num: number): string {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+  }
+
+  function calculate() {
+    // Get values
+    const husbandIncome = Number((document.getElementById('husbandIncome') as HTMLInputElement).value) || 0;
+    const wifeIncome = Number((document.getElementById('wifeIncome') as HTMLInputElement).value) || 0;
+    const childrenCount = Number((document.getElementById('childrenCount') as HTMLInputElement).value) || 0;
+    const schoolChildren = Number((document.getElementById('schoolChildren') as HTMLInputElement).value) || 0;
+    const collegeChildren = Number((document.getElementById('collegeChildren') as HTMLInputElement).value) || 0;
+    const groceries = Number((document.getElementById('groceries') as HTMLInputElement).value) || 0;
+    const utilities = Number((document.getElementById('utilities') as HTMLInputElement).value) || 0;
+    const transport = Number((document.getElementById('transport') as HTMLInputElement).value) || 0;
+    const internet = Number((document.getElementById('internet') as HTMLInputElement).value) || 0;
+
+    // Calculate
+    const totalIncome = husbandIncome + wifeIncome;
+    const educationCost = (schoolChildren * 500000) + (collegeChildren * 2000000);
+    const basicExpenses = groceries + utilities + transport + internet;
+    const totalExpense = basicExpenses + educationCost;
+    const savings = totalIncome - totalExpense;
+    const savingsPercent = totalIncome > 0 ? (savings / totalIncome) * 100 : 0;
+
+    // Display results
+    document.getElementById('results')?.classList.remove('hidden');
+    (document.getElementById('totalIncome') as HTMLElement).textContent = formatRupiah(totalIncome);
+    (document.getElementById('totalExpense') as HTMLElement).textContent = formatRupiah(totalExpense);
+    (document.getElementById('educationCost') as HTMLElement).textContent = formatRupiah(educationCost);
+    (document.getElementById('savings') as HTMLElement).textContent = formatRupiah(savings);
+    (document.getElementById('savingsPercent') as HTMLElement).textContent = savingsPercent.toFixed(1) + '%';
+
+    // Recommendation
+    const recEl = document.getElementById('recommendation') as HTMLElement;
+    if (savingsPercent >= 20) {
+      recEl.className = 'mt-8 p-6 rounded-2xl bg-green-500/10 border border-green-500/30';
+      recEl.innerHTML = `<p class="text-green-400 font-bold">✅ Keuangan Sehat!</p><p class="text-slate-300 mt-2">Tabungan Anda ${savingsPercent.toFixed(1)}% dari pendapatan sudah ideal. Pertahankan!</p>`;
+    } else if (savingsPercent >= 10) {
+      recEl.className = 'mt-8 p-6 rounded-2xl bg-yellow-500/10 border border-yellow-500/30';
+      recEl.innerHTML = `<p class="text-yellow-400 font-bold">⚠️ Perlu Perhatian</p><p class="text-slate-300 mt-2">Tabungan ${savingsPercent.toFixed(1)}% masih kurang dari ideal (20%). Coba kurangi pengeluaran.</p>`;
+    } else {
+      recEl.className = 'mt-8 p-6 rounded-2xl bg-red-500/10 border border-red-500/30';
+      recEl.innerHTML = `<p class="text-red-400 font-bold">🚨 Perlu Evaluasi</p><p class="text-slate-300 mt-2">Pengeluaran melebihi atau hampir sama dengan pendapatan. Segera evaluasi budget.</p>`;
+    }
+  }
+</script>
+
+<style>
+  /* Fix input visibility and spacing */
+  input[type="number"],
+  select {
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(100, 116, 139, 0.5) !important;
+    caret-color: #ffffff;
+    padding: 0.875rem 1rem !important;
+    padding-left: 3.5rem !important;
+    font-size: 1rem;
+  }
+  
+  /* Input without Rp prefix */
+  input[type="number"]:not([id$="Income"]):not([id="groceries"]):not([id="utilities"]):not([id="transport"]):not([id="internet"]) {
+    padding-left: 1rem !important;
+  }
+  
+  input[type="number"]:focus,
+  select:focus {
+    border-color: #6366f1 !important;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  }
+  
+  input[type="number"]::placeholder {
+    color: rgba(148, 163, 184, 0.7);
+  }
+  
+  /* Chrome, Safari, Edge number input arrows */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+    filter: invert(1);
+  }
+  
+  /* Firefox number input */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  
+  /* Rp prefix styling */
+  .relative span {
+    left: 1rem !important;
+    color: #94a3b8 !important;
+    font-weight: 500;
+  }
+</style>

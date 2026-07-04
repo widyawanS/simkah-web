@@ -1,0 +1,104 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import { getPosts } from "@lib/content.ts";
+import { Image } from "astro:assets";
+
+const posts = await getPosts();
+
+// Server-side debug
+console.log('🔍 Blog page - Posts loaded:', posts.length);
+posts.forEach(p => console.log(`  - ${p.slug}: ${p.image}`));
+---
+
+<Layout title="Berita | Insights & Stories">
+  <Container>
+    <main class="py-20 animate-fade-in">
+      <header class="text-center mb-20">
+          <h1 class="text-6xl font-bold mb-6 tracking-tighter">Berita & <span class="text-gradient">Informasi</span></h1>
+          <p class="text-slate-400 max-w-xl mx-auto text-lg">Eksplorasi mendalam tentang teknologi, kreativitas, dan alat produktivitas masa depan.</p>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        {
+          posts.map((post, index) => (
+            <article class="group relative flex flex-col">
+              <a href={`/blog/${post.slug}`} class="flex-1">
+                <div class="aspect-[16/10] rounded-[2rem] overflow-hidden mb-6 glass relative bg-slate-900">
+                  {post.image ? (
+                    typeof post.image === 'string' ? (
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        loading={index < 2 ? "eager" : "lazy"}
+                        onerror="this.onerror=null; this.src='/opengraph.jpg';"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        loading={index < 2 ? "eager" : "lazy"}
+                        width={600}
+                        height={338}
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    )
+                  ) : (
+                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-4xl font-bold">
+                      {post.title[0]}
+                    </div>
+                  )}
+                  <div class="absolute inset-0 bg-transparent group-hover:bg-brand-primary/10 transition-colors"></div>
+                  <div class="absolute top-4 left-4">
+                     <span class="px-4 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest text-brand-primary border border-white/5">
+                        {post.category}
+                     </span>
+                  </div>
+                </div>
+                
+                <h2 class="text-2xl font-bold mb-4 group-hover:text-brand-primary transition-colors leading-tight">
+                  {post.title}
+                </h2>
+                <p class="text-slate-400 line-clamp-2 text-sm leading-relaxed mb-6">
+                  {post.description}
+                </p>
+                
+              </a>
+            </article>
+          ))
+        }
+      </div>
+      
+      {posts.length === 0 && (
+         <div class="text-center py-20 glass rounded-[3rem]">
+            <p class="text-slate-500 italic">Belum ada artikel yang dipublikasikan.</p>
+            <a href="/keystatic" class="mt-4 inline-block text-brand-primary font-bold">Mulai nulis di Admin →</a>
+         </div>
+      )}
+    </main>
+  </Container>
+</Layout>
+
+<script>
+// Client-side image load monitoring
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('article img');
+  console.log(`🖼️ Found ${images.length} images on page`);
+  
+  images.forEach((img, index) => {
+    const src = img.getAttribute('src');
+    console.log(`Image ${index + 1}: ${src}`);
+    
+    img.addEventListener('load', () => {
+      console.log(`✅ LOADED: ${src}`);
+    });
+    
+    img.addEventListener('error', () => {
+      console.error(`❌ FAILED: ${src}`);
+      console.error(`   Alt: ${img.alt}`);
+      console.error(`   Full URL: ${new URL(src, window.location.origin).href}`);
+    });
+  });
+});
+</script>

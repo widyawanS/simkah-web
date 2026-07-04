@@ -1,0 +1,3233 @@
+﻿---
+// Hidden from navigation menu but visible in sitemap and searchable
+// Bisa diakses via: https://simkah.web.id/redbubble
+---
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketSight - AI Niche Researcher</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Import Map untuk Library React & Lucide -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.263.1"
+      }
+    }
+    </script>
+
+    <!-- Babel Standalone untuk kompilasi JSX di browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* Custom scrollbar untuk tampilan lebih rapi */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 overflow-hidden">
+    <div id="root"></div>
+
+    <!-- Script Utama Aplikasi -->
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { Search, TrendingUp, BarChart2, Target, Save, Trash2, ExternalLink, Zap, Calculator, PenTool, LayoutDashboard, Copy, Check, Sparkles, Globe, Image, ShoppingBag, Info, ChevronDown, ChevronUp, FileJson, Edit, AlertTriangle, Type, Printer, Languages, FileText, Tag, AlignLeft, ArrowRight, RefreshCw, Filter, Flame, Lightbulb } from 'lucide-react';
+
+        // --- TRANSLATION DATA ---
+        const translations = {
+          en: {
+            app_subtitle: "AI Art Niche Researcher",
+            nav_dashboard: "Dashboard & Research",
+            nav_analyzer: "Niche Calculator",
+            nav_prompts: "Prompt Builder",
+            nav_listing: "Listing Helper", 
+            
+            dash_welcome: "Research Command Center",
+            dash_stats_total: "Total Researched",
+            dash_stats_win: "Winning Products",
+            dash_stats_potential: "Potential Niches",
+            dash_tools_title: "Idea Discovery Toolkit",
+            dash_tools_desc: "Don't have a keyword yet? Use these direct links to find what's trending right now.",
+            dash_tool_rb: "Redbubble Popular",
+            dash_tool_etsy: "Etsy Market Trends",
+            dash_tool_pin: "Pinterest Trends",
+            dash_tool_google: "Google Trends (Global)",
+            
+            dash_search_title: "Validate Specific Idea",
+            dash_placeholder: "Found an idea? Enter keyword to analyze...",
+            dash_btn: "Analyze Profitability",
+            
+            dash_db_title: "Saved Niche Portfolio",
+            dash_filter_all: "All",
+            dash_filter_win: "Winning (75+)",
+            dash_filter_pot: "Potential (50-74)",
+            dash_empty: "No research data yet.",
+            dash_empty_sub: "Use the tools above to find ideas, then analyze them.",
+            
+            card_competition: "Competition:",
+            card_score: "Score:",
+            card_action_listing: "Create Listing",
+            card_check_rb: "Check Redbubble",
+            card_check_etsy: "Check Etsy",
+            card_check_pin: "Pinterest Ideas",
+            card_check_trend: "Google Trends",
+
+            calc_title: "Potential Calculator",
+            calc_desc: "Validate manual data from the field.",
+            calc_label_keyword: "Keyword (Auto-synced)",
+            calc_label_results: "Search Results (Real Data)",
+            calc_label_demand: "Demand Estimate (1-10)",
+            calc_step1: "Step 1: Check Competition",
+            calc_step1_desc: "Click the magnifying glass above, check 'X Results' on Redbubble, enter the number here.",
+            calc_step2: "Step 2: Check Demand",
+            calc_step2_desc: "Use Google Trends & check for 'Bestseller' badges.",
+            calc_guide: "Guide",
+            calc_guide_1: "Quiet",
+            calc_guide_1_desc: "Flat Google Trend. No reviews.",
+            calc_guide_2: "Medium",
+            calc_guide_2_desc: "Stable Trend. Some reviews/sales.",
+            calc_guide_3: "High",
+            calc_guide_3_desc: "Viral Trend. Many Bestsellers.",
+            calc_low: "Low",
+            calc_high: "Viral",
+            calc_btn: "Calculate Opportunity",
+            calc_result: "Analysis Result",
+            calc_verdict_win: "ðŸ’Ž WINNING PRODUCT!",
+            calc_verdict_good: "Good Potential",
+            calc_verdict_bad: "Not Recommended",
+            calc_narrative_win: "Amazing! High demand with low competition. A golden opportunity to enter now.",
+            calc_narrative_good_1: "Good demand, but competition is getting tight. Be unique.",
+            calc_narrative_good_2: "Low competition, but demand hasn't exploded yet. Safe for beginners.",
+            calc_narrative_bad_1: "Red Ocean. Too many competitors for the existing demand.",
+            calc_narrative_bad_2: "Ghost Town. Low competition, but nobody is buying.",
+            calc_save_btn: "Save Result",
+            calc_to_listing_btn: "Generate Listing Metadata for this Keyword",
+
+            gen_title: "Generator",
+            gen_warning: "Redbubble Policy:",
+            gen_warning_text: "Do not use copyrighted characters. For Text, verify spelling as AI makes mistakes.",
+            gen_subject: "Main Subject (Synced)",
+            gen_text: "Text in Image (Optional)",
+            gen_style: "Art Style",
+            gen_mood: "Mood/Vibe",
+            gen_ratio: "Product Ratio",
+            gen_btn: "Create Print-Ready Prompt",
+            gen_output: "Output Prompt",
+            gen_copy_text: "Copy Text Prompt",
+            gen_copy_json: "Copy as JSON",
+            gen_copied: "Copied!",
+            gen_opt_title: "Print-Ready Optimization:",
+            gen_opt_1: "Vector Quality: Adds 300 DPI, clean edges.",
+            gen_opt_2: "Safe Scaling: Negative prompts prevent blur/pixelation.",
+            gen_opt_3: "Background: Isolated on white for easy removal.",
+            hist_title: "Your Prompt History",
+            hist_empty: "No history yet.",
+            
+            list_title: "Redbubble Listing Helper",
+            list_desc: "Generate optimized Title, Tags, and Description for your product.",
+            list_input_label: "Your Main Keyword/Niche (Synced)",
+            list_input_placeholder: "e.g. Retro Astronaut Cat",
+            list_btn_generate: "Generate Listing Metadata",
+            list_section_title: "Optimized Titles",
+            list_section_tags: "SEO Tags (Copy All)",
+            list_section_desc: "Sales Description",
+            list_copy: "Copy",
+            list_copied: "Copied!",
+            list_tip: "Tip: Use ~15 relevant tags. Put the most important tag first.",
+
+            opt_none: "-- None --",
+            opt_custom: "âœï¸ Custom Input...",
+            placeholder_style: "Type style...",
+            placeholder_mood: "Type mood...",
+            placeholder_subject: "e.g. Cute mushroom wizard",
+            placeholder_text: "e.g. MUSHROOM VIBES",
+            
+            ratio_sq: "Square",
+            ratio_sq_desc: "Stickers, Coasters",
+            ratio_po: "Portrait",
+            ratio_po_desc: "Posters, Phone Cases",
+            ratio_ls: "Landscape",
+            ratio_ls_desc: "Desk Mats, Skins",
+            ratio_ap: "Apparel",
+            ratio_ap_desc: "T-Shirts, Hoodies"
+          },
+          id: {
+            app_subtitle: "Riset Niche Seni AI",
+            nav_dashboard: "Dashboard & Riset",
+            nav_analyzer: "Kalkulator Analisa",
+            nav_prompts: "Pembuat Prompt",
+            nav_listing: "Bantu Listing", 
+            
+            dash_welcome: "Pusat Komando Riset",
+            dash_stats_total: "Total Diriset",
+            dash_stats_win: "Winning Product",
+            dash_stats_potential: "Niche Potensial",
+            dash_tools_title: "Toolkit Pencari Ide",
+            dash_tools_desc: "Belum punya ide? Gunakan link ini untuk melihat apa yang sedang tren secara umum.",
+            dash_tool_rb: "Redbubble Populer",
+            dash_tool_etsy: "Tren Pasar Etsy",
+            dash_tool_pin: "Tren Pinterest",
+            dash_tool_google: "Google Trends (Global)",
+            
+            dash_search_title: "Validasi Ide Spesifik",
+            dash_placeholder: "Punya ide? Masukkan kata kunci untuk dianalisa...",
+            dash_btn: "Analisa Profitabilitas",
+            
+            dash_db_title: "Portofolio Niche Tersimpan",
+            dash_filter_all: "Semua",
+            dash_filter_win: "Winning (75+)",
+            dash_filter_pot: "Potensial (50-74)",
+            dash_empty: "Belum ada data riset.",
+            dash_empty_sub: "Gunakan alat di atas untuk mencari ide, lalu analisa.",
+            
+            card_competition: "Kompetisi:",
+            card_score: "Skor:",
+            card_check_rb: "Cek Redbubble",
+            card_check_etsy: "Cek Etsy",
+            card_check_pin: "Ide Pinterest",
+            card_check_trend: "Google Trends",
+            card_action_listing: "Buat Listing",
+
+            calc_title: "Kalkulator Potensi",
+            calc_desc: "Validasi manual data dari lapangan.",
+            calc_label_keyword: "Kata Kunci (Otomatis)",
+            calc_label_results: "Jumlah Hasil (Data Real)",
+            calc_label_demand: "Estimasi Permintaan (1-10)",
+            calc_step1: "Langkah 1: Cek Kompetisi",
+            calc_step1_desc: "Klik kaca pembesar di atas, lihat 'X Results' di Redbubble, masukkan angkanya.",
+            calc_step2: "Langkah 2: Cek Permintaan",
+            calc_step2_desc: "Gunakan Google Trends & cek badge 'Bestseller'.",
+            calc_guide: "Panduan",
+            calc_guide_1: "Sepi",
+            calc_guide_1_desc: "Grafik Google datar. Tidak ada ulasan.",
+            calc_guide_2: "Sedang",
+            calc_guide_2_desc: "Tren stabil. Ada penjualan/ulasan.",
+            calc_guide_3: "Ramai",
+            calc_guide_3_desc: "Tren viral. Banyak Bestseller.",
+            calc_low: "Sepi",
+            calc_high: "Viral",
+            calc_btn: "Hitung Peluang",
+            calc_result: "Hasil Analisa",
+            calc_verdict_win: "ðŸ’Ž WINNING PRODUCT!",
+            calc_verdict_good: "Potensi Bagus",
+            calc_verdict_bad: "Kurang Direkomendasikan",
+            calc_narrative_win: "Luar biasa! Permintaan tinggi dengan persaingan rendah. Peluang emas untuk masuk.",
+            calc_narrative_good_1: "Permintaan bagus, tapi persaingan mulai padat. Harus unik.",
+            calc_narrative_good_2: "Persaingan rendah, tapi permintaan belum meledak. Aman untuk pemula.",
+            calc_narrative_bad_1: "Red Ocean. Terlalu banyak pesaing untuk permintaan yang ada.",
+            calc_narrative_bad_2: "Kota Hantu. Persaingan sepi, tapi tidak ada yang membeli.",
+            calc_save_btn: "Simpan Hasil",
+            calc_to_listing_btn: "Buat Metadata Listing untuk Keyword Ini",
+
+            gen_title: "Generator",
+            gen_warning: "Kebijakan Redbubble:",
+            gen_warning_text: "Jangan gunakan karakter berhak cipta. Untuk Teks, cek ejaan karena AI bisa salah.",
+            gen_subject: "Subjek Utama (Tersinkron)",
+            gen_text: "Teks dalam Gambar (Opsional)",
+            gen_style: "Gaya Seni",
+            gen_mood: "Mood/Vibe",
+            gen_ratio: "Rasio Produk",
+            gen_btn: "Buat Prompt Siap Cetak",
+            gen_output: "Output Prompt",
+            gen_copy_text: "Salin Teks Prompt",
+            gen_copy_json: "Salin JSON",
+            gen_copied: "Tersalin!",
+            gen_opt_title: "Optimasi Siap Cetak:",
+            gen_opt_1: "Kualitas Vektor: 300 DPI, tepi bersih.",
+            gen_opt_2: "Skala Aman: Negative prompt mencegah blur/pikselasi.",
+            gen_opt_3: "Background: Terisolasi putih agar mudah dihapus.",
+            hist_title: "Riwayat Prompt Anda",
+            hist_empty: "Belum ada riwayat.",
+
+            list_title: "Bantuan Listing Redbubble",
+            list_desc: "Buat Judul, Tag, dan Deskripsi SEO otomatis untuk produk Anda.",
+            list_input_label: "Kata Kunci Utama / Niche (Tersinkron)",
+            list_input_placeholder: "cth. Retro Astronaut Cat",
+            list_btn_generate: "Buat Metadata Listing",
+            list_section_title: "Judul Teroptimasi",
+            list_section_tags: "Tag SEO (Salin Semua)",
+            list_section_desc: "Deskripsi Penjualan",
+            list_copy: "Salin",
+            list_copied: "Tersalin!",
+            list_tip: "Tip: Gunakan ~15 tag relevan. Taruh tag terpenting di awal.",
+
+            opt_none: "-- Tidak Ada --",
+            opt_custom: "âœï¸ Input Sendiri...",
+            placeholder_style: "Ketik gaya...",
+            placeholder_mood: "Ketik mood...",
+            placeholder_subject: "Contoh: Penyihir jamur lucu",
+            placeholder_text: "Contoh: MUSHROOM VIBES",
+
+            ratio_sq: "Kotak",
+            ratio_sq_desc: "Stiker, Tatakan",
+            ratio_po: "Potret",
+            ratio_po_desc: "Poster, Casing HP",
+            ratio_ls: "Lanskap",
+            ratio_ls_desc: "Desk Mat, Skin Laptop",
+            ratio_ap: "Pakaian",
+            ratio_ap_desc: "Kaos, Hoodie"
+          },
+          de: {
+            app_subtitle: "AI Art Nischen-Recherche",
+            nav_dashboard: "Dashboard & Recherche",
+            nav_analyzer: "Nischenrechner",
+            nav_prompts: "Prompt-Generator",
+            nav_listing: "Listing-Helfer",
+            
+            dash_welcome: "Recherche Kommandozentrale",
+            dash_stats_total: "Gesamt erforscht",
+            dash_stats_win: "Gewinner-Produkte",
+            dash_stats_potential: "Potenzielle Nischen",
+            dash_tools_title: "Ideen-Entdecker-Toolkit",
+            dash_tools_desc: "Noch keine Idee? Nutzen Sie diese Links, um Trends zu finden.",
+            dash_tool_rb: "Redbubble Beliebt",
+            dash_tool_etsy: "Etsy Marktrends",
+            dash_tool_pin: "Pinterest Trends",
+            dash_tool_google: "Google Trends (Global)",
+            
+            dash_search_title: "Spezifische Idee validieren",
+            dash_placeholder: "Bsp: Niedlicher Geist liest Buch...",
+            dash_btn: "RentabilitÃ¤t analysieren",
+            
+            dash_db_title: "Ihre Recherche-Datenbank",
+            dash_filter_all: "Alle",
+            dash_filter_win: "Gewinner (75+)",
+            dash_filter_pot: "Potenzial (50-74)",
+            dash_empty: "Noch keine Daten.",
+            dash_empty_sub: "Benutzen Sie die Tools oben.",
+            dash_saved: "gespeicherte Nischen",
+            
+            card_competition: "Wettbewerb:",
+            card_score: "Punktzahl:",
+            card_check_rb: "Redbubble prÃ¼fen",
+            card_check_etsy: "Etsy prÃ¼fen",
+            card_check_pin: "Pinterest Ideen",
+            card_check_trend: "Google Trends",
+            card_action_listing: "Listing erstellen",
+
+            calc_title: "Potenzialrechner",
+            calc_desc: "Manuelle Daten validieren.",
+            calc_label_keyword: "Suchbegriff (Auto-Sync)",
+            calc_label_results: "Suchergebnisse (Echte Daten)",
+            calc_label_demand: "Nachfrage (1-10)",
+            calc_step1: "Schritt 1: Wettbewerb prÃ¼fen",
+            calc_step1_desc: "Lupe klicken, 'X Ergebnisse' auf Redbubble prÃ¼fen, Zahl hier eingeben.",
+            calc_step2: "Schritt 2: Nachfrage prÃ¼fen",
+            calc_step2_desc: "Google Trends & 'Bestseller'-Badges prÃ¼fen.",
+            calc_guide: "Leitfaden",
+            calc_guide_1: "Ruhig",
+            calc_guide_1_desc: "Google Trend flach. Keine Bewertungen.",
+            calc_guide_2: "Mittel",
+            calc_guide_2_desc: "Stabiler Trend. Einige VerkÃ¤ufe.",
+            calc_guide_3: "Hoch",
+            calc_guide_3_desc: "Viraler Trend. Viele Bestseller.",
+            calc_low: "Gering",
+            calc_high: "Viral",
+            calc_btn: "Chance berechnen",
+            calc_result: "Analyseergebnis",
+            calc_verdict_win: "ðŸ’Ž GEWINNER PRODUKT!",
+            calc_verdict_good: "Gutes Potenzial",
+            calc_verdict_bad: "Nicht empfohlen",
+            calc_narrative_win: "GroÃŸartig! Hohe Nachfrage bei geringem Wettbewerb. Eine goldene Gelegenheit.",
+            calc_narrative_good_1: "Gute Nachfrage, aber der Wettbewerb wird hÃ¤rter. Sei einzigartig.",
+            calc_narrative_good_2: "Geringer Wettbewerb, aber Nachfrage noch nicht explodiert. Sicher fÃ¼r AnfÃ¤nger.",
+            calc_narrative_bad_1: "Red Ocean. Zu viele Wettbewerber fÃ¼r die vorhandene Nachfrage.",
+            calc_narrative_bad_2: "Geisterstadt. Geringer Wettbewerb, aber niemand kauft.",
+            calc_save_btn: "Ergebnis speichern",
+            calc_to_listing_btn: "Listing-Metadaten erstellen",
+
+            gen_title: "Generator",
+            gen_warning: "Redbubble Richtlinie:",
+            gen_warning_text: "Keine urheberrechtlich geschÃ¼tzten Charaktere. Text auf Rechtschreibung prÃ¼fen.",
+            gen_subject: "Hauptmotiv (Sync)",
+            gen_text: "Text im Bild (Optional)",
+            gen_style: "Kunststil",
+            gen_mood: "Stimmung/Vibe",
+            gen_ratio: "Produkt-Format",
+            gen_btn: "Druckfertigen Prompt erstellen",
+            gen_output: "Ausgabe Prompt",
+            gen_copy_text: "Text kopieren",
+            gen_copy_json: "JSON kopieren",
+            gen_copied: "Kopiert!",
+            gen_opt_title: "Druckoptimierung:",
+            gen_opt_1: "VektorqualitÃ¤t: 300 DPI, saubere Kanten.",
+            gen_opt_2: "Sichere Skalierung: Negative Prompts verhindern UnschÃ¤rfe.",
+            gen_opt_3: "Hintergrund: Isoliert auf WeiÃŸ.",
+            hist_title: "Ihr Prompt-Verlauf",
+            hist_empty: "Noch kein Verlauf.",
+
+            list_title: "Redbubble Listing-Helfer",
+            list_desc: "Erstellen Sie Titel, Tags und Beschreibungen fÃ¼r Ihr Produkt.",
+            list_input_label: "Haupt-Suchbegriff / Nische (Sync)",
+            list_input_placeholder: "z.B. Retro Astronaut Cat",
+            list_btn_generate: "Metadaten erstellen",
+            list_section_title: "Optimierte Titel",
+            list_section_tags: "SEO Tags (Alle kopieren)",
+            list_section_desc: "Verkaufsbeschreibung",
+            list_copy: "Kopieren",
+            list_copied: "Kopiert!",
+            list_tip: "Tipp: Verwenden Sie ~15 Tags. Wichtigstes Tag zuerst.",
+
+            opt_none: "-- Keiner --",
+            opt_custom: "âœï¸ Eigene Eingabe...",
+            placeholder_style: "Stil eingeben...",
+            placeholder_mood: "Stimmung eingeben...",
+            placeholder_subject: "Bsp: Pilz-Zauberer",
+            placeholder_text: "Bsp: MUSHROOM VIBES",
+
+            ratio_sq: "Quadrat",
+            ratio_sq_desc: "Sticker, Untersetzer",
+            ratio_po: "PortrÃ¤t",
+            ratio_po_desc: "Poster, HandyhÃ¼llen",
+            ratio_ls: "Landschaft",
+            ratio_ls_desc: "Schreibtischunterlagen",
+            ratio_ap: "Kleidung",
+            ratio_ap_desc: "T-Shirts, Hoodies"
+          }
+        };
+
+        const MarketSight = () => {
+          const [activeTab, setActiveTab] = useState('dashboard');
+          const [savedNiches, setSavedNiches] = useState([]);
+          const [sessionKeyword, setSessionKeyword] = useState(''); // GLOBAL KEYWORD STATE
+          const [lang, setLang] = useState('en');
+
+          // Translation helper
+          const t = (key) => translations[lang][key] || key;
+          
+          useEffect(() => {
+            const saved = localStorage.getItem('marketSightSaved');
+            if (saved) {
+              setSavedNiches(JSON.parse(saved));
+            }
+          }, []);
+
+          useEffect(() => {
+            localStorage.setItem('marketSightSaved', JSON.stringify(savedNiches));
+          }, [savedNiches]);
+
+          const addToSaved = (niche) => {
+            if (!savedNiches.find(n => n.id === niche.id)) {
+              setSavedNiches([niche, ...savedNiches]); 
+            }
+          };
+
+          const removeFromSaved = (id) => {
+            setSavedNiches(savedNiches.filter(n => n.id !== id));
+          };
+
+          const updateSessionKeyword = (keyword) => {
+            if (keyword && keyword.trim() !== '') {
+              setSessionKeyword(keyword);
+            }
+          };
+
+          // Navigate & Sync
+          const navigateTo = (tabName, keyword = null) => {
+            if (keyword) updateSessionKeyword(keyword);
+            setActiveTab(tabName);
+          };
+
+          return (
+            <div className="flex h-screen bg-slate-900 text-slate-100 font-sans overflow-hidden">
+              {/* Sidebar */}
+              <aside className="w-64 bg-slate-800 border-r border-slate-700 hidden md:flex flex-col">
+                <div className="p-6">
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent flex items-center gap-2">
+                    <Zap className="text-purple-400" /> MarketSight
+                  </h1>
+                  <p className="text-xs text-slate-400 mt-2">{t('app_subtitle')}</p>
+                </div>
+
+                <nav className="flex-1 px-4 space-y-2">
+                  <NavItem 
+                    icon={<LayoutDashboard size={20} />} 
+                    label={t('nav_dashboard')} 
+                    active={activeTab === 'dashboard'} 
+                    onClick={() => setActiveTab('dashboard')} 
+                  />
+                  <NavItem 
+                    icon={<Target size={20} />} 
+                    label={t('nav_analyzer')}
+                    active={activeTab === 'analyzer'} 
+                    onClick={() => setActiveTab('analyzer')} 
+                  />
+                  <NavItem 
+                    icon={<PenTool size={20} />} 
+                    label={t('nav_prompts')} 
+                    active={activeTab === 'prompts'} 
+                    onClick={() => setActiveTab('prompts')} 
+                  />
+                  <NavItem 
+                    icon={<FileText size={20} />} 
+                    label={t('nav_listing')} 
+                    active={activeTab === 'listing'} 
+                    onClick={() => setActiveTab('listing')} 
+                  />
+                </nav>
+
+                {/* Language Selector */}
+                <div className="px-4 mb-4">
+                   <div className="bg-slate-900 rounded p-2 flex items-center gap-2 border border-slate-700">
+                      <Languages size={16} className="text-slate-400"/>
+                      <select 
+                        value={lang} 
+                        onChange={(e) => setLang(e.target.value)}
+                        className="bg-transparent text-sm text-slate-300 focus:outline-none w-full cursor-pointer"
+                      >
+                        <option value="en">English (US)</option>
+                        <option value="id">Bahasa Indonesia</option>
+                        <option value="de">Deutsch</option>
+                      </select>
+                   </div>
+                </div>
+
+              </aside>
+
+              {/* Main Content */}
+              <main className="flex-1 overflow-y-auto relative">
+                {/* Mobile Header */}
+                <div className="md:hidden bg-slate-800 p-4 flex justify-between items-center border-b border-slate-700 sticky top-0 z-10">
+                  <h1 className="font-bold text-purple-400 flex items-center gap-2"><Zap size={18}/> MarketSight</h1>
+                  <div className="flex gap-2">
+                     <button onClick={() => setActiveTab('dashboard')} className={`p-2 rounded ${activeTab === 'dashboard' ? 'bg-slate-700' : ''}`}><LayoutDashboard size={20}/></button>
+                     <button onClick={() => setActiveTab('analyzer')} className={`p-2 rounded ${activeTab === 'analyzer' ? 'bg-slate-700' : ''}`}><Target size={20}/></button>
+                     <button onClick={() => setActiveTab('listing')} className={`p-2 rounded ${activeTab === 'listing' ? 'bg-slate-700' : ''}`}><FileText size={20}/></button>
+                  </div>
+                </div>
+
+                <div className="p-6 max-w-6xl mx-auto">
+                  {activeTab === 'dashboard' && (
+                    <TrendDashboard 
+                      sessionKeyword={sessionKeyword}
+                      updateSession={updateSessionKeyword}
+                      navigateTo={navigateTo}
+                      savedNiches={savedNiches} 
+                      removeFromSaved={removeFromSaved}
+                      t={t}
+                    />
+                  )}
+                  {activeTab === 'analyzer' && (
+                    <NicheAnalyzer 
+                      sessionKeyword={sessionKeyword} 
+                      updateSession={updateSessionKeyword}
+                      addToSaved={addToSaved} 
+                      navigateTo={navigateTo} 
+                      t={t} 
+                    />
+                  )}
+                  {activeTab === 'prompts' && (
+                    <PromptBuilder 
+                      sessionKeyword={sessionKeyword} 
+                      updateSession={updateSessionKeyword}
+                      t={t} 
+                    />
+                  )}
+                  {activeTab === 'listing' && (
+                    <ListingBuilder 
+                      sessionKeyword={sessionKeyword} 
+                      updateSession={updateSessionKeyword}
+                      t={t} 
+                    />
+                  )}
+                </div>
+              </main>
+            </div>
+          );
+        };
+
+        // --- Sub Components ---
+
+        const NavItem = ({ icon, label, active, onClick, badge }) => (
+          <button 
+            onClick={onClick}
+            className={`w-full flex items-center justify-between p-3 rounded-lg transition-all ${
+              active 
+                ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' 
+                : 'text-slate-400 hover:bg-slate-700 hover:text-white'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              {icon}
+              <span className="font-medium">{label}</span>
+            </div>
+            {badge > 0 && (
+              <span className="bg-pink-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                {badge}
+              </span>
+            )}
+          </button>
+        );
+
+        const TrendDashboard = ({ sessionKeyword, updateSession, navigateTo, savedNiches, removeFromSaved, t }) => {
+          const [inputKeyword, setInputKeyword] = useState(sessionKeyword);
+          const [filter, setFilter] = useState('all');
+
+          // Stats Logic - Robuster parsing
+          const totalSaved = savedNiches.length;
+          const getScore = (n) => {
+            // Check if score exists and is a string, remove non-digits, fallback to 0
+            if (typeof n.volume === 'string') {
+                const score = parseInt(n.volume.replace(/\D/g, ''));
+                return isNaN(score) ? 0 : score;
+            }
+            return 0;
+          };
+          const winningCount = savedNiches.filter(n => getScore(n) >= 75).length;
+          const potentialCount = savedNiches.filter(n => getScore(n) >= 50 && getScore(n) < 75).length;
+
+          useEffect(() => {
+            setInputKeyword(sessionKeyword);
+          }, [sessionKeyword]);
+
+          const handleSearch = (e) => {
+            e.preventDefault();
+            if (inputKeyword.trim()) {
+              updateSession(inputKeyword);
+              navigateTo('analyzer');
+            }
+          };
+
+          const filteredNiches = savedNiches.filter(n => {
+            const s = getScore(n);
+            if (filter === 'win') return s >= 75;
+            if (filter === 'pot') return s >= 50 && s < 75;
+            return true;
+          });
+
+          return (
+            <div className="space-y-8">
+              {/* 1. STATS & WELCOME */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="md:col-span-1 bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <h2 className="text-xl font-bold mb-1">{t('dash_welcome')}</h2>
+                    <p className="text-xs text-slate-400">Overview of your activity</p>
+                </div>
+                <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+                    <div>
+                        <p className="text-xs text-slate-400">{t('dash_stats_total')}</p>
+                        <span className="text-2xl font-bold">{totalSaved}</span>
+                    </div>
+                    <Save size={24} className="text-slate-600 opacity-50"/>
+                </div>
+                <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between border-l-4 border-l-green-500">
+                    <div>
+                        <p className="text-xs text-slate-400">{t('dash_stats_win')}</p>
+                        <span className="text-2xl font-bold text-green-400">{winningCount}</span>
+                    </div>
+                    <Sparkles size={24} className="text-green-500 opacity-50"/>
+                </div>
+                <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between border-l-4 border-l-yellow-500">
+                    <div>
+                        <p className="text-xs text-slate-400">{t('dash_stats_potential')}</p>
+                        <span className="text-2xl font-bold text-yellow-400">{potentialCount}</span>
+                    </div>
+                    <Flame size={24} className="text-yellow-500 opacity-50"/>
+                </div>
+              </div>
+
+              {/* 2. RESEARCH TOOLKIT (Quick Links) */}
+              <div className="bg-gradient-to-r from-slate-900 to-slate-800 border border-slate-700 rounded-xl p-6">
+                <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                    <Lightbulb size={20} className="text-yellow-400"/> {t('dash_tools_title')}
+                </h3>
+                <p className="text-sm text-slate-400 mb-4">{t('dash_tools_desc')}</p>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <a href="https://www.redbubble.com/shop/?sortOrder=trending" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-bold text-red-400 transition-colors">
+                        <ShoppingBag size={14}/> {t('dash_tool_rb')}
+                    </a>
+                    <a href="https://www.etsy.com/trends" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-bold text-orange-400 transition-colors">
+                        <ShoppingBag size={14}/> {t('dash_tool_etsy')}
+                    </a>
+                    <a href="https://www.pinterest.com/today/" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-bold text-red-600 transition-colors">
+                        <Image size={14}/> {t('dash_tool_pin')}
+                    </a>
+                    <a href="https://trends.google.com/trends/trendingsearches/daily?geo=US" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-bold text-blue-400 transition-colors">
+                        <Globe size={14}/> {t('dash_tool_google')}
+                    </a>
+                </div>
+              </div>
+
+              {/* 3. VALIDATE SPECIFIC IDEA (Search) */}
+              <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 relative overflow-hidden">
+                <div className="relative z-10">
+                  <h2 className="text-lg font-bold mb-2 text-white">
+                    {t('dash_search_title')}
+                  </h2>
+                  <form onSubmit={handleSearch} className="flex gap-4">
+                    <div className="flex-1 relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Search className="text-slate-500" size={18} />
+                      </div>
+                      <input 
+                        type="text" 
+                        value={inputKeyword}
+                        onChange={(e) => setInputKeyword(e.target.value)}
+                        onBlur={() => updateSession(inputKeyword)} // SYNC ON BLUR
+                        placeholder={t('dash_placeholder')}
+                        className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-purple-500 text-sm"
+                      />
+                    </div>
+                    <button 
+                      type="submit"
+                      className="bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-6 rounded-lg transition-all flex items-center gap-2 text-sm whitespace-nowrap"
+                    >
+                      <Calculator size={18} />
+                      {t('dash_btn')}
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              {/* 4. SAVED PORTFOLIO */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Save className="text-slate-400" size={20} />
+                    {t('dash_db_title')}
+                  </h3>
+                  
+                  {/* FILTER BUTTONS */}
+                  <div className="flex gap-2">
+                     <button onClick={() => setFilter('all')} className={`px-3 py-1 rounded text-xs font-bold ${filter === 'all' ? 'bg-slate-600 text-white' : 'bg-slate-800 text-slate-400'}`}>{t('dash_filter_all')}</button>
+                     <button onClick={() => setFilter('win')} className={`px-3 py-1 rounded text-xs font-bold ${filter === 'win' ? 'bg-green-900 text-green-400' : 'bg-slate-800 text-slate-400'}`}>{t('dash_filter_win')}</button>
+                     <button onClick={() => setFilter('pot')} className={`px-3 py-1 rounded text-xs font-bold ${filter === 'pot' ? 'bg-yellow-900 text-yellow-400' : 'bg-slate-800 text-slate-400'}`}>{t('dash_filter_pot')}</button>
+                  </div>
+                </div>
+
+                {filteredNiches.length === 0 ? (
+                  <div className="text-center py-12 border-2 border-dashed border-slate-800 rounded-xl">
+                    <p className="text-slate-500 font-medium">{t('dash_empty')}</p>
+                    <p className="text-slate-600 text-sm mt-1">{t('dash_empty_sub')}</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredNiches.map((item) => (
+                      <div key={item.id} className="bg-slate-800 border border-slate-700 rounded-xl p-5 relative group hover:border-purple-500/50 hover:shadow-lg transition-all flex flex-col">
+                        <div className="flex justify-between items-start mb-3">
+                          <h4 className="font-bold text-lg text-white truncate pr-8" title={item.keyword}>
+                            {item.keyword}
+                          </h4>
+                          <div className="flex items-center gap-1">
+                            {/* QUICK LISTING BUTTON */}
+                            <button 
+                              onClick={() => navigateTo('listing', item.keyword)}
+                              className="text-slate-600 hover:text-purple-400 transition-colors p-1"
+                              title={t('card_action_listing')}
+                            >
+                              <FileText size={16} />
+                            </button>
+                            <button 
+                              onClick={() => removeFromSaved(item.id)}
+                              className="text-slate-600 hover:text-red-400 transition-colors p-1"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="bg-slate-900/50 rounded-lg p-3 mb-4 space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-slate-400">{t('card_competition')}</span>
+                            <span className="text-white font-medium">{item.competition}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-slate-400">{t('card_score')}</span>
+                            <span className={`font-bold ${
+                              (getScore(item) >= 75)
+                              ? "text-green-400" 
+                              : (getScore(item) >= 50) ? "text-yellow-400" : "text-red-400"
+                            }`}>
+                              {getScore(item)}%
+                            </span>
+                          </div>
+                        </div>
+
+                        {item.narrative && (
+                          <div className="mb-4 text-xs text-slate-400 italic bg-slate-900/30 p-2 rounded border-l-2 border-purple-500">
+                            "{item.narrative.length > 80 ? item.narrative.substring(0, 80) + '...' : item.narrative}"
+                          </div>
+                        )}
+
+                        <div className="grid grid-cols-2 gap-2 mt-auto">
+                           <a 
+                            href={`https://www.redbubble.com/shop/?query=${encodeURIComponent(item.keyword)}&sortOrder=trending`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="py-2 bg-slate-700 hover:bg-slate-600 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1 group/btn"
+                            title={t('card_check_rb')}
+                          >
+                            <ShoppingBag size={12} className="text-red-400"/> Redbubble
+                          </a>
+                           <a 
+                            href={`https://www.etsy.com/search?q=${encodeURIComponent(item.keyword)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="py-2 bg-slate-700 hover:bg-slate-600 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1 group/btn"
+                            title={t('card_check_etsy')}
+                          >
+                            <ShoppingBag size={12} className="text-orange-400"/> Etsy
+                          </a>
+                           <a 
+                            href={`https://id.pinterest.com/search/pins/?q=${encodeURIComponent(item.keyword + ' aesthetic art')}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="py-2 bg-slate-700 hover:bg-slate-600 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1 group/btn"
+                            title={t('card_check_pin')}
+                          >
+                            <Image size={12} className="text-red-600"/> Pinterest
+                          </a>
+                           <a 
+                            href={`https://trends.google.com/trends/explore?q=${encodeURIComponent(item.keyword)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="py-2 bg-slate-700 hover:bg-slate-600 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1 group/btn"
+                            title={t('card_check_trend')}
+                          >
+                            <Globe size={12} className="text-blue-400"/> Trends
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        const NicheAnalyzer = ({ addToSaved, sessionKeyword, updateSession, navigateTo, t }) => {
+          const [keyword, setKeyword] = useState(sessionKeyword);
+          const [results, setResults] = useState('');
+          const [demandScore, setDemandScore] = useState(5); 
+          const [analysis, setAnalysis] = useState(null);
+          const [showGuide, setShowGuide] = useState(false); 
+
+          // Sync with global session keyword
+          useEffect(() => {
+            setKeyword(sessionKeyword);
+          }, [sessionKeyword]);
+
+          const calculateOpportunity = () => {
+            if (!keyword || !results) return;
+            
+            // Update global session if user changed keyword here
+            if (keyword !== sessionKeyword) {
+              updateSession(keyword);
+            }
+            
+            const resultCount = parseInt(results);
+            const maxResultsForWin = 3000; 
+            
+            const competitionScore = Math.max(0, (maxResultsForWin - resultCount) / maxResultsForWin * 50);
+            const demandWeight = demandScore * 5;
+            let score = competitionScore + demandWeight;
+            score = Math.min(100, Math.max(0, score));
+
+            // Logic for narrative...
+            let verdict = "";
+            let color = "";
+            let narrative = "";
+
+            if (score >= 75) { 
+                verdict = t('calc_verdict_win'); color = "text-green-400"; narrative = t('calc_narrative_win');
+            } else if (score >= 50) { 
+                verdict = t('calc_verdict_good'); color = "text-yellow-400";
+                narrative = (resultCount > 2000) ? t('calc_narrative_good_1') : t('calc_narrative_good_2');
+            } else { 
+                verdict = t('calc_verdict_bad'); color = "text-red-400"; 
+                narrative = (resultCount > 3000) ? t('calc_narrative_bad_1') : t('calc_narrative_bad_2');
+            }
+
+            setAnalysis({ score: Math.round(score), verdict, color, resultCount, narrative });
+          };
+
+          return (
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div className="flex items-center gap-2 mb-6">
+                <Target className="text-purple-400" size={28} />
+                <div>
+                   <h2 className="text-2xl font-bold">{t('calc_title')}</h2>
+                   <p className="text-xs text-slate-400">{t('calc_desc')}</p>
+                </div>
+              </div>
+
+              <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
+                <div className="grid gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-2">{t('calc_label_keyword')}</label>
+                    <div className="flex gap-2">
+                        <input 
+                        type="text" 
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
+                        onBlur={() => updateSession(keyword)} // SYNC ON BLUR
+                        placeholder={t('dash_placeholder')}
+                        className="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-3 focus:outline-none focus:border-purple-500 text-white text-lg"
+                        />
+                        {keyword && (
+                            <a 
+                            href={`https://www.redbubble.com/shop/?query=${encodeURIComponent(keyword)}&sortOrder=trending`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-4 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center justify-center text-red-400 transition-colors border border-slate-600"
+                            title={t('card_check_rb')}
+                            >
+                            <Search size={20} />
+                            </a>
+                        )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+                      <label className="block text-sm font-bold text-slate-300 mb-2">{t('calc_step1')}</label>
+                      <p className="text-xs text-slate-500 mb-3">{t('calc_step1_desc')}</p>
+                      <input 
+                        type="number" 
+                        value={results}
+                        onChange={(e) => setResults(e.target.value)}
+                        placeholder="450"
+                        className="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 focus:outline-none focus:border-purple-500 text-white font-mono"
+                      />
+                    </div>
+                    
+                    <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+                      <div className="flex justify-between items-center mb-2">
+                        <label className="block text-sm font-bold text-slate-300">{t('calc_step2')}</label>
+                        <button 
+                          onClick={() => setShowGuide(!showGuide)}
+                          className="text-xs text-purple-400 flex items-center gap-1 hover:text-purple-300 transition-colors"
+                        >
+                          {showGuide ? <ChevronUp size={14}/> : <ChevronDown size={14}/>} {t('calc_guide')}
+                        </button>
+                      </div>
+
+                      {/* Guide Dropdown Logic */}
+                      {showGuide && (
+                        <div className="bg-slate-800 p-3 rounded mb-3 text-[10px] text-slate-300 border border-slate-600 space-y-2 animate-fade-in">
+                          <div className="grid grid-cols-[50px_1fr] gap-2 items-start">
+                            <span className="font-bold text-slate-400">1-3</span>
+                            <span><strong className="text-red-400">{t('calc_guide_1')}:</strong> {t('calc_guide_1_desc')}</span>
+                          </div>
+                          <div className="grid grid-cols-[50px_1fr] gap-2 items-start">
+                            <span className="font-bold text-slate-400">4-7</span>
+                            <span><strong className="text-yellow-400">{t('calc_guide_2')}:</strong> {t('calc_guide_2_desc')}</span>
+                          </div>
+                          <div className="grid grid-cols-[50px_1fr] gap-2 items-start">
+                            <span className="font-bold text-slate-400">8-10</span>
+                            <span><strong className="text-green-400">{t('calc_guide_3')}:</strong> {t('calc_guide_3_desc')}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      <p className="text-xs text-slate-500 mb-3">{t('calc_label_demand')}</p>
+                      <div className="flex items-center gap-4">
+                         <input 
+                            type="range" min="1" max="10" value={demandScore}
+                            onChange={(e) => setDemandScore(parseInt(e.target.value))}
+                            className="flex-1 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
+                        />
+                        <span className="text-xl font-bold text-purple-400 w-8 text-center">{demandScore}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-slate-500 mt-1 uppercase tracking-wider font-bold">
+                        <span>{t('calc_low')}</span>
+                        <span>{t('calc_high')}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={calculateOpportunity}
+                    disabled={!keyword || !results}
+                    className={`w-full py-4 rounded-lg font-bold text-white shadow-lg transition-all transform flex items-center justify-center gap-2 ${
+                      !keyword || !results 
+                        ? 'bg-slate-700 cursor-not-allowed opacity-50' 
+                        : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 hover:scale-[1.01]'
+                    }`}
+                  >
+                    <Calculator size={20} />
+                    {t('calc_btn')}
+                  </button>
+                </div>
+              </div>
+
+              {analysis && (
+                <div className="bg-slate-800 p-6 rounded-xl border border-slate-600 animate-fade-in">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold">{t('calc_result')}</h3>
+                    <span className="text-xs bg-slate-700 px-2 py-1 rounded">Keyword: {keyword}</span>
+                  </div>
+                  
+                  <div className="flex flex-col md:flex-row gap-6 items-center">
+                    <div className="relative w-32 h-32 flex items-center justify-center">
+                      <svg className="w-full h-full transform -rotate-90">
+                        <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-700" />
+                        <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="8" fill="transparent" 
+                          strokeDasharray={377} strokeDashoffset={377 - (377 * analysis.score) / 100} className={analysis.color} 
+                        />
+                      </svg>
+                      <span className={`absolute text-3xl font-bold ${analysis.color}`}>{analysis.score}</span>
+                    </div>
+                    
+                    <div className="flex-1">
+                      <h4 className={`text-2xl font-bold mb-2 ${analysis.color}`}>{analysis.verdict}</h4>
+                      <div className="bg-slate-900/50 border border-slate-700 p-4 rounded-lg mb-4">
+                        <p className="text-slate-200 text-sm leading-relaxed">{analysis.narrative}</p>
+                      </div>
+                      
+                      <div className="flex flex-col gap-3">
+                         <button 
+                          onClick={() => navigateTo('listing')}
+                          className="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded text-sm font-bold text-white flex items-center justify-center gap-2 mb-1"
+                        >
+                          <FileText size={16} /> {t('calc_to_listing_btn')}
+                        </button>
+
+                         <button 
+                          onClick={() => addToSaved({ id: Date.now(), keyword, competition: analysis.resultCount + ' Results', volume: 'Score: ' + analysis.score, note: analysis.verdict, narrative: analysis.narrative })}
+                          className="w-full py-3 bg-green-600 hover:bg-green-700 rounded text-sm font-bold text-white flex items-center justify-center gap-2"
+                        >
+                          <Save size={16} /> {t('calc_save_btn')}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        };
+
+        const PromptBuilder = ({ t, sessionKeyword, updateSession }) => {
+          const [subject, setSubject] = useState(sessionKeyword);
+          const [selectedStyle, setSelectedStyle] = useState('Digital Art');
+          const [customStyle, setCustomStyle] = useState('');
+          const [selectedMood, setSelectedMood] = useState('Vibrant');
+          const [customMood, setCustomMood] = useState('');
+          const [typography, setTypography] = useState('');
+          const [aspect, setAspect] = useState('--ar 2:3');
+          const [generatedPrompt, setGeneratedPrompt] = useState('');
+          const [promptObject, setPromptObject] = useState(null); 
+          const [copied, setCopied] = useState(''); 
+          const [promptHistory, setPromptHistory] = useState([]);
+
+          // Auto-fill from Session
+          useEffect(() => {
+            if (sessionKeyword) setSubject(sessionKeyword);
+          }, [sessionKeyword]);
+
+          // Load History
+          useEffect(() => {
+            const savedHistory = localStorage.getItem('marketSightPromptHistory');
+            if (savedHistory) setPromptHistory(JSON.parse(savedHistory));
+          }, []);
+
+          // Save History
+          useEffect(() => {
+            localStorage.setItem('marketSightPromptHistory', JSON.stringify(promptHistory));
+          }, [promptHistory]);
+
+          const styles = ["None", "Custom", "Digital Art", "Watercolor", "Ukiyo-e", "Synthwave", "Cyberpunk", "Vintage Poster", "Oil Painting", "Pixel Art", "3D Render", "Sticker Art", "Flat Vector"];
+          const moods = ["None", "Custom", "Vibrant", "Dark", "Pastel", "Neon", "Ethereal", "Minimalist", "Retro", "Psychedelic", "High Contrast"];
+          
+          const generate = () => {
+            if (!subject) return;
+
+            // 1. Handle Style Logic
+            // REVISI: Mengubah struktur agar Subjek lebih dulu (lebih kuat di Midjourney V5/V6)
+            // Format baru: [Subjek], [Gaya], [Mood]
+            let styleText = "";
+            if (selectedStyle === 'Custom' && customStyle) {
+                styleText = `, ${customStyle} style`;
+            } else if (selectedStyle !== 'None') {
+                styleText = `, ${selectedStyle} style`;
+            }
+
+            // 2. Handle Mood Logic
+            let moodText = "";
+            if (selectedMood === 'Custom' && customMood) {
+                moodText = `, ${customMood} vibes`;
+            } else if (selectedMood !== 'None') {
+                moodText = `, ${selectedMood} vibes`;
+            }
+
+            // 3. Handle Typography Logic
+            let typoText = "";
+            if (typography) {
+                typoText = `, with text "${typography}" integrated in design`;
+            }
+
+            // Construct the main prompt sentence 
+            // REVISI: Subject first priority
+            let mainPrompt = subject + typoText + styleText + moodText;
+
+            // Redbubble Optimization (REVAMPED FOR PRINTABILITY)
+            // Kunci: "Vector", "T-shirt design", "Contour", "Solid colors"
+            const printReadyKeywords = "vector art, t-shirt design style, clean lines, solid colors, flat design, isolated on white background, high contrast, svg style, no background, professional print quality, die-cut sticker style";
+            
+            // Negative Prompts (REVAMPED)
+            // Menghilangkan elemen yang susah dicetak: shadow, 3d, realistic, gradient kasar
+            const negativePrompts = "--no photo, realistic, 3d, shading, complex background, texture, noise, dither, blur, watermark, signature, cut off, frame, border";
+            
+            // Midjourney Params
+            // Stylize diturunkan sedikit (250 -> 150) agar lebih patuh pada perintah "clean/vector"
+            const params = "--q 2 --stylize 150";
+
+            const fullText = `/imagine prompt: ${mainPrompt}, ${printReadyKeywords} ${aspect} ${negativePrompts} ${params}`;
+            
+            const newPromptData = {
+                id: Date.now(),
+                subject,
+                selectedStyle,
+                customStyle,
+                selectedMood,
+                customMood,
+                typography,
+                aspect,
+                fullText,
+                timestamp: new Date().toLocaleString()
+            };
+
+            setGeneratedPrompt(fullText);
+            setPromptObject(newPromptData);
+            setPromptHistory([newPromptData, ...promptHistory]);
+            setCopied('');
+          };
+
+          // Improved copy function with fallback for clipboard API
+          const copyContent = (text) => {
+            // Create a temporary textarea element
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            
+            // Move it off-screen but keep it part of the document (required for execCommand)
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '0';
+            
+            document.body.appendChild(textarea);
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                // Execute the copy command
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+            
+            // Remove the temporary element
+            document.body.removeChild(textarea);
+          };
+
+          const copyText = () => {
+            copyContent(generatedPrompt);
+            setCopied('TEXT');
+            setTimeout(() => setCopied(''), 2000);
+          };
+
+          const copyJSON = (data = null) => {
+            const targetData = data || promptObject;
+            if (!targetData) return;
+            copyContent(JSON.stringify(targetData, null, 2));
+            setCopied('JSON');
+            setTimeout(() => setCopied(''), 2000);
+          };
+
+          const deleteHistoryItem = (id) => {
+            setPromptHistory(promptHistory.filter(item => item.id !== id));
+          };
+
+          const editHistoryItem = (item) => {
+            setSubject(item.subject);
+            setSelectedStyle(item.selectedStyle);
+            setCustomStyle(item.customStyle || '');
+            setSelectedMood(item.selectedMood);
+            setCustomMood(item.customMood || '');
+            setTypography(item.typography || '');
+            setAspect(item.aspect);
+            setGeneratedPrompt(item.fullText);
+            setPromptObject(item);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          };
+
+          return (
+            <div className="max-w-6xl mx-auto space-y-8 h-full">
+              {/* SECTION 1: GENERATOR & PREVIEW */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Form */}
+                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 h-fit">
+                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <PenTool size={20} className="text-purple-400"/> {t('gen_title')}
+                    </h3>
+                    
+                    {/* IP WARNING */}
+                    <div className="bg-yellow-900/20 border border-yellow-700/50 p-3 rounded mb-4 flex gap-2 items-start">
+                        <AlertTriangle size={16} className="text-yellow-500 mt-0.5 shrink-0"/>
+                        <p className="text-xs text-yellow-200/80">
+                            <strong>{t('gen_warning')}</strong> {t('gen_warning_text')}
+                        </p>
+                    </div>
+                    
+                    <div className="space-y-4">
+                    <div>
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-2">
+                            {t('gen_subject')}
+                            <RefreshCw size={10} className="text-purple-400 cursor-help" title="Synced with your Dashboard/Analyzer input"/>
+                        </label>
+                        <input 
+                        type="text" 
+                        className="w-full bg-slate-900 border border-slate-700 p-2 rounded focus:border-purple-500 outline-none placeholder-slate-600"
+                        placeholder={t('placeholder_subject')}
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        onBlur={() => updateSession(subject)} // SYNC ON BLUR
+                        />
+                    </div>
+
+                    {/* Typography Field */}
+                    <div>
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-2">
+                            <Type size={12} className="text-purple-400"/> {t('gen_text')}
+                        </label>
+                        <input 
+                        type="text" 
+                        className="w-full bg-slate-900 border border-slate-700 p-2 rounded focus:border-purple-500 outline-none placeholder-slate-600"
+                        placeholder={t('placeholder_text')}
+                        value={typography}
+                        onChange={(e) => setTypography(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Style Selector */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{t('gen_style')}</label>
+                            <select 
+                                className="w-full bg-slate-900 border border-slate-700 p-2 rounded focus:border-purple-500 outline-none"
+                                value={selectedStyle}
+                                onChange={(e) => setSelectedStyle(e.target.value)}
+                            >
+                                <option value="None">{t('opt_none')}</option>
+                                {styles.filter(s => s !== "None" && s !== "Custom").map(s => <option key={s} value={s}>{s}</option>)}
+                                <option value="Custom">{t('opt_custom')}</option>
+                            </select>
+                            {selectedStyle === 'Custom' && (
+                                <input 
+                                    type="text" 
+                                    className="w-full bg-slate-950 border border-slate-700 p-2 rounded mt-2 text-sm focus:border-purple-500 outline-none animate-fade-in"
+                                    placeholder={t('placeholder_style')}
+                                    value={customStyle}
+                                    onChange={(e) => setCustomStyle(e.target.value)}
+                                />
+                            )}
+                        </div>
+
+                        {/* Mood Selector */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{t('gen_mood')}</label>
+                            <select 
+                                className="w-full bg-slate-900 border border-slate-700 p-2 rounded focus:border-purple-500 outline-none"
+                                value={selectedMood}
+                                onChange={(e) => setSelectedMood(e.target.value)}
+                            >
+                                <option value="None">{t('opt_none')}</option>
+                                {moods.filter(m => m !== "None" && m !== "Custom").map(m => <option key={m} value={m}>{m}</option>)}
+                                <option value="Custom">{t('opt_custom')}</option>
+                            </select>
+                            {selectedMood === 'Custom' && (
+                                <input 
+                                    type="text" 
+                                    className="w-full bg-slate-950 border border-slate-700 p-2 rounded mt-2 text-sm focus:border-purple-500 outline-none animate-fade-in"
+                                    placeholder={t('placeholder_mood')}
+                                    value={customMood}
+                                    onChange={(e) => setCustomMood(e.target.value)}
+                                />
+                            )}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{t('gen_ratio')}</label>
+                        <div className="grid grid-cols-2 gap-2">
+                            <button onClick={() => setAspect('--ar 1:1')} className={`p-2 rounded text-[10px] border flex flex-col items-center ${aspect === '--ar 1:1' ? 'bg-purple-600 border-purple-600' : 'border-slate-700 bg-slate-900'}`}>
+                                <span className="font-bold">1:1 ({t('ratio_sq')})</span>
+                                <span className="opacity-70">{t('ratio_sq_desc')}</span>
+                            </button>
+                            <button onClick={() => setAspect('--ar 2:3')} className={`p-2 rounded text-[10px] border flex flex-col items-center ${aspect === '--ar 2:3' ? 'bg-purple-600 border-purple-600' : 'border-slate-700 bg-slate-900'}`}>
+                                <span className="font-bold">2:3 ({t('ratio_po')})</span>
+                                <span className="opacity-70">{t('ratio_po_desc')}</span>
+                            </button>
+                            <button onClick={() => setAspect('--ar 3:2')} className={`p-2 rounded text-[10px] border flex flex-col items-center ${aspect === '--ar 3:2' ? 'bg-purple-600 border-purple-600' : 'border-slate-700 bg-slate-900'}`}>
+                                <span className="font-bold">3:2 ({t('ratio_ls')})</span>
+                                <span className="opacity-70">{t('ratio_ls_desc')}</span>
+                            </button>
+                            <button onClick={() => setAspect('--ar 4:5')} className={`p-2 rounded text-[10px] border flex flex-col items-center ${aspect === '--ar 4:5' ? 'bg-purple-600 border-purple-600' : 'border-slate-700 bg-slate-900'}`}>
+                                <span className="font-bold">4:5 ({t('ratio_ap')})</span>
+                                <span className="opacity-70">{t('ratio_ap_desc')}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button onClick={generate} disabled={!subject} className={`w-full py-3 rounded font-bold transition-colors ${!subject ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 text-white'}`}>
+                        {t('gen_btn')}
+                    </button>
+                    </div>
+                </div>
+
+                {/* Output Preview */}
+                <div className="flex flex-col h-full">
+                    <div className="bg-slate-900 p-6 rounded-xl border border-slate-700 flex-1 flex flex-col relative overflow-hidden min-h-[300px]">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                    <h3 className="text-xl font-bold mb-4 text-slate-300">{t('gen_output')}</h3>
+                    
+                    {generatedPrompt ? (
+                        <div className="flex-1 flex flex-col">
+                        <div className="bg-black/30 p-4 rounded-lg border border-slate-700 mb-4 font-mono text-sm text-green-400 break-words leading-relaxed shadow-inner overflow-y-auto max-h-[200px]">
+                            {generatedPrompt}
+                        </div>
+                        
+                        <div className="flex flex-col gap-2 mt-auto">
+                            <button 
+                                onClick={copyText}
+                                className={`w-full py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all ${
+                                copied === 'TEXT' ? 'bg-green-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-white'
+                                }`}
+                            >
+                                {copied === 'TEXT' ? <><Check size={18}/> {t('gen_copied')}</> : <><Copy size={18}/> {t('gen_copy_text')}</>}
+                            </button>
+                            
+                            <button 
+                                onClick={() => copyJSON()}
+                                className={`w-full py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all border border-slate-600 ${
+                                copied === 'JSON' ? 'bg-green-900/30 text-green-400 border-green-500' : 'bg-transparent hover:bg-slate-800 text-slate-300'
+                                }`}
+                            >
+                                {copied === 'JSON' ? <><Check size={18}/> {t('gen_copied')}</> : <><FileJson size={18}/> {t('gen_copy_json')}</>}
+                            </button>
+                        </div>
+                        </div>
+                    ) : (
+                        <div className="flex-1 flex flex-col items-center justify-center text-slate-600 italic">
+                            <Sparkles size={48} className="mb-2 opacity-20"/>
+                            <p>"{t('gen_btn')}..."</p>
+                        </div>
+                    )}
+                    </div>
+                    
+                    <div className="mt-4 p-4 bg-purple-900/10 border border-purple-500/20 rounded-lg text-xs text-purple-200">
+                    <p className="font-bold mb-1 flex items-center gap-2"><Printer size={14}/> {t('gen_opt_title')}</p>
+                    <ul className="list-disc ml-4 space-y-1 opacity-80">
+                        <li>{t('gen_opt_1')}</li>
+                        <li>{t('gen_opt_2')}</li>
+                        <li>{t('gen_opt_3')}</li>
+                    </ul>
+                    </div>
+                </div>
+              </div>
+
+              {/* SECTION 2: HISTORY LIST */}
+              <div className="border-t border-slate-700 pt-8">
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <LayoutDashboard size={20} className="text-purple-400"/> {t('hist_title')}
+                </h3>
+
+                {promptHistory.length === 0 ? (
+                    <p className="text-slate-500 text-sm italic">{t('hist_empty')}</p>
+                ) : (
+                    <div className="grid grid-cols-1 gap-4">
+                        {promptHistory.map((item) => (
+                            <div key={item.id} className="bg-slate-800 border border-slate-700 rounded-lg p-4 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between group hover:border-purple-500/30 transition-all">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        {item.selectedStyle !== 'None' && (
+                                           <span className="text-xs font-bold bg-slate-700 px-2 py-0.5 rounded text-purple-300">
+                                             {item.selectedStyle === 'Custom' ? item.customStyle : item.selectedStyle}
+                                           </span>
+                                        )}
+                                        <span className="text-xs text-slate-500">{item.timestamp}</span>
+                                    </div>
+                                    <p className="text-white font-medium truncate mb-1">{item.fullText}</p>
+                                    <div className="flex gap-2 text-xs text-slate-400 truncate">
+                                        <span>Subject: {item.subject}</span>
+                                        {item.typography && <span className="text-yellow-400">| Text: "{item.typography}"</span>}
+                                    </div>
+                                </div>
+                                
+                                <div className="flex gap-2 w-full md:w-auto">
+                                    <button onClick={() => editHistoryItem(item)} className="p-2 hover:bg-blue-600/20 text-blue-400 rounded transition-colors" title="Edit / Load Again">
+                                        <Edit size={18}/>
+                                    </button>
+                                    <button onClick={() => {
+                                        copyContent(JSON.stringify(item, null, 2));
+                                        alert('JSON Copied!');
+                                    }} className="p-2 hover:bg-green-600/20 text-green-400 rounded transition-colors" title="Copy JSON">
+                                        <FileJson size={18}/>
+                                    </button>
+                                    <button onClick={() => deleteHistoryItem(item.id)} className="p-2 hover:bg-red-600/20 text-red-400 rounded transition-colors" title="Delete">
+                                        <Trash2 size={18}/>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        // --- NEW COMPONENT: LISTING BUILDER ---
+        const ListingBuilder = ({ t, sessionKeyword, updateSession }) => {
+          const [mainKeyword, setMainKeyword] = useState(sessionKeyword);
+          const [generatedData, setGeneratedData] = useState(null);
+          const [copiedSection, setCopiedSection] = useState('');
+
+          // Auto-fill from Session
+          useEffect(() => {
+            if (sessionKeyword) setMainKeyword(sessionKeyword);
+          }, [sessionKeyword]);
+
+          // Improved copy function
+          const copyToClipboard = (text, section) => {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                setCopiedSection(section);
+                setTimeout(() => setCopiedSection(''), 2000);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+            document.body.removeChild(textarea);
+          };
+
+          const generateListing = () => {
+            if (!mainKeyword.trim()) return;
+
+            const titleCase = (str) => str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            const kw = titleCase(mainKeyword);
+
+            // 1. Generate Powerful Titles
+            const titles = [
+                `The Ultimate ${kw} Aesthetic Graphic`,
+                `${kw} - Retro Vintage Style Design`,
+                `Funny ${kw} Gift Idea for Fans`,
+                `Official ${kw} Lover Merchandise`,
+                `Unique ${kw} Art Illustration`
+            ];
+
+            // 2. Generate Smart Tags (Mix of Broad, Exact, and POD specific)
+            const words = mainKeyword.toLowerCase().split(' ').filter(w => w.length > 2);
+            
+            // Base variations
+            let generatedTags = [
+                mainKeyword, 
+                `${mainKeyword} art`, 
+                `${mainKeyword} design`,
+                `${mainKeyword} gift`,
+                `${mainKeyword} lover`
+            ];
+
+            // Word variations
+            words.forEach(w => {
+                generatedTags.push(`cute ${w}`);
+                generatedTags.push(`retro ${w}`);
+                generatedTags.push(`${w} aesthetic`);
+            });
+
+            // High Volume / Vibe Tags
+            const powerTags = [
+                "trending", "bestseller", "vintage", "retro", "90s", "y2k", 
+                "cool", "funny", "urban", "streetwear", "graphic", "illustration",
+                "colorful", "unique", "indie", "hipster"
+            ];
+
+            // Product Specific Tags (Crucial for Redbubble SEO)
+            const productTags = [
+                "sticker", "t-shirt", "apparel", "poster", "phone case", 
+                "wall art", "home decor", "gift idea", "birthday present"
+            ];
+
+            // Combine, Shuffle & Deduplicate
+            let allTags = [...generatedTags, ...powerTags, ...productTags];
+            // Simple shuffle to make it look organic
+            allTags = allTags.sort(() => Math.random() - 0.5);
+            // Remove duplicates and take top 25
+            const uniqueTags = [...new Set(allTags)].slice(0, 25);
+            // Ensure main keyword is first
+            const finalTags = [mainKeyword, ...uniqueTags.filter(t => t !== mainKeyword)];
+            const tagsString = finalTags.join(', ');
+
+            // 3. Generate Powerful Sales Copy (Description)
+            const description = `ðŸŒŸ **${kw} - Exclusive Design** ðŸŒŸ
+
+        Express your unique style with this one-of-a-kind **${kw}** artwork! Designed specifically for those who appreciate creativity and quality, this graphic captures the true essence of the ${mainKeyword} vibe.
+
+        **Why you'll love this:**
+        âœ… **Unique Art:** Stand out from the crowd with a design you won't find in generic stores.
+        âœ… **Perfect Gift:** The ultimate surprise for birthdays, holidays, or special occasions.
+        âœ… **Premium Look:** Looks incredible on T-Shirts, vibrant Stickers, cozy Hoodies, and durable Phone Cases.
+
+        **Great for:**
+        â€¢ ${kw} enthusiasts & collectors
+        â€¢ Friends and family who love unique art
+        â€¢ Adding a pop of personality to your daily outfit or room
+
+        ðŸ‘‰ **Available on a wide range of products!** Choose your favorite size, color, and style below.
+
+        *Grab yours today and support independent art!* âœ¨`;
+
+            setGeneratedData({ titles, tags: tagsString, description });
+          };
+
+          return (
+            <div className="max-w-4xl mx-auto space-y-8">
+              {/* Header */}
+              <div className="text-center">
+                <h2 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+                  <FileText className="text-purple-400" /> {t('list_title')}
+                </h2>
+                <p className="text-slate-400">{t('list_desc')}</p>
+              </div>
+
+              {/* Input Section */}
+              <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+                <label className="block text-sm font-bold text-slate-300 mb-2 flex items-center gap-2">
+                    {t('list_input_label')}
+                    <RefreshCw size={10} className="text-purple-400 cursor-help" title="Synced with your Dashboard/Analyzer input"/>
+                </label>
+                <div className="flex gap-4">
+                    <input 
+                        type="text" 
+                        value={mainKeyword}
+                        onChange={(e) => setMainKeyword(e.target.value)}
+                        onBlur={() => updateSession(mainKeyword)} // SYNC ON BLUR
+                        placeholder={t('list_input_placeholder')}
+                        className="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-3 focus:outline-none focus:border-purple-500 text-white"
+                    />
+                    <button 
+                        onClick={generateListing}
+                        className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 rounded-lg transition-all shadow-lg hover:scale-105"
+                    >
+                        {t('list_btn_generate')}
+                    </button>
+                </div>
+              </div>
+
+              {/* Results Section */}
+              {generatedData && (
+                <div className="grid gap-6 animate-fade-in">
+                    {/* Titles */}
+                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                        <h3 className="text-lg font-bold mb-4 text-purple-300 flex items-center gap-2">
+                            <Type size={18}/> {t('list_section_title')}
+                        </h3>
+                        <div className="space-y-3">
+                            {generatedData.titles.map((title, index) => (
+                                <div key={index} className="flex gap-2 items-center bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 hover:border-purple-500/50 transition-colors group">
+                                    <span className="flex-1 font-medium text-slate-200">{title}</span>
+                                    <button 
+                                        onClick={() => copyToClipboard(title, `title-${index}`)}
+                                        className={`px-3 py-1.5 rounded text-xs font-bold transition-all ${copiedSection === `title-${index}` ? 'bg-green-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-slate-300'}`}
+                                    >
+                                        {copiedSection === `title-${index}` ? t('list_copied') : t('list_copy')}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Tags */}
+                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-bold text-purple-300 flex items-center gap-2">
+                                <Tag size={18}/> {t('list_section_tags')}
+                            </h3>
+                            <span className="text-xs text-slate-500 italic hidden sm:inline">{t('list_tip')}</span>
+                        </div>
+                        
+                        <div className="bg-slate-900 p-4 rounded-lg border border-slate-700 font-mono text-sm text-green-400 mb-3 break-words">
+                            {generatedData.tags}
+                        </div>
+                        <button 
+                            onClick={() => copyToClipboard(generatedData.tags, 'tags')}
+                            className={`w-full py-2 rounded font-bold transition-all ${copiedSection === 'tags' ? 'bg-green-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-white'}`}
+                        >
+                            {copiedSection === 'tags' ? <><Check size={16} className="inline mr-1"/> {t('list_copied')}</> : <><Copy size={16} className="inline mr-1"/> {t('list_section_tags')}</>}
+                        </button>
+                    </div>
+
+                    {/* Description */}
+                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                        <h3 className="text-lg font-bold mb-4 text-purple-300 flex items-center gap-2">
+                            <AlignLeft size={18}/> {t('list_section_desc')}
+                        </h3>
+                        <div className="bg-slate-900 p-4 rounded-lg border border-slate-700 text-slate-300 text-sm whitespace-pre-wrap mb-3 leading-relaxed">
+                            {generatedData.description}
+                        </div>
+                        <button 
+                            onClick={() => copyToClipboard(generatedData.description, 'desc')}
+                            className={`w-full py-2 rounded font-bold transition-all ${copiedSection === 'desc' ? 'bg-green-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-white'}`}
+                        >
+                            {copiedSection === 'desc' ? <><Check size={16} className="inline mr-1"/> {t('list_copied')}</> : <><Copy size={16} className="inline mr-1"/> {t('list_copy')}</>}
+                        </button>
+                    </div>
+                </div>
+              )}
+            </div>
+          );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<MarketSight />);
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketSight - AI Niche Researcher</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Import Map untuk Library React & Lucide -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.263.1"
+      }
+    }
+    </script>
+
+    <!-- Babel Standalone untuk kompilasi JSX di browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* Custom scrollbar untuk tampilan lebih rapi */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 overflow-hidden">
+    <div id="root"></div>
+
+    <!-- Script Utama Aplikasi -->
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { Search, TrendingUp, BarChart2, Target, Save, Trash2, ExternalLink, Zap, Calculator, PenTool, LayoutDashboard, Copy, Check, Sparkles, Globe, Image, ShoppingBag, Info, ChevronDown, ChevronUp, FileJson, Edit, AlertTriangle, Type, Printer, Languages, FileText, Tag, AlignLeft, ArrowRight, RefreshCw, Filter, Flame, Lightbulb } from 'lucide-react';
+
+        // --- TRANSLATION DATA ---
+        const translations = {
+          en: {
+            app_subtitle: "AI Art Niche Researcher",
+            nav_dashboard: "Dashboard & Research",
+            nav_analyzer: "Niche Calculator",
+            nav_prompts: "Prompt Builder",
+            nav_listing: "Listing Helper", 
+            
+            dash_welcome: "Research Command Center",
+            dash_stats_total: "Total Researched",
+            dash_stats_win: "Winning Products",
+            dash_stats_potential: "Potential Niches",
+            dash_tools_title: "Idea Discovery Toolkit",
+            dash_tools_desc: "Don't have a keyword yet? Use these direct links to find what's trending right now.",
+            dash_tool_rb: "Redbubble Popular",
+            dash_tool_etsy: "Etsy Market Trends",
+            dash_tool_pin: "Pinterest Trends",
+            dash_tool_google: "Google Trends (Global)",
+            
+            dash_search_title: "Validate Specific Idea",
+            dash_placeholder: "Found an idea? Enter keyword to analyze...",
+            dash_btn: "Analyze Profitability",
+            
+            dash_db_title: "Saved Niche Portfolio",
+            dash_filter_all: "All",
+            dash_filter_win: "Winning (75+)",
+            dash_filter_pot: "Potential (50-74)",
+            dash_empty: "No research data yet.",
+            dash_empty_sub: "Use the tools above to find ideas, then analyze them.",
+            
+            card_competition: "Competition:",
+            card_score: "Score:",
+            card_action_listing: "Create Listing",
+            card_check_rb: "Check Redbubble",
+            card_check_etsy: "Check Etsy",
+            card_check_pin: "Pinterest Ideas",
+            card_check_trend: "Google Trends",
+
+            calc_title: "Potential Calculator",
+            calc_desc: "Validate manual data from the field.",
+            calc_label_keyword: "Keyword (Auto-synced)",
+            calc_label_results: "Search Results (Real Data)",
+            calc_label_demand: "Demand Estimate (1-10)",
+            calc_step1: "Step 1: Check Competition",
+            calc_step1_desc: "Click the magnifying glass above, check 'X Results' on Redbubble, enter the number here.",
+            calc_step2: "Step 2: Check Demand",
+            calc_step2_desc: "Use Google Trends & check for 'Bestseller' badges.",
+            calc_guide: "Guide",
+            calc_guide_1: "Quiet",
+            calc_guide_1_desc: "Flat Google Trend. No reviews.",
+            calc_guide_2: "Medium",
+            calc_guide_2_desc: "Stable Trend. Some reviews/sales.",
+            calc_guide_3: "High",
+            calc_guide_3_desc: "Viral Trend. Many Bestsellers.",
+            calc_low: "Low",
+            calc_high: "Viral",
+            calc_btn: "Calculate Opportunity",
+            calc_result: "Analysis Result",
+            calc_verdict_win: "ðŸ’Ž WINNING PRODUCT!",
+            calc_verdict_good: "Good Potential",
+            calc_verdict_bad: "Not Recommended",
+            calc_narrative_win: "Amazing! High demand with low competition. A golden opportunity to enter now.",
+            calc_narrative_good_1: "Good demand, but competition is getting tight. Be unique.",
+            calc_narrative_good_2: "Low competition, but demand hasn't exploded yet. Safe for beginners.",
+            calc_narrative_bad_1: "Red Ocean. Too many competitors for the existing demand.",
+            calc_narrative_bad_2: "Ghost Town. Low competition, but nobody is buying.",
+            calc_save_btn: "Save Result",
+            calc_to_listing_btn: "Generate Listing Metadata for this Keyword",
+
+            gen_title: "Generator",
+            gen_warning: "Redbubble Policy:",
+            gen_warning_text: "Do not use copyrighted characters. For Text, verify spelling as AI makes mistakes.",
+            gen_subject: "Main Subject (Synced)",
+            gen_text: "Text in Image (Optional)",
+            gen_style: "Art Style",
+            gen_mood: "Mood/Vibe",
+            gen_ratio: "Product Ratio",
+            gen_btn: "Create Print-Ready Prompt",
+            gen_output: "Output Prompt",
+            gen_copy_text: "Copy Text Prompt",
+            gen_copy_json: "Copy as JSON",
+            gen_copied: "Copied!",
+            gen_opt_title: "Print-Ready Optimization:",
+            gen_opt_1: "Vector Quality: Adds 300 DPI, clean edges.",
+            gen_opt_2: "Safe Scaling: Negative prompts prevent blur/pixelation.",
+            gen_opt_3: "Background: Isolated on white for easy removal.",
+            hist_title: "Your Prompt History",
+            hist_empty: "No history yet.",
+            
+            list_title: "Redbubble Listing Helper",
+            list_desc: "Generate optimized Title, Tags, and Description for your product.",
+            list_input_label: "Your Main Keyword/Niche (Synced)",
+            list_input_placeholder: "e.g. Retro Astronaut Cat",
+            list_btn_generate: "Generate Listing Metadata",
+            list_section_title: "Optimized Titles",
+            list_section_tags: "SEO Tags (Copy All)",
+            list_section_desc: "Sales Description",
+            list_copy: "Copy",
+            list_copied: "Copied!",
+            list_tip: "Tip: Use ~15 relevant tags. Put the most important tag first.",
+
+            opt_none: "-- None --",
+            opt_custom: "âœï¸ Custom Input...",
+            placeholder_style: "Type style...",
+            placeholder_mood: "Type mood...",
+            placeholder_subject: "e.g. Cute mushroom wizard",
+            placeholder_text: "e.g. MUSHROOM VIBES",
+            
+            ratio_sq: "Square",
+            ratio_sq_desc: "Stickers, Coasters",
+            ratio_po: "Portrait",
+            ratio_po_desc: "Posters, Phone Cases",
+            ratio_ls: "Landscape",
+            ratio_ls_desc: "Desk Mats, Skins",
+            ratio_ap: "Apparel",
+            ratio_ap_desc: "T-Shirts, Hoodies"
+          },
+          id: {
+            app_subtitle: "Riset Niche Seni AI",
+            nav_dashboard: "Dashboard & Riset",
+            nav_analyzer: "Kalkulator Analisa",
+            nav_prompts: "Pembuat Prompt",
+            nav_listing: "Bantu Listing", 
+            
+            dash_welcome: "Pusat Komando Riset",
+            dash_stats_total: "Total Diriset",
+            dash_stats_win: "Winning Product",
+            dash_stats_potential: "Niche Potensial",
+            dash_tools_title: "Toolkit Pencari Ide",
+            dash_tools_desc: "Belum punya ide? Gunakan link ini untuk melihat apa yang sedang tren secara umum.",
+            dash_tool_rb: "Redbubble Populer",
+            dash_tool_etsy: "Tren Pasar Etsy",
+            dash_tool_pin: "Tren Pinterest",
+            dash_tool_google: "Google Trends (Global)",
+            
+            dash_search_title: "Validasi Ide Spesifik",
+            dash_placeholder: "Punya ide? Masukkan kata kunci untuk dianalisa...",
+            dash_btn: "Analisa Profitabilitas",
+            
+            dash_db_title: "Portofolio Niche Tersimpan",
+            dash_filter_all: "Semua",
+            dash_filter_win: "Winning (75+)",
+            dash_filter_pot: "Potensial (50-74)",
+            dash_empty: "Belum ada data riset.",
+            dash_empty_sub: "Gunakan alat di atas untuk mencari ide, lalu analisa.",
+            
+            card_competition: "Kompetisi:",
+            card_score: "Skor:",
+            card_check_rb: "Cek Redbubble",
+            card_check_etsy: "Cek Etsy",
+            card_check_pin: "Ide Pinterest",
+            card_check_trend: "Google Trends",
+            card_action_listing: "Buat Listing",
+
+            calc_title: "Kalkulator Potensi",
+            calc_desc: "Validasi manual data dari lapangan.",
+            calc_label_keyword: "Kata Kunci (Otomatis)",
+            calc_label_results: "Jumlah Hasil (Data Real)",
+            calc_label_demand: "Estimasi Permintaan (1-10)",
+            calc_step1: "Langkah 1: Cek Kompetisi",
+            calc_step1_desc: "Klik kaca pembesar di atas, lihat 'X Results' di Redbubble, masukkan angkanya.",
+            calc_step2: "Langkah 2: Cek Permintaan",
+            calc_step2_desc: "Gunakan Google Trends & cek badge 'Bestseller'.",
+            calc_guide: "Panduan",
+            calc_guide_1: "Sepi",
+            calc_guide_1_desc: "Grafik Google datar. Tidak ada ulasan.",
+            calc_guide_2: "Sedang",
+            calc_guide_2_desc: "Tren stabil. Ada penjualan/ulasan.",
+            calc_guide_3: "Ramai",
+            calc_guide_3_desc: "Tren viral. Banyak Bestseller.",
+            calc_low: "Sepi",
+            calc_high: "Viral",
+            calc_btn: "Hitung Peluang",
+            calc_result: "Hasil Analisa",
+            calc_verdict_win: "ðŸ’Ž WINNING PRODUCT!",
+            calc_verdict_good: "Potensi Bagus",
+            calc_verdict_bad: "Kurang Direkomendasikan",
+            calc_narrative_win: "Luar biasa! Permintaan tinggi dengan persaingan rendah. Peluang emas untuk masuk.",
+            calc_narrative_good_1: "Permintaan bagus, tapi persaingan mulai padat. Harus unik.",
+            calc_narrative_good_2: "Persaingan rendah, tapi permintaan belum meledak. Aman untuk pemula.",
+            calc_narrative_bad_1: "Red Ocean. Terlalu banyak pesaing untuk permintaan yang ada.",
+            calc_narrative_bad_2: "Kota Hantu. Persaingan sepi, tapi tidak ada yang membeli.",
+            calc_save_btn: "Simpan Hasil",
+            calc_to_listing_btn: "Buat Metadata Listing untuk Keyword Ini",
+
+            gen_title: "Generator",
+            gen_warning: "Kebijakan Redbubble:",
+            gen_warning_text: "Jangan gunakan karakter berhak cipta. Untuk Teks, cek ejaan karena AI bisa salah.",
+            gen_subject: "Subjek Utama (Tersinkron)",
+            gen_text: "Teks dalam Gambar (Opsional)",
+            gen_style: "Gaya Seni",
+            gen_mood: "Mood/Vibe",
+            gen_ratio: "Rasio Produk",
+            gen_btn: "Buat Prompt Siap Cetak",
+            gen_output: "Output Prompt",
+            gen_copy_text: "Salin Teks Prompt",
+            gen_copy_json: "Salin JSON",
+            gen_copied: "Tersalin!",
+            gen_opt_title: "Optimasi Siap Cetak:",
+            gen_opt_1: "Kualitas Vektor: 300 DPI, tepi bersih.",
+            gen_opt_2: "Skala Aman: Negative prompt mencegah blur/pikselasi.",
+            gen_opt_3: "Background: Terisolasi putih agar mudah dihapus.",
+            hist_title: "Riwayat Prompt Anda",
+            hist_empty: "Belum ada riwayat.",
+
+            list_title: "Bantuan Listing Redbubble",
+            list_desc: "Buat Judul, Tag, dan Deskripsi SEO otomatis untuk produk Anda.",
+            list_input_label: "Kata Kunci Utama / Niche (Tersinkron)",
+            list_input_placeholder: "cth. Retro Astronaut Cat",
+            list_btn_generate: "Buat Metadata Listing",
+            list_section_title: "Judul Teroptimasi",
+            list_section_tags: "Tag SEO (Salin Semua)",
+            list_section_desc: "Deskripsi Penjualan",
+            list_copy: "Salin",
+            list_copied: "Tersalin!",
+            list_tip: "Tip: Gunakan ~15 tag relevan. Taruh tag terpenting di awal.",
+
+            opt_none: "-- Tidak Ada --",
+            opt_custom: "âœï¸ Input Sendiri...",
+            placeholder_style: "Ketik gaya...",
+            placeholder_mood: "Ketik mood...",
+            placeholder_subject: "Contoh: Penyihir jamur lucu",
+            placeholder_text: "Contoh: MUSHROOM VIBES",
+
+            ratio_sq: "Kotak",
+            ratio_sq_desc: "Stiker, Tatakan",
+            ratio_po: "Potret",
+            ratio_po_desc: "Poster, Casing HP",
+            ratio_ls: "Lanskap",
+            ratio_ls_desc: "Desk Mat, Skin Laptop",
+            ratio_ap: "Pakaian",
+            ratio_ap_desc: "Kaos, Hoodie"
+          },
+          de: {
+            app_subtitle: "AI Art Nischen-Recherche",
+            nav_dashboard: "Dashboard & Recherche",
+            nav_analyzer: "Nischenrechner",
+            nav_prompts: "Prompt-Generator",
+            nav_listing: "Listing-Helfer",
+            
+            dash_welcome: "Recherche Kommandozentrale",
+            dash_stats_total: "Gesamt erforscht",
+            dash_stats_win: "Gewinner-Produkte",
+            dash_stats_potential: "Potenzielle Nischen",
+            dash_tools_title: "Ideen-Entdecker-Toolkit",
+            dash_tools_desc: "Noch keine Idee? Nutzen Sie diese Links, um Trends zu finden.",
+            dash_tool_rb: "Redbubble Beliebt",
+            dash_tool_etsy: "Etsy Marktrends",
+            dash_tool_pin: "Pinterest Trends",
+            dash_tool_google: "Google Trends (Global)",
+            
+            dash_search_title: "Spezifische Idee validieren",
+            dash_placeholder: "Bsp: Niedlicher Geist liest Buch...",
+            dash_btn: "RentabilitÃ¤t analysieren",
+            
+            dash_db_title: "Ihre Recherche-Datenbank",
+            dash_filter_all: "Alle",
+            dash_filter_win: "Gewinner (75+)",
+            dash_filter_pot: "Potenzial (50-74)",
+            dash_empty: "Noch keine Daten.",
+            dash_empty_sub: "Benutzen Sie die Tools oben.",
+            dash_saved: "gespeicherte Nischen",
+            
+            card_competition: "Wettbewerb:",
+            card_score: "Punktzahl:",
+            card_check_rb: "Redbubble prÃ¼fen",
+            card_check_etsy: "Etsy prÃ¼fen",
+            card_check_pin: "Pinterest Ideen",
+            card_check_trend: "Google Trends",
+            card_action_listing: "Listing erstellen",
+
+            calc_title: "Potenzialrechner",
+            calc_desc: "Manuelle Daten validieren.",
+            calc_label_keyword: "Suchbegriff (Auto-Sync)",
+            calc_label_results: "Suchergebnisse (Echte Daten)",
+            calc_label_demand: "Nachfrage (1-10)",
+            calc_step1: "Schritt 1: Wettbewerb prÃ¼fen",
+            calc_step1_desc: "Lupe klicken, 'X Ergebnisse' auf Redbubble prÃ¼fen, Zahl hier eingeben.",
+            calc_step2: "Schritt 2: Nachfrage prÃ¼fen",
+            calc_step2_desc: "Google Trends & 'Bestseller'-Badges prÃ¼fen.",
+            calc_guide: "Leitfaden",
+            calc_guide_1: "Ruhig",
+            calc_guide_1_desc: "Google Trend flach. Keine Bewertungen.",
+            calc_guide_2: "Mittel",
+            calc_guide_2_desc: "Stabiler Trend. Einige VerkÃ¤ufe.",
+            calc_guide_3: "Hoch",
+            calc_guide_3_desc: "Viraler Trend. Viele Bestseller.",
+            calc_low: "Gering",
+            calc_high: "Viral",
+            calc_btn: "Chance berechnen",
+            calc_result: "Analyseergebnis",
+            calc_verdict_win: "ðŸ’Ž GEWINNER PRODUKT!",
+            calc_verdict_good: "Gutes Potenzial",
+            calc_verdict_bad: "Nicht empfohlen",
+            calc_narrative_win: "GroÃŸartig! Hohe Nachfrage bei geringem Wettbewerb. Eine goldene Gelegenheit.",
+            calc_narrative_good_1: "Gute Nachfrage, aber der Wettbewerb wird hÃ¤rter. Sei einzigartig.",
+            calc_narrative_good_2: "Geringer Wettbewerb, aber Nachfrage noch nicht explodiert. Sicher fÃ¼r AnfÃ¤nger.",
+            calc_narrative_bad_1: "Red Ocean. Zu viele Wettbewerber fÃ¼r die vorhandene Nachfrage.",
+            calc_narrative_bad_2: "Geisterstadt. Geringer Wettbewerb, aber niemand kauft.",
+            calc_save_btn: "Ergebnis speichern",
+            calc_to_listing_btn: "Listing-Metadaten erstellen",
+
+            gen_title: "Generator",
+            gen_warning: "Redbubble Richtlinie:",
+            gen_warning_text: "Keine urheberrechtlich geschÃ¼tzten Charaktere. Text auf Rechtschreibung prÃ¼fen.",
+            gen_subject: "Hauptmotiv (Sync)",
+            gen_text: "Text im Bild (Optional)",
+            gen_style: "Kunststil",
+            gen_mood: "Stimmung/Vibe",
+            gen_ratio: "Produkt-Format",
+            gen_btn: "Druckfertigen Prompt erstellen",
+            gen_output: "Ausgabe Prompt",
+            gen_copy_text: "Text kopieren",
+            gen_copy_json: "JSON kopieren",
+            gen_copied: "Kopiert!",
+            gen_opt_title: "Druckoptimierung:",
+            gen_opt_1: "VektorqualitÃ¤t: 300 DPI, saubere Kanten.",
+            gen_opt_2: "Sichere Skalierung: Negative Prompts verhindern UnschÃ¤rfe.",
+            gen_opt_3: "Hintergrund: Isoliert auf WeiÃŸ.",
+            hist_title: "Ihr Prompt-Verlauf",
+            hist_empty: "Noch kein Verlauf.",
+
+            list_title: "Redbubble Listing-Helfer",
+            list_desc: "Erstellen Sie Titel, Tags und Beschreibungen fÃ¼r Ihr Produkt.",
+            list_input_label: "Haupt-Suchbegriff / Nische (Sync)",
+            list_input_placeholder: "z.B. Retro Astronaut Cat",
+            list_btn_generate: "Metadaten erstellen",
+            list_section_title: "Optimierte Titel",
+            list_section_tags: "SEO Tags (Alle kopieren)",
+            list_section_desc: "Verkaufsbeschreibung",
+            list_copy: "Kopieren",
+            list_copied: "Kopiert!",
+            list_tip: "Tipp: Verwenden Sie ~15 Tags. Wichtigstes Tag zuerst.",
+
+            opt_none: "-- Keiner --",
+            opt_custom: "âœï¸ Eigene Eingabe...",
+            placeholder_style: "Stil eingeben...",
+            placeholder_mood: "Stimmung eingeben...",
+            placeholder_subject: "Bsp: Pilz-Zauberer",
+            placeholder_text: "Bsp: MUSHROOM VIBES",
+
+            ratio_sq: "Quadrat",
+            ratio_sq_desc: "Sticker, Untersetzer",
+            ratio_po: "PortrÃ¤t",
+            ratio_po_desc: "Poster, HandyhÃ¼llen",
+            ratio_ls: "Landschaft",
+            ratio_ls_desc: "Schreibtischunterlagen",
+            ratio_ap: "Kleidung",
+            ratio_ap_desc: "T-Shirts, Hoodies"
+          }
+        };
+
+        const MarketSight = () => {
+          const [activeTab, setActiveTab] = useState('dashboard');
+          const [savedNiches, setSavedNiches] = useState([]);
+          const [sessionKeyword, setSessionKeyword] = useState(''); // GLOBAL KEYWORD STATE
+          const [lang, setLang] = useState('en');
+
+          // Translation helper
+          const t = (key) => translations[lang][key] || key;
+          
+          useEffect(() => {
+            const saved = localStorage.getItem('marketSightSaved');
+            if (saved) {
+              setSavedNiches(JSON.parse(saved));
+            }
+          }, []);
+
+          useEffect(() => {
+            localStorage.setItem('marketSightSaved', JSON.stringify(savedNiches));
+          }, [savedNiches]);
+
+          const addToSaved = (niche) => {
+            if (!savedNiches.find(n => n.id === niche.id)) {
+              setSavedNiches([niche, ...savedNiches]); 
+            }
+          };
+
+          const removeFromSaved = (id) => {
+            setSavedNiches(savedNiches.filter(n => n.id !== id));
+          };
+
+          const updateSessionKeyword = (keyword) => {
+            if (keyword && keyword.trim() !== '') {
+              setSessionKeyword(keyword);
+            }
+          };
+
+          // Navigate & Sync
+          const navigateTo = (tabName, keyword = null) => {
+            if (keyword) updateSessionKeyword(keyword);
+            setActiveTab(tabName);
+          };
+
+          return (
+            <div className="flex h-screen bg-slate-900 text-slate-100 font-sans overflow-hidden">
+              {/* Sidebar */}
+              <aside className="w-64 bg-slate-800 border-r border-slate-700 hidden md:flex flex-col">
+                <div className="p-6">
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent flex items-center gap-2">
+                    <Zap className="text-purple-400" /> MarketSight
+                  </h1>
+                  <p className="text-xs text-slate-400 mt-2">{t('app_subtitle')}</p>
+                </div>
+
+                <nav className="flex-1 px-4 space-y-2">
+                  <NavItem 
+                    icon={<LayoutDashboard size={20} />} 
+                    label={t('nav_dashboard')} 
+                    active={activeTab === 'dashboard'} 
+                    onClick={() => setActiveTab('dashboard')} 
+                  />
+                  <NavItem 
+                    icon={<Target size={20} />} 
+                    label={t('nav_analyzer')}
+                    active={activeTab === 'analyzer'} 
+                    onClick={() => setActiveTab('analyzer')} 
+                  />
+                  <NavItem 
+                    icon={<PenTool size={20} />} 
+                    label={t('nav_prompts')} 
+                    active={activeTab === 'prompts'} 
+                    onClick={() => setActiveTab('prompts')} 
+                  />
+                  <NavItem 
+                    icon={<FileText size={20} />} 
+                    label={t('nav_listing')} 
+                    active={activeTab === 'listing'} 
+                    onClick={() => setActiveTab('listing')} 
+                  />
+                </nav>
+
+                {/* Language Selector */}
+                <div className="px-4 mb-4">
+                   <div className="bg-slate-900 rounded p-2 flex items-center gap-2 border border-slate-700">
+                      <Languages size={16} className="text-slate-400"/>
+                      <select 
+                        value={lang} 
+                        onChange={(e) => setLang(e.target.value)}
+                        className="bg-transparent text-sm text-slate-300 focus:outline-none w-full cursor-pointer"
+                      >
+                        <option value="en">English (US)</option>
+                        <option value="id">Bahasa Indonesia</option>
+                        <option value="de">Deutsch</option>
+                      </select>
+                   </div>
+                </div>
+
+              </aside>
+
+              {/* Main Content */}
+              <main className="flex-1 overflow-y-auto relative">
+                {/* Mobile Header */}
+                <div className="md:hidden bg-slate-800 p-4 flex justify-between items-center border-b border-slate-700 sticky top-0 z-10">
+                  <h1 className="font-bold text-purple-400 flex items-center gap-2"><Zap size={18}/> MarketSight</h1>
+                  <div className="flex gap-2">
+                     <button onClick={() => setActiveTab('dashboard')} className={`p-2 rounded ${activeTab === 'dashboard' ? 'bg-slate-700' : ''}`}><LayoutDashboard size={20}/></button>
+                     <button onClick={() => setActiveTab('analyzer')} className={`p-2 rounded ${activeTab === 'analyzer' ? 'bg-slate-700' : ''}`}><Target size={20}/></button>
+                     <button onClick={() => setActiveTab('listing')} className={`p-2 rounded ${activeTab === 'listing' ? 'bg-slate-700' : ''}`}><FileText size={20}/></button>
+                  </div>
+                </div>
+
+                <div className="p-6 max-w-6xl mx-auto">
+                  {activeTab === 'dashboard' && (
+                    <TrendDashboard 
+                      sessionKeyword={sessionKeyword}
+                      updateSession={updateSessionKeyword}
+                      navigateTo={navigateTo}
+                      savedNiches={savedNiches} 
+                      removeFromSaved={removeFromSaved}
+                      t={t}
+                    />
+                  )}
+                  {activeTab === 'analyzer' && (
+                    <NicheAnalyzer 
+                      sessionKeyword={sessionKeyword} 
+                      updateSession={updateSessionKeyword}
+                      addToSaved={addToSaved} 
+                      navigateTo={navigateTo} 
+                      t={t} 
+                    />
+                  )}
+                  {activeTab === 'prompts' && (
+                    <PromptBuilder 
+                      sessionKeyword={sessionKeyword} 
+                      updateSession={updateSessionKeyword}
+                      t={t} 
+                    />
+                  )}
+                  {activeTab === 'listing' && (
+                    <ListingBuilder 
+                      sessionKeyword={sessionKeyword} 
+                      updateSession={updateSessionKeyword}
+                      t={t} 
+                    />
+                  )}
+                </div>
+              </main>
+            </div>
+          );
+        };
+
+        // --- Sub Components ---
+
+        const NavItem = ({ icon, label, active, onClick, badge }) => (
+          <button 
+            onClick={onClick}
+            className={`w-full flex items-center justify-between p-3 rounded-lg transition-all ${
+              active 
+                ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' 
+                : 'text-slate-400 hover:bg-slate-700 hover:text-white'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              {icon}
+              <span className="font-medium">{label}</span>
+            </div>
+            {badge > 0 && (
+              <span className="bg-pink-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                {badge}
+              </span>
+            )}
+          </button>
+        );
+
+        const TrendDashboard = ({ sessionKeyword, updateSession, navigateTo, savedNiches, removeFromSaved, t }) => {
+          const [inputKeyword, setInputKeyword] = useState(sessionKeyword);
+          const [filter, setFilter] = useState('all');
+
+          // Stats Logic - Robuster parsing
+          const totalSaved = savedNiches.length;
+          const getScore = (n) => {
+            // Check if score exists and is a string, remove non-digits, fallback to 0
+            if (typeof n.volume === 'string') {
+                const score = parseInt(n.volume.replace(/\D/g, ''));
+                return isNaN(score) ? 0 : score;
+            }
+            return 0;
+          };
+          const winningCount = savedNiches.filter(n => getScore(n) >= 75).length;
+          const potentialCount = savedNiches.filter(n => getScore(n) >= 50 && getScore(n) < 75).length;
+
+          useEffect(() => {
+            setInputKeyword(sessionKeyword);
+          }, [sessionKeyword]);
+
+          const handleSearch = (e) => {
+            e.preventDefault();
+            if (inputKeyword.trim()) {
+              updateSession(inputKeyword);
+              navigateTo('analyzer');
+            }
+          };
+
+          const filteredNiches = savedNiches.filter(n => {
+            const s = getScore(n);
+            if (filter === 'win') return s >= 75;
+            if (filter === 'pot') return s >= 50 && s < 75;
+            return true;
+          });
+
+          return (
+            <div className="space-y-8">
+              {/* 1. STATS & WELCOME */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="md:col-span-1 bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <h2 className="text-xl font-bold mb-1">{t('dash_welcome')}</h2>
+                    <p className="text-xs text-slate-400">Overview of your activity</p>
+                </div>
+                <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+                    <div>
+                        <p className="text-xs text-slate-400">{t('dash_stats_total')}</p>
+                        <span className="text-2xl font-bold">{totalSaved}</span>
+                    </div>
+                    <Save size={24} className="text-slate-600 opacity-50"/>
+                </div>
+                <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between border-l-4 border-l-green-500">
+                    <div>
+                        <p className="text-xs text-slate-400">{t('dash_stats_win')}</p>
+                        <span className="text-2xl font-bold text-green-400">{winningCount}</span>
+                    </div>
+                    <Sparkles size={24} className="text-green-500 opacity-50"/>
+                </div>
+                <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between border-l-4 border-l-yellow-500">
+                    <div>
+                        <p className="text-xs text-slate-400">{t('dash_stats_potential')}</p>
+                        <span className="text-2xl font-bold text-yellow-400">{potentialCount}</span>
+                    </div>
+                    <Flame size={24} className="text-yellow-500 opacity-50"/>
+                </div>
+              </div>
+
+              {/* 2. RESEARCH TOOLKIT (Quick Links) */}
+              <div className="bg-gradient-to-r from-slate-900 to-slate-800 border border-slate-700 rounded-xl p-6">
+                <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                    <Lightbulb size={20} className="text-yellow-400"/> {t('dash_tools_title')}
+                </h3>
+                <p className="text-sm text-slate-400 mb-4">{t('dash_tools_desc')}</p>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <a href="https://www.redbubble.com/shop/?sortOrder=trending" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-bold text-red-400 transition-colors">
+                        <ShoppingBag size={14}/> {t('dash_tool_rb')}
+                    </a>
+                    <a href="https://www.etsy.com/trends" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-bold text-orange-400 transition-colors">
+                        <ShoppingBag size={14}/> {t('dash_tool_etsy')}
+                    </a>
+                    <a href="https://www.pinterest.com/today/" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-bold text-red-600 transition-colors">
+                        <Image size={14}/> {t('dash_tool_pin')}
+                    </a>
+                    <a href="https://trends.google.com/trends/trendingsearches/daily?geo=US" target="_blank" rel="noreferrer" className="flex items-center gap-2 p-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-bold text-blue-400 transition-colors">
+                        <Globe size={14}/> {t('dash_tool_google')}
+                    </a>
+                </div>
+              </div>
+
+              {/* 3. VALIDATE SPECIFIC IDEA (Search) */}
+              <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 relative overflow-hidden">
+                <div className="relative z-10">
+                  <h2 className="text-lg font-bold mb-2 text-white">
+                    {t('dash_search_title')}
+                  </h2>
+                  <form onSubmit={handleSearch} className="flex gap-4">
+                    <div className="flex-1 relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Search className="text-slate-500" size={18} />
+                      </div>
+                      <input 
+                        type="text" 
+                        value={inputKeyword}
+                        onChange={(e) => setInputKeyword(e.target.value)}
+                        onBlur={() => updateSession(inputKeyword)} // SYNC ON BLUR
+                        placeholder={t('dash_placeholder')}
+                        className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-purple-500 text-sm"
+                      />
+                    </div>
+                    <button 
+                      type="submit"
+                      className="bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-6 rounded-lg transition-all flex items-center gap-2 text-sm whitespace-nowrap"
+                    >
+                      <Calculator size={18} />
+                      {t('dash_btn')}
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              {/* 4. SAVED PORTFOLIO */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Save className="text-slate-400" size={20} />
+                    {t('dash_db_title')}
+                  </h3>
+                  
+                  {/* FILTER BUTTONS */}
+                  <div className="flex gap-2">
+                     <button onClick={() => setFilter('all')} className={`px-3 py-1 rounded text-xs font-bold ${filter === 'all' ? 'bg-slate-600 text-white' : 'bg-slate-800 text-slate-400'}`}>{t('dash_filter_all')}</button>
+                     <button onClick={() => setFilter('win')} className={`px-3 py-1 rounded text-xs font-bold ${filter === 'win' ? 'bg-green-900 text-green-400' : 'bg-slate-800 text-slate-400'}`}>{t('dash_filter_win')}</button>
+                     <button onClick={() => setFilter('pot')} className={`px-3 py-1 rounded text-xs font-bold ${filter === 'pot' ? 'bg-yellow-900 text-yellow-400' : 'bg-slate-800 text-slate-400'}`}>{t('dash_filter_pot')}</button>
+                  </div>
+                </div>
+
+                {filteredNiches.length === 0 ? (
+                  <div className="text-center py-12 border-2 border-dashed border-slate-800 rounded-xl">
+                    <p className="text-slate-500 font-medium">{t('dash_empty')}</p>
+                    <p className="text-slate-600 text-sm mt-1">{t('dash_empty_sub')}</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredNiches.map((item) => (
+                      <div key={item.id} className="bg-slate-800 border border-slate-700 rounded-xl p-5 relative group hover:border-purple-500/50 hover:shadow-lg transition-all flex flex-col">
+                        <div className="flex justify-between items-start mb-3">
+                          <h4 className="font-bold text-lg text-white truncate pr-8" title={item.keyword}>
+                            {item.keyword}
+                          </h4>
+                          <div className="flex items-center gap-1">
+                            {/* QUICK LISTING BUTTON */}
+                            <button 
+                              onClick={() => navigateTo('listing', item.keyword)}
+                              className="text-slate-600 hover:text-purple-400 transition-colors p-1"
+                              title={t('card_action_listing')}
+                            >
+                              <FileText size={16} />
+                            </button>
+                            <button 
+                              onClick={() => removeFromSaved(item.id)}
+                              className="text-slate-600 hover:text-red-400 transition-colors p-1"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="bg-slate-900/50 rounded-lg p-3 mb-4 space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-slate-400">{t('card_competition')}</span>
+                            <span className="text-white font-medium">{item.competition}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-slate-400">{t('card_score')}</span>
+                            <span className={`font-bold ${
+                              (getScore(item) >= 75)
+                              ? "text-green-400" 
+                              : (getScore(item) >= 50) ? "text-yellow-400" : "text-red-400"
+                            }`}>
+                              {getScore(item)}%
+                            </span>
+                          </div>
+                        </div>
+
+                        {item.narrative && (
+                          <div className="mb-4 text-xs text-slate-400 italic bg-slate-900/30 p-2 rounded border-l-2 border-purple-500">
+                            "{item.narrative.length > 80 ? item.narrative.substring(0, 80) + '...' : item.narrative}"
+                          </div>
+                        )}
+
+                        <div className="grid grid-cols-2 gap-2 mt-auto">
+                           <a 
+                            href={`https://www.redbubble.com/shop/?query=${encodeURIComponent(item.keyword)}&sortOrder=trending`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="py-2 bg-slate-700 hover:bg-slate-600 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1 group/btn"
+                            title={t('card_check_rb')}
+                          >
+                            <ShoppingBag size={12} className="text-red-400"/> Redbubble
+                          </a>
+                           <a 
+                            href={`https://www.etsy.com/search?q=${encodeURIComponent(item.keyword)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="py-2 bg-slate-700 hover:bg-slate-600 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1 group/btn"
+                            title={t('card_check_etsy')}
+                          >
+                            <ShoppingBag size={12} className="text-orange-400"/> Etsy
+                          </a>
+                           <a 
+                            href={`https://id.pinterest.com/search/pins/?q=${encodeURIComponent(item.keyword + ' aesthetic art')}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="py-2 bg-slate-700 hover:bg-slate-600 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1 group/btn"
+                            title={t('card_check_pin')}
+                          >
+                            <Image size={12} className="text-red-600"/> Pinterest
+                          </a>
+                           <a 
+                            href={`https://trends.google.com/trends/explore?q=${encodeURIComponent(item.keyword)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="py-2 bg-slate-700 hover:bg-slate-600 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1 group/btn"
+                            title={t('card_check_trend')}
+                          >
+                            <Globe size={12} className="text-blue-400"/> Trends
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        const NicheAnalyzer = ({ addToSaved, sessionKeyword, updateSession, navigateTo, t }) => {
+          const [keyword, setKeyword] = useState(sessionKeyword);
+          const [results, setResults] = useState('');
+          const [demandScore, setDemandScore] = useState(5); 
+          const [analysis, setAnalysis] = useState(null);
+          const [showGuide, setShowGuide] = useState(false); 
+
+          // Sync with global session keyword
+          useEffect(() => {
+            setKeyword(sessionKeyword);
+          }, [sessionKeyword]);
+
+          const calculateOpportunity = () => {
+            if (!keyword || !results) return;
+            
+            // Update global session if user changed keyword here
+            if (keyword !== sessionKeyword) {
+              updateSession(keyword);
+            }
+            
+            const resultCount = parseInt(results);
+            const maxResultsForWin = 3000; 
+            
+            const competitionScore = Math.max(0, (maxResultsForWin - resultCount) / maxResultsForWin * 50);
+            const demandWeight = demandScore * 5;
+            let score = competitionScore + demandWeight;
+            score = Math.min(100, Math.max(0, score));
+
+            // Logic for narrative...
+            let verdict = "";
+            let color = "";
+            let narrative = "";
+
+            if (score >= 75) { 
+                verdict = t('calc_verdict_win'); color = "text-green-400"; narrative = t('calc_narrative_win');
+            } else if (score >= 50) { 
+                verdict = t('calc_verdict_good'); color = "text-yellow-400";
+                narrative = (resultCount > 2000) ? t('calc_narrative_good_1') : t('calc_narrative_good_2');
+            } else { 
+                verdict = t('calc_verdict_bad'); color = "text-red-400"; 
+                narrative = (resultCount > 3000) ? t('calc_narrative_bad_1') : t('calc_narrative_bad_2');
+            }
+
+            setAnalysis({ score: Math.round(score), verdict, color, resultCount, narrative });
+          };
+
+          return (
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div className="flex items-center gap-2 mb-6">
+                <Target className="text-purple-400" size={28} />
+                <div>
+                   <h2 className="text-2xl font-bold">{t('calc_title')}</h2>
+                   <p className="text-xs text-slate-400">{t('calc_desc')}</p>
+                </div>
+              </div>
+
+              <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
+                <div className="grid gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-2">{t('calc_label_keyword')}</label>
+                    <div className="flex gap-2">
+                        <input 
+                        type="text" 
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
+                        onBlur={() => updateSession(keyword)} // SYNC ON BLUR
+                        placeholder={t('dash_placeholder')}
+                        className="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-3 focus:outline-none focus:border-purple-500 text-white text-lg"
+                        />
+                        {keyword && (
+                            <a 
+                            href={`https://www.redbubble.com/shop/?query=${encodeURIComponent(keyword)}&sortOrder=trending`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-4 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center justify-center text-red-400 transition-colors border border-slate-600"
+                            title={t('card_check_rb')}
+                            >
+                            <Search size={20} />
+                            </a>
+                        )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+                      <label className="block text-sm font-bold text-slate-300 mb-2">{t('calc_step1')}</label>
+                      <p className="text-xs text-slate-500 mb-3">{t('calc_step1_desc')}</p>
+                      <input 
+                        type="number" 
+                        value={results}
+                        onChange={(e) => setResults(e.target.value)}
+                        placeholder="450"
+                        className="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 focus:outline-none focus:border-purple-500 text-white font-mono"
+                      />
+                    </div>
+                    
+                    <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+                      <div className="flex justify-between items-center mb-2">
+                        <label className="block text-sm font-bold text-slate-300">{t('calc_step2')}</label>
+                        <button 
+                          onClick={() => setShowGuide(!showGuide)}
+                          className="text-xs text-purple-400 flex items-center gap-1 hover:text-purple-300 transition-colors"
+                        >
+                          {showGuide ? <ChevronUp size={14}/> : <ChevronDown size={14}/>} {t('calc_guide')}
+                        </button>
+                      </div>
+
+                      {/* Guide Dropdown Logic */}
+                      {showGuide && (
+                        <div className="bg-slate-800 p-3 rounded mb-3 text-[10px] text-slate-300 border border-slate-600 space-y-2 animate-fade-in">
+                          <div className="grid grid-cols-[50px_1fr] gap-2 items-start">
+                            <span className="font-bold text-slate-400">1-3</span>
+                            <span><strong className="text-red-400">{t('calc_guide_1')}:</strong> {t('calc_guide_1_desc')}</span>
+                          </div>
+                          <div className="grid grid-cols-[50px_1fr] gap-2 items-start">
+                            <span className="font-bold text-slate-400">4-7</span>
+                            <span><strong className="text-yellow-400">{t('calc_guide_2')}:</strong> {t('calc_guide_2_desc')}</span>
+                          </div>
+                          <div className="grid grid-cols-[50px_1fr] gap-2 items-start">
+                            <span className="font-bold text-slate-400">8-10</span>
+                            <span><strong className="text-green-400">{t('calc_guide_3')}:</strong> {t('calc_guide_3_desc')}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      <p className="text-xs text-slate-500 mb-3">{t('calc_label_demand')}</p>
+                      <div className="flex items-center gap-4">
+                         <input 
+                            type="range" min="1" max="10" value={demandScore}
+                            onChange={(e) => setDemandScore(parseInt(e.target.value))}
+                            className="flex-1 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
+                        />
+                        <span className="text-xl font-bold text-purple-400 w-8 text-center">{demandScore}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-slate-500 mt-1 uppercase tracking-wider font-bold">
+                        <span>{t('calc_low')}</span>
+                        <span>{t('calc_high')}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={calculateOpportunity}
+                    disabled={!keyword || !results}
+                    className={`w-full py-4 rounded-lg font-bold text-white shadow-lg transition-all transform flex items-center justify-center gap-2 ${
+                      !keyword || !results 
+                        ? 'bg-slate-700 cursor-not-allowed opacity-50' 
+                        : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 hover:scale-[1.01]'
+                    }`}
+                  >
+                    <Calculator size={20} />
+                    {t('calc_btn')}
+                  </button>
+                </div>
+              </div>
+
+              {analysis && (
+                <div className="bg-slate-800 p-6 rounded-xl border border-slate-600 animate-fade-in">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold">{t('calc_result')}</h3>
+                    <span className="text-xs bg-slate-700 px-2 py-1 rounded">Keyword: {keyword}</span>
+                  </div>
+                  
+                  <div className="flex flex-col md:flex-row gap-6 items-center">
+                    <div className="relative w-32 h-32 flex items-center justify-center">
+                      <svg className="w-full h-full transform -rotate-90">
+                        <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-700" />
+                        <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="8" fill="transparent" 
+                          strokeDasharray={377} strokeDashoffset={377 - (377 * analysis.score) / 100} className={analysis.color} 
+                        />
+                      </svg>
+                      <span className={`absolute text-3xl font-bold ${analysis.color}`}>{analysis.score}</span>
+                    </div>
+                    
+                    <div className="flex-1">
+                      <h4 className={`text-2xl font-bold mb-2 ${analysis.color}`}>{analysis.verdict}</h4>
+                      <div className="bg-slate-900/50 border border-slate-700 p-4 rounded-lg mb-4">
+                        <p className="text-slate-200 text-sm leading-relaxed">{analysis.narrative}</p>
+                      </div>
+                      
+                      <div className="flex flex-col gap-3">
+                         <button 
+                          onClick={() => navigateTo('listing')}
+                          className="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded text-sm font-bold text-white flex items-center justify-center gap-2 mb-1"
+                        >
+                          <FileText size={16} /> {t('calc_to_listing_btn')}
+                        </button>
+
+                         <button 
+                          onClick={() => addToSaved({ id: Date.now(), keyword, competition: analysis.resultCount + ' Results', volume: 'Score: ' + analysis.score, note: analysis.verdict, narrative: analysis.narrative })}
+                          className="w-full py-3 bg-green-600 hover:bg-green-700 rounded text-sm font-bold text-white flex items-center justify-center gap-2"
+                        >
+                          <Save size={16} /> {t('calc_save_btn')}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        };
+
+        const PromptBuilder = ({ t, sessionKeyword, updateSession }) => {
+          const [subject, setSubject] = useState(sessionKeyword);
+          const [selectedStyle, setSelectedStyle] = useState('Digital Art');
+          const [customStyle, setCustomStyle] = useState('');
+          const [selectedMood, setSelectedMood] = useState('Vibrant');
+          const [customMood, setCustomMood] = useState('');
+          const [typography, setTypography] = useState('');
+          const [aspect, setAspect] = useState('--ar 2:3');
+          const [generatedPrompt, setGeneratedPrompt] = useState('');
+          const [promptObject, setPromptObject] = useState(null); 
+          const [copied, setCopied] = useState(''); 
+          const [promptHistory, setPromptHistory] = useState([]);
+
+          // Auto-fill from Session
+          useEffect(() => {
+            if (sessionKeyword) setSubject(sessionKeyword);
+          }, [sessionKeyword]);
+
+          // Load History
+          useEffect(() => {
+            const savedHistory = localStorage.getItem('marketSightPromptHistory');
+            if (savedHistory) setPromptHistory(JSON.parse(savedHistory));
+          }, []);
+
+          // Save History
+          useEffect(() => {
+            localStorage.setItem('marketSightPromptHistory', JSON.stringify(promptHistory));
+          }, [promptHistory]);
+
+          const styles = ["None", "Custom", "Digital Art", "Watercolor", "Ukiyo-e", "Synthwave", "Cyberpunk", "Vintage Poster", "Oil Painting", "Pixel Art", "3D Render", "Sticker Art", "Flat Vector"];
+          const moods = ["None", "Custom", "Vibrant", "Dark", "Pastel", "Neon", "Ethereal", "Minimalist", "Retro", "Psychedelic", "High Contrast"];
+          
+          const generate = () => {
+            if (!subject) return;
+
+            // 1. Handle Style Logic
+            // REVISI: Mengubah struktur agar Subjek lebih dulu (lebih kuat di Midjourney V5/V6)
+            // Format baru: [Subjek], [Gaya], [Mood]
+            let styleText = "";
+            if (selectedStyle === 'Custom' && customStyle) {
+                styleText = `, ${customStyle} style`;
+            } else if (selectedStyle !== 'None') {
+                styleText = `, ${selectedStyle} style`;
+            }
+
+            // 2. Handle Mood Logic
+            let moodText = "";
+            if (selectedMood === 'Custom' && customMood) {
+                moodText = `, ${customMood} vibes`;
+            } else if (selectedMood !== 'None') {
+                moodText = `, ${selectedMood} vibes`;
+            }
+
+            // 3. Handle Typography Logic
+            let typoText = "";
+            if (typography) {
+                typoText = `, with text "${typography}" integrated in design`;
+            }
+
+            // Construct the main prompt sentence 
+            // REVISI: Subject first priority
+            let mainPrompt = subject + typoText + styleText + moodText;
+
+            // Redbubble Optimization (REVAMPED FOR PRINTABILITY)
+            // Kunci: "Vector", "T-shirt design", "Contour", "Solid colors"
+            const printReadyKeywords = "vector art, t-shirt design style, clean lines, solid colors, flat design, isolated on white background, high contrast, svg style, no background, professional print quality, die-cut sticker style";
+            
+            // Negative Prompts (REVAMPED)
+            // Menghilangkan elemen yang susah dicetak: shadow, 3d, realistic, gradient kasar
+            const negativePrompts = "--no photo, realistic, 3d, shading, complex background, texture, noise, dither, blur, watermark, signature, cut off, frame, border";
+            
+            // Midjourney Params
+            // Stylize diturunkan sedikit (250 -> 150) agar lebih patuh pada perintah "clean/vector"
+            const params = "--q 2 --stylize 150";
+
+            const fullText = `/imagine prompt: ${mainPrompt}, ${printReadyKeywords} ${aspect} ${negativePrompts} ${params}`;
+            
+            const newPromptData = {
+                id: Date.now(),
+                subject,
+                selectedStyle,
+                customStyle,
+                selectedMood,
+                customMood,
+                typography,
+                aspect,
+                fullText,
+                timestamp: new Date().toLocaleString()
+            };
+
+            setGeneratedPrompt(fullText);
+            setPromptObject(newPromptData);
+            setPromptHistory([newPromptData, ...promptHistory]);
+            setCopied('');
+          };
+
+          // Improved copy function with fallback for clipboard API
+          const copyContent = (text) => {
+            // Create a temporary textarea element
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            
+            // Move it off-screen but keep it part of the document (required for execCommand)
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '0';
+            
+            document.body.appendChild(textarea);
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                // Execute the copy command
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+            
+            // Remove the temporary element
+            document.body.removeChild(textarea);
+          };
+
+          const copyText = () => {
+            copyContent(generatedPrompt);
+            setCopied('TEXT');
+            setTimeout(() => setCopied(''), 2000);
+          };
+
+          const copyJSON = (data = null) => {
+            const targetData = data || promptObject;
+            if (!targetData) return;
+            copyContent(JSON.stringify(targetData, null, 2));
+            setCopied('JSON');
+            setTimeout(() => setCopied(''), 2000);
+          };
+
+          const deleteHistoryItem = (id) => {
+            setPromptHistory(promptHistory.filter(item => item.id !== id));
+          };
+
+          const editHistoryItem = (item) => {
+            setSubject(item.subject);
+            setSelectedStyle(item.selectedStyle);
+            setCustomStyle(item.customStyle || '');
+            setSelectedMood(item.selectedMood);
+            setCustomMood(item.customMood || '');
+            setTypography(item.typography || '');
+            setAspect(item.aspect);
+            setGeneratedPrompt(item.fullText);
+            setPromptObject(item);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          };
+
+          return (
+            <div className="max-w-6xl mx-auto space-y-8 h-full">
+              {/* SECTION 1: GENERATOR & PREVIEW */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Form */}
+                <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 h-fit">
+                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <PenTool size={20} className="text-purple-400"/> {t('gen_title')}
+                    </h3>
+                    
+                    {/* IP WARNING */}
+                    <div className="bg-yellow-900/20 border border-yellow-700/50 p-3 rounded mb-4 flex gap-2 items-start">
+                        <AlertTriangle size={16} className="text-yellow-500 mt-0.5 shrink-0"/>
+                        <p className="text-xs text-yellow-200/80">
+                            <strong>{t('gen_warning')}</strong> {t('gen_warning_text')}
+                        </p>
+                    </div>
+                    
+                    <div className="space-y-4">
+                    <div>
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-2">
+                            {t('gen_subject')}
+                            <RefreshCw size={10} className="text-purple-400 cursor-help" title="Synced with your Dashboard/Analyzer input"/>
+                        </label>
+                        <input 
+                        type="text" 
+                        className="w-full bg-slate-900 border border-slate-700 p-2 rounded focus:border-purple-500 outline-none placeholder-slate-600"
+                        placeholder={t('placeholder_subject')}
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        onBlur={() => updateSession(subject)} // SYNC ON BLUR
+                        />
+                    </div>
+
+                    {/* Typography Field */}
+                    <div>
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-2">
+                            <Type size={12} className="text-purple-400"/> {t('gen_text')}
+                        </label>
+                        <input 
+                        type="text" 
+                        className="w-full bg-slate-900 border border-slate-700 p-2 rounded focus:border-purple-500 outline-none placeholder-slate-600"
+                        placeholder={t('placeholder_text')}
+                        value={typography}
+                        onChange={(e) => setTypography(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Style Selector */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{t('gen_style')}</label>
+                            <select 
+                                className="w-full bg-slate-900 border border-slate-700 p-2 rounded focus:border-purple-500 outline-none"
+                                value={selectedStyle}
+                                onChange={(e) => setSelectedStyle(e.target.value)}
+                            >
+                                <option value="None">{t('opt_none')}</option>
+                                {styles.filter(s => s !== "None" && s !== "Custom").map(s => <option key={s} value={s}>{s}</option>)}
+                                <option value="Custom">{t('opt_custom')}</option>
+                            </select>
+                            {selectedStyle === 'Custom' && (
+                                <input 
+                                    type="text" 
+                                    className="w-full bg-slate-950 border border-slate-700 p-2 rounded mt-2 text-sm focus:border-purple-500 outline-none animate-fade-in"
+                                    placeholder={t('placeholder_style')}
+                                    value={customStyle}
+                                    onChange={(e) => setCustomStyle(e.target.value)}
+                                />
+                            )}
+                        </div>
+
+                        {/* Mood Selector */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{t('gen_mood')}</label>
+                            <select 
+                                className="w-full bg-slate-900 border border-slate-700 p-2 rounded focus:border-purple-500 outline-none"
+                                value={selectedMood}
+                                onChange={(e) => setSelectedMood(e.target.value)}
+                            >
+                                <option value="None">{t('opt_none')}</option>
+                                {moods.filter(m => m !== "None" && m !== "Custom").map(m => <option key={m} value={m}>{m}</option>)}
+                                <option value="Custom">{t('opt_custom')}</option>
+                            </select>
+                            {selectedMood === 'Custom' && (
+                                <input 
+                                    type="text" 
+                                    className="w-full bg-slate-950 border border-slate-700 p-2 rounded mt-2 text-sm focus:border-purple-500 outline-none animate-fade-in"
+                                    placeholder={t('placeholder_mood')}
+                                    value={customMood}
+                                    onChange={(e) => setCustomMood(e.target.value)}
+                                />
+                            )}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{t('gen_ratio')}</label>
+                        <div className="grid grid-cols-2 gap-2">
+                            <button onClick={() => setAspect('--ar 1:1')} className={`p-2 rounded text-[10px] border flex flex-col items-center ${aspect === '--ar 1:1' ? 'bg-purple-600 border-purple-600' : 'border-slate-700 bg-slate-900'}`}>
+                                <span className="font-bold">1:1 ({t('ratio_sq')})</span>
+                                <span className="opacity-70">{t('ratio_sq_desc')}</span>
+                            </button>
+                            <button onClick={() => setAspect('--ar 2:3')} className={`p-2 rounded text-[10px] border flex flex-col items-center ${aspect === '--ar 2:3' ? 'bg-purple-600 border-purple-600' : 'border-slate-700 bg-slate-900'}`}>
+                                <span className="font-bold">2:3 ({t('ratio_po')})</span>
+                                <span className="opacity-70">{t('ratio_po_desc')}</span>
+                            </button>
+                            <button onClick={() => setAspect('--ar 3:2')} className={`p-2 rounded text-[10px] border flex flex-col items-center ${aspect === '--ar 3:2' ? 'bg-purple-600 border-purple-600' : 'border-slate-700 bg-slate-900'}`}>
+                                <span className="font-bold">3:2 ({t('ratio_ls')})</span>
+                                <span className="opacity-70">{t('ratio_ls_desc')}</span>
+                            </button>
+                            <button onClick={() => setAspect('--ar 4:5')} className={`p-2 rounded text-[10px] border flex flex-col items-center ${aspect === '--ar 4:5' ? 'bg-purple-600 border-purple-600' : 'border-slate-700 bg-slate-900'}`}>
+                                <span className="font-bold">4:5 ({t('ratio_ap')})</span>
+                                <span className="opacity-70">{t('ratio_ap_desc')}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button onClick={generate} disabled={!subject} className={`w-full py-3 rounded font-bold transition-colors ${!subject ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 text-white'}`}>
+                        {t('gen_btn')}
+                    </button>
+                    </div>
+                </div>
+
+                {/* Output Preview */}
+                <div className="flex flex-col h-full">
+                    <div className="bg-slate-900 p-6 rounded-xl border border-slate-700 flex-1 flex flex-col relative overflow-hidden min-h-[300px]">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                    <h3 className="text-xl font-bold mb-4 text-slate-300">{t('gen_output')}</h3>
+                    
+                    {generatedPrompt ? (
+                        <div className="flex-1 flex flex-col">
+                        <div className="bg-black/30 p-4 rounded-lg border border-slate-700 mb-4 font-mono text-sm text-green-400 break-words leading-relaxed shadow-inner overflow-y-auto max-h-[200px]">
+                            {generatedPrompt}
+                        </div>
+                        
+                        <div className="flex flex-col gap-2 mt-auto">
+                            <button 
+                                onClick={copyText}
+                                className={`w-full py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all ${
+                                copied === 'TEXT' ? 'bg-green-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-white'
+                                }`}
+                            >
+                                {copied === 'TEXT' ? <><Check size={18}/> {t('gen_copied')}</> : <><Copy size={18}/> {t('gen_copy_text')}</>}
+                            </button>
+                            
+                            <button 
+                                onClick={() => copyJSON()}
+                                className={`w-full py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all border border-slate-600 ${
+                                copied === 'JSON' ? 'bg-green-900/30 text-green-400 border-green-500' : 'bg-transparent hover:bg-slate-800 text-slate-300'
+                                }`}
+                            >
+                                {copied === 'JSON' ? <><Check size={18}/> {t('gen_copied')}</> : <><FileJson size={18}/> {t('gen_copy_json')}</>}
+                            </button>
+                        </div>
+                        </div>
+                    ) : (
+                        <div className="flex-1 flex flex-col items-center justify-center text-slate-600 italic">
+                            <Sparkles size={48} className="mb-2 opacity-20"/>
+                            <p>"{t('gen_btn')}..."</p>
+                        </div>
+                    )}
+                    </div>
+                    
+                    <div className="mt-4 p-4 bg-purple-900/10 border border-purple-500/20 rounded-lg text-xs text-purple-200">
+                    <p className="font-bold mb-1 flex items-center gap-2"><Printer size={14}/> {t('gen_opt_title')}</p>
+                    <ul className="list-disc ml-4 space-y-1 opacity-80">
+                        <li>{t('gen_opt_1')}</li>
+                        <li>{t('gen_opt_2')}</li>
+                        <li>{t('gen_opt_3')}</li>
+                    </ul>
+                    </div>
+                </div>
+              </div>
+
+              {/* SECTION 2: HISTORY LIST */}
+              <div className="border-t border-slate-700 pt-8">
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <LayoutDashboard size={20} className="text-purple-400"/> {t('hist_title')}
+                </h3>
+
+                {promptHistory.length === 0 ? (
+                    <p className="text-slate-500 text-sm italic">{t('hist_empty')}</p>
+                ) : (
+                    <div className="grid grid-cols-1 gap-4">
+                        {promptHistory.map((item) => (
+                            <div key={item.id} className="bg-slate-800 border border-slate-700 rounded-lg p-4 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between group hover:border-purple-500/30 transition-all">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        {item.selectedStyle !== 'None' && (
+                                           <span className="text-xs font-bold bg-slate-700 px-2 py-0.5 rounded text-purple-300">
+                                             {item.selectedStyle === 'Custom' ? item.customStyle : item.selectedStyle}
+                                           </span>
+                                        )}
+                                        <span className="text-xs text-slate-500">{item.timestamp}</span>
+                                    </div>
+                                    <p className="text-white font-medium truncate mb-1">{item.fullText}</p>
+                                    <div className="flex gap-2 text-xs text-slate-400 truncate">
+                                        <span>Subject: {item.subject}</span>
+                                        {item.typography && <span className="text-yellow-400">| Text: "{item.typography}"</span>}
+                                    </div>
+                                </div>
+                                
+                                <div className="flex gap-2 w-full md:w-auto">
+                                    <button onClick={() => editHistoryItem(item)} className="p-2 hover:bg-blue-600/20 text-blue-400 rounded transition-colors" title="Edit / Load Again">
+                                        <Edit size={18}/>
+                                    </button>
+                                    <button onClick={() => {
+                                        copyContent(JSON.stringify(item, null, 2));
+                                        alert('JSON Copied!');
+                                    }} className="p-2 hover:bg-green-600/20 text-green-400 rounded transition-colors" title="Copy JSON">
+                                        <FileJson size={18}/>
+                                    </button>
+                                    <button onClick={() => deleteHistoryItem(item.id)} className="p-2 hover:bg-red-600/20 text-red-400 rounded transition-colors" title="Delete">
+                                        <Trash2 size={18}/>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        // --- NEW COMPONENT: LISTING BUILDER ---
+        const ListingBuilder = ({ t, sessionKeyword, updateSession }) => {
+          const [mainKeyword, setMainKeyword] = useState(sessionKeyword);
+          const [generatedData, setGeneratedData] = useState(null);
+          const [copiedSection, setCopiedSection] = useState('');
+
+          // Auto-fill from Session
+          useEffect(() => {
+            if (sessionKeyword) setMainKeyword(sessionKeyword);
+          }, [sessionKeyword]);
+
+          // Improved copy function
+          const copyToClipboard = (text, section) => {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                setCopiedSection(section);
+                setTimeout(() => setCopiedSection(''), 2000);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+            document.body.removeChild(textarea);
+          };
+
+          const generateListing = () => {
+            if (!mainKeyword.trim()) return;
+
+            const titleCase = (str) => str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            const kw = titleCase(mainKeyword);
+
+            // 1. Generate Powerful Titles
+            const titles = [
+                `The Ultimate ${kw} Aesthetic Graphic`,
+                `${kw} - Retro Vintage Style Design`,
+                `Funny ${kw} Gift Idea for Fans`,
+                `Official ${kw} Lover Merchandise`,
+                `Unique ${kw} Art Illustration`
+            ];
+
+            // 2. Generate Smart Tags (Mix of Broad, Exact, and POD specific)
+            const words = mainKeyword.toLowerCase().split(' ').filter(w => w.length > 2);
+            
+            // Base variations
+            let generatedTags = [
+                mainKeyword, 
+                `${mainKeyword} art`, 
+                `${mainKeyword} design`,
+                `${mainKeyword} gift`,
+                `${mainKeyword} lover`
+            ];
+
+            // Word variations
+            words.forEach(w => {
+                generatedTags.push(`cute ${w}`);
+                generatedTags.push(`retro ${w}`);
+                generatedTags.push(`${w} aesthetic`);
+            });
+
+            // High Volume / Vibe Tags
+            const powerTags = [
+                "trending", "bestseller", "vintage", "retro", "90s", "y2k", 
+                "cool", "funny", "urban", "streetwear", "graphic", "illustration",
+                "colorful", "unique", "indie", "hipster"
+            ];
+
+            // Product Specific Tags (Crucial for Redbubble SEO)
+            const productTags = [
+                "sticker", "t-shirt", "apparel", "poster", "phone case", 
+                "wall art", "home decor", "gift idea", "birthday present"
+            ];
+
+            // Combine, Shuffle & Deduplicate
+            let allTags = [...generatedTags, ...powerTags, ...productTags];
+            // Simple shuffle to make it look organic
+            allTags = allTags.sort(() => Math.random() - 0.5);
+            // Remove duplicates and take top 25
+            const uniqueTags = [...new Set(allTags)].slice(0, 25);
+            // Ensure main keyword is first
+            const finalTags = [mainKeyword, ...uniqueTags.filter(t => t !== mainKeyword)];
+            const tagsString = finalTags.join(', ');
+
+            // 3. Generate Powerful Sales Copy (Description)
+            const description = `ðŸŒŸ **${kw} - Exclusive Design** ðŸŒŸ
+
+        Express your unique style with this one-of-a-kind **${kw}** artwork! Designed specifically for those who appreciate creativity and quality, this graphic captures the true essence of the ${mainKeyword} vibe.
+
+        **Why you'll love this:**
+        âœ… **Unique Art:** Stand out from the crowd with a design you won't find in generic stores.
+        âœ… **Perfect Gift:** The ultimate surprise for birthdays, holidays, or special occasions.
+        âœ… **Premium Look:** Looks incredible on T-Shirts, vibrant Stickers, cozy Hoodies, and durable Phone Cases.
+
+        **Great for:**
+        â€¢ ${kw} enthusiasts & collectors
+        â€¢ Friends and family who love unique art
+        â€¢ Adding a pop of personality to your daily outfit or room
+
+        ðŸ‘‰ **Available on a wide range of products!** Choose your favorite size, color, and style below.
+
+        *Grab yours today and support independent art!* âœ¨`;
+
+            setGeneratedData({ titles, tags: tagsString, description });
+          };
+
+          return (
+            <div className="max-w-4xl mx-auto space-y-8">
+              {/* Header */}
+              <div className="text-center">
+                <h2 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+                  <FileText className="text-purple-400" /> {t('list_title')}
+                </h2>
+                <p className="text-slate-400">{t('list_desc')}</p>
+              </div>
+
+              {/* Input Section */}
+              <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+                <label className="block text-sm font-bold text-slate-300 mb-2 flex items-center gap-2">
+                    {t('list_input_label')}
+                    <RefreshCw size={10} className="text-purple-400 cursor-help" title="Synced with your Dashboard/Analyzer input"/>
+                </label>
+                <div className="flex gap-4">
+                    <input 
+                        type="text" 
+                        value={mainKeyword}
+                        onChange={(e) => setMainKeyword(e.target.value)}
+                        onBlur={() => updateSession(mainKeyword)} // SYNC ON BLUR
+                        placeholder={t('list_input_placeholder')}
+                        className="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-3 focus:outline-none focus:border-purple-500 text-white"
+                    />
+                    <button 
+                        onClick={generateListing}
+                        className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 rounded-lg transition-all shadow-lg hover:scale-105"
+                    >
+                        {t('list_btn_generate')}
+                    </button>
+                </div>
+              </div>
+
+              {/* Results Section */}
+              {generatedData && (
+                <div className="grid gap-6 animate-fade-in">
+                    {/* Titles */}
+                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                        <h3 className="text-lg font-bold mb-4 text-purple-300 flex items-center gap-2">
+                            <Type size={18}/> {t('list_section_title')}
+                        </h3>
+                        <div className="space-y-3">
+                            {generatedData.titles.map((title, index) => (
+                                <div key={index} className="flex gap-2 items-center bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 hover:border-purple-500/50 transition-colors group">
+                                    <span className="flex-1 font-medium text-slate-200">{title}</span>
+                                    <button 
+                                        onClick={() => copyToClipboard(title, `title-${index}`)}
+                                        className={`px-3 py-1.5 rounded text-xs font-bold transition-all ${copiedSection === `title-${index}` ? 'bg-green-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-slate-300'}`}
+                                    >
+                                        {copiedSection === `title-${index}` ? t('list_copied') : t('list_copy')}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Tags */}
+                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-bold text-purple-300 flex items-center gap-2">
+                                <Tag size={18}/> {t('list_section_tags')}
+                            </h3>
+                            <span className="text-xs text-slate-500 italic hidden sm:inline">{t('list_tip')}</span>
+                        </div>
+                        
+                        <div className="bg-slate-900 p-4 rounded-lg border border-slate-700 font-mono text-sm text-green-400 mb-3 break-words">
+                            {generatedData.tags}
+                        </div>
+                        <button 
+                            onClick={() => copyToClipboard(generatedData.tags, 'tags')}
+                            className={`w-full py-2 rounded font-bold transition-all ${copiedSection === 'tags' ? 'bg-green-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-white'}`}
+                        >
+                            {copiedSection === 'tags' ? <><Check size={16} className="inline mr-1"/> {t('list_copied')}</> : <><Copy size={16} className="inline mr-1"/> {t('list_section_tags')}</>}
+                        </button>
+                    </div>
+
+                    {/* Description */}
+                    <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                        <h3 className="text-lg font-bold mb-4 text-purple-300 flex items-center gap-2">
+                            <AlignLeft size={18}/> {t('list_section_desc')}
+                        </h3>
+                        <div className="bg-slate-900 p-4 rounded-lg border border-slate-700 text-slate-300 text-sm whitespace-pre-wrap mb-3 leading-relaxed">
+                            {generatedData.description}
+                        </div>
+                        <button 
+                            onClick={() => copyToClipboard(generatedData.description, 'desc')}
+                            className={`w-full py-2 rounded font-bold transition-all ${copiedSection === 'desc' ? 'bg-green-600 text-white' : 'bg-slate-700 hover:bg-slate-600 text-white'}`}
+                        >
+                            {copiedSection === 'desc' ? <><Check size={16} className="inline mr-1"/> {t('list_copied')}</> : <><Copy size={16} className="inline mr-1"/> {t('list_copy')}</>}
+                        </button>
+                    </div>
+                </div>
+              )}
+            </div>
+          );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<MarketSight />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+---
+import CustomSEO from "@components/ui/SEO.astro";
+import Footer from "@components/footer.astro";
+import Navbar from "@components/navbar/navbar.astro";
+import BackToTop from "@components/ui/BackToTop.astro";
+import "@fontsource/outfit";
+import "@fontsource/playfair-display";
+import "../styles/premium.css";
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  ogType?: string;
+}
+
+const { title, description, image, ogType } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <CustomSEO 
+      title={title} 
+      description={description} 
+      image={image} 
+      ogType={ogType} 
+    />
+    <slot name="head" />
+  </head>
+  <body class="transition-colors duration-300">
+    <Navbar />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <BackToTop />
+  </body>
+</html>

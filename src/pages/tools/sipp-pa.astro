@@ -1,0 +1,138 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import AdSlot from "@components/ui/AdSlot.astro";
+
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRphPEFpPWt1xyQNyukVHMS9g8kCmq99CjcRx_YitDAtc_SKmBDIqambYVjwq2Lvr05GW3i-OuGotd_/pub?output=csv";
+
+let allData = [];
+try {
+  const response = await fetch(SHEET_URL);
+  const csvData = await response.text();
+
+  // Parsing CSV sederhana (Asumsi: Tidak ada koma di dalam teks sel)
+  const rows = csvData.split('\n').filter(row => row.trim() !== '');
+  const headers = rows[0].split(',').map(h => h.trim()); 
+  
+  allData = rows.slice(1).map(row => {
+    const values = row.split(',');
+    let obj = {};
+    headers.forEach((header, i) => {
+      obj[header] = values[i]?.trim();
+    });
+    return obj;
+  });
+} catch (error) {
+  console.error("Gagal sinkronisasi Google Sheets:", error);
+}
+---
+
+<Layout title="Database SIPP PA - Search Tool">
+  <div class="max-w-6xl mx-auto p-6 mt-10">
+    <div class="glass p-8 rounded-3xl mb-8 border border-slate-700/50 shadow-2xl">
+      <h1 class="text-3xl font-bold mb-2 flex items-center gap-3">
+        <span class="text-4xl">📂</span> 
+        Database <span class="text-gradient">SIPP PA</span>
+      </h1>
+      <p class="text-slate-400 mb-6">Akses cepat link SIPP seluruh Pengadilan Agama Indonesia.</p>
+      
+      <div class="relative">
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Ketik Nama PA" 
+          class="w-full px-5 py-4 bg-slate-900/50 border border-slate-700 rounded-2xl text-white focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 focus:outline-none transition-all placeholder:text-slate-600"
+        />
+        <div class="absolute right-5 top-4 opacity-30">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass rounded-3xl overflow-hidden border border-slate-700/50 shadow-xl">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-slate-800/80 text-slate-300 text-xs uppercase tracking-widest">
+            <tr>
+              <th class="p-5 font-semibold w-24">No</th>
+              <th class="p-5 font-semibold">Nama PA</th>
+              <th class="p-5 font-semibold">Akses SIPP</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            {allData.map((item) => (
+              <tr class="data-row border-b border-slate-800/50 hover:bg-slate-700/30 transition-all">
+                <td class="p-5 text-slate-500 font-mono text-sm">{item["No"]}</td>
+                <td class="p-5">
+                  <div class="text-white font-semibold">{item["Nama PA"]}</div>
+                  <div class="text-[10px] text-slate-500 uppercase mt-1">Pengadilan Agama</div>
+                </td>
+                <td class="p-5">
+                  {item["Sipp PA"] ? (
+                    <a 
+                      href={item["Sipp PA"].startsWith('http') ? item["Sipp PA"] : `https://${item["Sipp PA"]}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-2 px-4 py-2 bg-pink-500/10 text-pink-400 rounded-lg border border-pink-500/20 hover:bg-pink-500 hover:text-white transition-all text-sm font-bold"
+                    >
+                      Buka SIPP 
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  ) : (
+                    <span class="text-slate-600 italic text-sm">Link belum tersedia</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div id="noData" class="hidden py-24 text-center">
+        <div class="text-6xl mb-4">🔍</div>
+        <h3 class="text-xl font-bold text-white">Data tidak ditemukan</h3>
+        <p class="text-slate-500">Coba periksa kembali ejaan Nama PA yang Anda cari.</p>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .glass {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(16px);
+  }
+  .text-gradient {
+    background: linear-gradient(to right, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>
+
+<script>
+  
+  const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+  const rows = document.querySelectorAll('.data-row');
+  const noData = document.getElementById('noData');
+
+  searchInput?.addEventListener('input', () => {
+    const val = searchInput.value.toLowerCase();
+    let hasResults = false;
+
+    rows.forEach(row => {
+      const text = row.textContent?.toLowerCase() || "";
+      if (text.includes(val)) {
+        (row as HTMLElement).style.display = "";
+        hasResults = true;
+      } else {
+        (row as HTMLElement).style.display = "none";
+      }
+    });
+
+    noData?.classList.toggle('hidden', hasResults);
+  });
+</script>

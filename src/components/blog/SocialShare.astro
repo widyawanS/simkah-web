@@ -1,0 +1,53 @@
+---
+export interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+const encodedUrl = encodeURIComponent(url);
+const encodedTitle = encodeURIComponent(title);
+---
+
+<div class="flex items-center gap-4 py-8 border-t border-b border-slate-200 dark:border-slate-800 my-8">
+  <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Bagikan:</span>
+  
+  <!-- WhatsApp -->
+  <a
+    href={`https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors"
+    aria-label="Share on WhatsApp"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.835c1.783.997 3.515 1.5 5.292 1.5 5.4 0 9.794-4.393 9.797-9.794.001-2.618-1.02-5.08-2.873-6.934a9.726 9.726 0 00-6.923-2.871c-5.397 0-9.791 4.393-9.794 9.794-.001 2.155.56 3.945 1.588 5.71l-1.06 3.848 3.972-1.053zm10.962-7.461c-.3-.15-1.77-.874-2.043-.974-.275-.101-.476-.151-.675.15s-.777.974-.951 1.173-.349.225-.648.075c-.3-.15-1.267-.467-2.414-1.492-.893-.796-1.495-1.778-1.671-2.078s-.019-.462.13-.611c.134-.134.3-.349.449-.525.149-.174.198-.299.299-.499s.05-.375-.025-.525-.675-1.625-.925-2.227c-.244-.588-.492-.509-.675-.518-.174-.009-.374-.011-.574-.011s-.525.075-.8.375-1.05 1.025-1.05 2.5 1.075 2.9 1.225 3.1c.149.2 2.116 3.228 5.125 4.53 2.126.918 2.768.805 3.313.754.675-.062 1.77-.724 2.02-.974s.25-.499.176-.649-.25-.224-.551-.374z"/>
+    </svg>
+  </a>
+
+  <!-- Facebook -->
+  <a
+    href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+    aria-label="Share on Facebook"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.248h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+    </svg>
+  </a>
+
+  <!-- Twitter / X -->
+  <a
+    href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="p-2 rounded-full bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+    aria-label="Share on X (Twitter)"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    </svg>
+  </a>
+</div>

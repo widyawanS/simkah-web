@@ -1,0 +1,59 @@
+---
+title: >-
+  Rekomendasi Nikah Sudah Terkirim, Tapi Belum Terbaca di KUA Tujuan? Ini yang
+  Harus Dicek
+description: >-
+  Pernah nggak, seharian nunggu rekomendasi nikah yang kata teman operator
+  simkah KUA asal sudah terkirim tapi belum terbaca di KUA tujuan? Rasanya kayak
+  udah lari maraton tapi garis finishnya malah kabur. Nah, sebelum panik dan
+  langsung ngedumel, ada beberapa cara jitu yang bisa kamu coba.
+pubDate: 2026-03-31
+author: Widyawan
+image: >-
+  /images/blog/rekomendasi-nikah-sudah-terkirim-tapi-belum-terbaca-di-kua-tujuan-ini-yang-harus-dicek/image.webp
+category: Catatan
+draft: false
+---
+Situasi ini pasti sudah tidak asing bagi para operator SIMKAH: rekomendasi nikah dari KUA asal sudah terkirim dengan benar, tapi di KUA tujuan datanya seperti "menghilang" — tidak terbaca sama sekali. Sebelum langsung menghubungi helpdesk/"Lapor PAK" atau menyalahkan sistem, ada beberapa langkah teknis yang bisa dicoba sendiri dari komputer kantor.
+
+Sebagian besar kasus seperti ini ternyata bukan soal data yang hilang, melainkan soal **browser atau jaringan yang masih menampilkan versi lama halaman SIMKAH**. Nah, berikut panduan praktisnya.
+
+## 1. Hard Refresh — Langkah Pertama yang Sering Terlupakan
+
+Jangan sepelekan ini. Hard Refresh memaksa browser mengunduh ulang seluruh aset halaman SIMKAH secara langsung dari server, tanpa mengandalkan data lama yang tersimpan di cache.
+
+* **Windows/Linux:** `Ctrl + F5` atau `Ctrl + Shift + R`
+* **Mac:** `Cmd + Shift + R`
+
+Cukup dua detik, dan seringkali masalah langsung selesai di sini.
+
+## 2. Buka di Mode Incognito / Private
+
+Kalau Hard Refresh belum berhasil, coba buka SIMKAH di **jendela Incognito**. Mode ini bekerja tanpa menggunakan cache maupun cookie dari sesi sebelumnya.
+
+Kalau data rekomendasi muncul normal di Incognito, berarti sumber masalahnya ada pada **cache atau ekstensi browser utama** yang terpasang di komputer kantor — bukan pada sistem SIMKAH-nya.
+
+## 3. Flush DNS — Bersihkan "Memori" Jaringan Komputer
+
+Yang bikin kaget, komputer bisa saja masih menyimpan alamat IP lama dari server SIMKAH dan terus menggunakannya. Solusinya adalah melakukan **DNS Flush**:
+
+* **Windows:** Buka Command Prompt → ketik `ipconfig /flushdns` → Enter
+* **Mac:** Buka Terminal → ketik `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`
+
+Langkah ini aman dilakukan dan tidak memerlukan hak akses administrator khusus di sebagian besar komputer kantor.
+
+## 4. Nonaktifkan Sementara Ekstensi Browser
+
+Ekstensi seperti **AdBlocker, Privacy Badger**, atau ekstensi penghemat data terkadang memblokir skrip terbaru dari halaman SIMKAH, sehingga yang tampil masih versi lama. Coba nonaktifkan semua ekstensi sementara, lalu muat ulang halaman.
+
+## 5. Ganti Jaringan Internet
+
+Singkatnya, masalah bisa juga berasal dari sisi **ISP (penyedia layanan internet)** yang digunakan kantor. Beberapa ISP memiliki sistem *Transparent Proxy* — semacam cache di level jaringan mereka sendiri. Coba beralih dari **WiFi kantor ke jaringan seluler (hotspot)**, atau sebaliknya, lalu akses kembali SIMKAH.
+
+Jika konten berubah setelah ganti jaringan, perlu dilaporkan ke pengelola jaringan kantor atau ISP terkait.
+
+## Kesimpulan untuk Operator
+
+Kelima langkah di atas adalah **troubleshooting mandiri tingkat pertama** yang bisa dilakukan sebelum eskalasi ke helpdesk/"Lapor  PAK". Urutannya pun sebaiknya diikuti dari atas ke bawah — mulai dari yang paling cepat dan mudah.
+
+Kalau setelah semua langkah ini data rekomendasi masih belum terbaca, barulah dipastikan masalahnya ada di sisi sistem dan perlu ditangani lebih lanjut oleh tim teknis SIMKAH pusat.

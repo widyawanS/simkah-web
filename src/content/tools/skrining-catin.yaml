@@ -1,0 +1,12 @@
+title: Skrining Kesiapan Catin
+shortDescription: >-
+  Deteksi dini faktor risiko stunting pada calon pengantin. Ukur BMI, LLA, dan 
+  status merokok untuk mengetahui kesiapan kesehatan pranikah sesuai standar el-SIMIL.
+category: calculator
+icon: 🩺
+colorFrom: pink-500
+colorTo: purple-500
+link: /tools/skrining-catin
+isActive: true
+showInMenu: true
+order: 0

@@ -1,0 +1,363 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+import AdSlot from "@components/ui/AdSlot.astro";
+---
+
+<Layout title="Kalkulator Wedding Party - Estimasi Biaya Pernikahan">
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">Kalkulator Wedding Party</Fragment>
+      <Fragment slot="desc">Rencanakan anggaran pernikahan impian Anda dengan detail</Fragment>
+    </Sectionhead>
+
+    <div class="max-w-4xl mx-auto mt-8">
+      <AdSlot type="tools" />
+    </div>
+
+    <div class="max-w-4xl mx-auto mt-16">
+      <!-- Calculator Card -->
+      <div class="glass rounded-3xl p-8 md:p-12">
+        <form id="weddingCalculator" class="space-y-8">
+          <!-- Guest Section -->
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+              </span>
+              Jumlah Tamu
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Tamu Pria</label>
+                <input type="number" id="guestsMale" value="150" min="0"
+                  class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Tamu Wanita</label>
+                <input type="number" id="guestsFemale" value="150" min="0"
+                  class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+              </div>
+            </div>
+          </div>
+
+          <!-- Venue Section -->
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+              </span>
+              Venue & Gedung
+            </h3>
+            <div>
+              <label class="block text-sm text-slate-400 mb-2">Tipe Venue</label>
+              <select id="venueType" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                <option value="rumah">Rumah / Tenda (Rp 5-15 juta)</option>
+                <option value="gedung">Gedung Serbaguna (Rp 15-40 juta)</option>
+                <option value="hotel" selected>Ballroom Hotel (Rp 40-100 juta)</option>
+                <option value="outdoor">Outdoor/Garden (Rp 30-80 juta)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Catering Section -->
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+              </span>
+              Catering
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Tipe Catering</label>
+                <select id="cateringType" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  <option value="prasmanan_simple">Prasmanan Sederhana (Rp 75K/pax)</option>
+                  <option value="prasmanan_medium" selected>Prasmanan Menengah (Rp 125K/pax)</option>
+                  <option value="prasmanan_premium">Prasmanan Premium (Rp 200K/pax)</option>
+                  <option value="fine_dining">Fine Dining (Rp 350K/pax)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Tambahan Snack Box</label>
+                <select id="snackBox" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  <option value="0">Tidak Ada</option>
+                  <option value="25000">Standar (Rp 25K/box)</option>
+                  <option value="50000" selected>Premium (Rp 50K/box)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Decoration Section -->
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                </svg>
+              </span>
+              Dekorasi & Entertainment
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Paket Dekorasi</label>
+                <select id="decoration" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  <option value="10000000">Minimalis (Rp 10 juta)</option>
+                  <option value="25000000">Standar (Rp 25 juta)</option>
+                  <option value="50000000" selected>Premium (Rp 50 juta)</option>
+                  <option value="100000000">Mewah (Rp 100 juta)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Entertainment</label>
+                <select id="entertainment" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  <option value="5000000">MC + Sound System (Rp 5 juta)</option>
+                  <option value="15000000" selected>MC + Band Akustik (Rp 15 juta)</option>
+                  <option value="30000000">MC + Full Band (Rp 30 juta)</option>
+                  <option value="75000000">MC + Artis (Rp 75 juta+)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Photography Section -->
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </span>
+              Dokumentasi
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Paket Foto & Video</label>
+                <select id="photography" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  <option value="5000000">Basic (Rp 5 juta)</option>
+                  <option value="15000000" selected>Standar (Rp 15 juta)</option>
+                  <option value="35000000">Premium (Rp 35 juta)</option>
+                  <option value="75000000">Cinematic (Rp 75 juta)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Pre-Wedding</label>
+                <select id="prewedding" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  <option value="0">Tidak Ada</option>
+                  <option value="5000000">Lokal (Rp 5 juta)</option>
+                  <option value="15000000" selected>Out of Town (Rp 15 juta)</option>
+                  <option value="50000000">Overseas (Rp 50 juta+)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Extras Section -->
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+              </span>
+              Tambahan
+            </h3>
+            <div class="grid md:grid-cols-3 gap-4">
+              <label class="flex items-center gap-3 p-4 bg-slate-800/50 border border-slate-700 rounded-xl cursor-pointer hover:border-brand-primary transition-colors">
+                <input type="checkbox" id="makeup" checked class="w-5 h-5 accent-brand-primary">
+                <span class="text-white">MUA (Rp 15 juta)</span>
+              </label>
+              <label class="flex items-center gap-3 p-4 bg-slate-800/50 border border-slate-700 rounded-xl cursor-pointer hover:border-brand-primary transition-colors">
+                <input type="checkbox" id="souvenir" checked class="w-5 h-5 accent-brand-primary">
+                <span class="text-white">Souvenir</span>
+              </label>
+              <label class="flex items-center gap-3 p-4 bg-slate-800/50 border border-slate-700 rounded-xl cursor-pointer hover:border-brand-primary transition-colors">
+                <input type="checkbox" id="invitation" checked class="w-5 h-5 accent-brand-primary">
+                <span class="text-white">Undangan Digital</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="button" id="calculateBtn" 
+            class="w-full py-4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl font-bold text-white hover:opacity-90 transition-opacity">
+            💒 Hitung Total Biaya Wedding
+          </button>
+        </form>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden mt-10 pt-10 border-t border-slate-700">
+          <h3 class="text-2xl font-bold text-white mb-6">💍 Estimasi Biaya Pernikahan</h3>
+          
+          <div class="bg-gradient-to-r from-pink-500/20 to-purple-500/20 border border-pink-500/30 rounded-2xl p-8 mb-8 text-center">
+            <p class="text-sm text-pink-300 mb-2">Total Estimasi</p>
+            <p id="grandTotal" class="text-5xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Rp 0</p>
+          </div>
+
+          <h4 class="font-bold text-white mb-4">📋 Rincian Biaya</h4>
+          <div class="space-y-3" id="breakdown">
+            <!-- Breakdown will be inserted here -->
+          </div>
+
+          <div class="mt-8 p-6 rounded-2xl bg-blue-500/10 border border-blue-500/30">
+            <p class="text-blue-400 font-bold">💡 Tips Hemat</p>
+            <ul class="text-slate-300 mt-3 space-y-2 text-sm">
+              <li>• Pilih hari weekday untuk diskon venue hingga 30%</li>
+              <li>• Gunakan vendor all-in-one untuk negosiasi paket</li>
+              <li>• Undangan digital bisa hemat hingga Rp 5 juta</li>
+              <li>• Pertimbangkan intimate wedding (< 100 tamu) untuk efisiensi</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>
+
+<script>
+  document.getElementById('calculateBtn')?.addEventListener('click', calculate);
+  
+  function formatRupiah(num: number): string {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+  }
+
+  function calculate() {
+    // Get values
+    const guestsMale = Number((document.getElementById('guestsMale') as HTMLInputElement).value) || 0;
+    const guestsFemale = Number((document.getElementById('guestsFemale') as HTMLInputElement).value) || 0;
+    const totalGuests = guestsMale + guestsFemale;
+
+    // Venue costs
+    const venueType = (document.getElementById('venueType') as HTMLSelectElement).value;
+    const venueCosts: Record<string, number> = {
+      rumah: 10000000,
+      gedung: 30000000,
+      hotel: 70000000,
+      outdoor: 50000000
+    };
+    const venueCost = venueCosts[venueType] || 30000000;
+
+    // Catering costs
+    const cateringType = (document.getElementById('cateringType') as HTMLSelectElement).value;
+    const cateringPrices: Record<string, number> = {
+      prasmanan_simple: 75000,
+      prasmanan_medium: 125000,
+      prasmanan_premium: 200000,
+      fine_dining: 350000
+    };
+    const cateringPerPax = cateringPrices[cateringType] || 125000;
+    const snackBox = Number((document.getElementById('snackBox') as HTMLSelectElement).value) || 0;
+    const cateringCost = (cateringPerPax + snackBox) * totalGuests;
+
+    // Decoration & Entertainment
+    const decoration = Number((document.getElementById('decoration') as HTMLSelectElement).value) || 0;
+    const entertainment = Number((document.getElementById('entertainment') as HTMLSelectElement).value) || 0;
+
+    // Photography
+    const photography = Number((document.getElementById('photography') as HTMLSelectElement).value) || 0;
+    const prewedding = Number((document.getElementById('prewedding') as HTMLSelectElement).value) || 0;
+
+    // Extras
+    const makeup = (document.getElementById('makeup') as HTMLInputElement).checked ? 15000000 : 0;
+    const souvenir = (document.getElementById('souvenir') as HTMLInputElement).checked ? totalGuests * 25000 : 0;
+    const invitation = (document.getElementById('invitation') as HTMLInputElement).checked ? 2000000 : 0;
+
+    // Calculate total
+    const grandTotal = venueCost + cateringCost + decoration + entertainment + photography + prewedding + makeup + souvenir + invitation;
+
+    // Display results
+    document.getElementById('results')?.classList.remove('hidden');
+    (document.getElementById('grandTotal') as HTMLElement).textContent = formatRupiah(grandTotal);
+
+    // Breakdown
+    const breakdown = document.getElementById('breakdown') as HTMLElement;
+    breakdown.innerHTML = `
+      <div class="flex justify-between py-3 border-b border-slate-700/50">
+        <span class="text-slate-400">🏛️ Venue (${venueType})</span>
+        <span class="font-bold text-white">${formatRupiah(venueCost)}</span>
+      </div>
+      <div class="flex justify-between py-3 border-b border-slate-700/50">
+        <span class="text-slate-400">🍽️ Catering (${totalGuests} pax)</span>
+        <span class="font-bold text-white">${formatRupiah(cateringCost)}</span>
+      </div>
+      <div class="flex justify-between py-3 border-b border-slate-700/50">
+        <span class="text-slate-400">🌸 Dekorasi</span>
+        <span class="font-bold text-white">${formatRupiah(decoration)}</span>
+      </div>
+      <div class="flex justify-between py-3 border-b border-slate-700/50">
+        <span class="text-slate-400">🎤 Entertainment</span>
+        <span class="font-bold text-white">${formatRupiah(entertainment)}</span>
+      </div>
+      <div class="flex justify-between py-3 border-b border-slate-700/50">
+        <span class="text-slate-400">📸 Foto & Video</span>
+        <span class="font-bold text-white">${formatRupiah(photography)}</span>
+      </div>
+      <div class="flex justify-between py-3 border-b border-slate-700/50">
+        <span class="text-slate-400">💑 Pre-Wedding</span>
+        <span class="font-bold text-white">${formatRupiah(prewedding)}</span>
+      </div>
+      <div class="flex justify-between py-3 border-b border-slate-700/50">
+        <span class="text-slate-400">💄 MUA</span>
+        <span class="font-bold text-white">${formatRupiah(makeup)}</span>
+      </div>
+      <div class="flex justify-between py-3 border-b border-slate-700/50">
+        <span class="text-slate-400">🎁 Souvenir (${totalGuests} pcs)</span>
+        <span class="font-bold text-white">${formatRupiah(souvenir)}</span>
+      </div>
+      <div class="flex justify-between py-3">
+        <span class="text-slate-400">💌 Undangan Digital</span>
+        <span class="font-bold text-white">${formatRupiah(invitation)}</span>
+      </div>
+    `;
+  }
+</script>
+
+<style>
+  /* Fix input and select visibility and spacing */
+  input[type="number"],
+  select {
+    background-color: rgba(15, 23, 42, 0.9) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(100, 116, 139, 0.5) !important;
+    caret-color: #ffffff;
+    padding: 0.875rem 1.25rem !important;
+    font-size: 1rem;
+  }
+  
+  input[type="number"]:focus,
+  select:focus {
+    border-color: #ec4899 !important;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+  }
+  
+  select option {
+    background-color: #1e293b;
+    color: #ffffff;
+    padding: 12px;
+  }
+  
+  input[type="number"]::placeholder {
+    color: rgba(148, 163, 184, 0.7);
+  }
+  
+  /* Chrome, Safari, Edge number input arrows */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+    filter: invert(1);
+  }
+  
+  /* Checkbox styling */
+  input[type="checkbox"] {
+    accent-color: #ec4899;
+  }
+</style>

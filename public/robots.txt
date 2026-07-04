@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: http://simkah.web.id/sitemap-index.xml

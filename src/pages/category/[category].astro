@@ -1,0 +1,74 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import { getPostsByCategory } from "@lib/content.ts";
+
+export async function getStaticPaths() {
+  // To avoid errors during build with empty categories, we can just return empty paths here
+  // or dynamically find all categories.
+  // For now, in output: 'server' mode, we don't need getStaticPaths if we use SSR.
+  // But let's check the config. 
+}
+
+const { category } = Astro.params;
+const posts = await getPostsByCategory(category as string);
+
+const capitalizedCategory = (category as string).charAt(0).toUpperCase() + (category as string).slice(1);
+---
+
+<Layout title={`${capitalizedCategory} | Archive`}>
+  <Container>
+    <main class="py-20 animate-fade-in">
+      <header class="text-center mb-20">
+          <span class="text-brand-primary text-xs font-bold uppercase tracking-widest mb-4 block">Archive Category</span>
+          <h1 class="text-6xl font-bold mb-6 tracking-tighter">Kategori: <span class="text-gradient">{capitalizedCategory}</span></h1>
+          <p class="text-slate-400 max-w-xl mx-auto text-lg">Menampilkan semua tulisan dalam kategori {capitalizedCategory}.</p>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        {
+          posts.map((post) => (
+            <article class="group relative flex flex-col">
+              <a href={`/blog/${post.slug}`} class="flex-1">
+                <div class="aspect-[16/10] rounded-[2rem] overflow-hidden mb-6 glass relative transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-brand-primary/20">
+                  {post.image && (
+                    <img
+                      src={post.image}
+                      alt=""
+                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  )}
+                  <div class="absolute inset-0 bg-transparent group-hover:bg-brand-primary/5 transition-colors"></div>
+                  <div class="absolute top-4 left-4">
+                     <span class="px-4 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest text-brand-primary border border-white/5">
+                        {post.category}
+                     </span>
+                  </div>
+                </div>
+                
+                <h2 class="text-2xl font-bold mb-4 group-hover:text-brand-primary transition-colors leading-tight line-clamp-2">
+                  {post.title}
+                </h2>
+                <p class="text-slate-500 line-clamp-2 text-sm leading-relaxed mb-6">
+                  {post.description}
+                </p>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+      
+      {posts.length === 0 && (
+         <div class="text-center py-32 glass rounded-[3rem] border border-dashed border-slate-300 dark:border-slate-800">
+            <div class="w-20 h-20 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+            </div>
+            <p class="text-slate-500 italic text-lg">Belum ada artikel dalam kategori ini.</p>
+            <a href="/" class="mt-6 inline-block text-brand-primary font-bold hover:underline">Kembali ke Beranda →</a>
+         </div>
+      )}
+    </main>
+  </Container>
+</Layout>

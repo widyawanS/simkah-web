@@ -1,0 +1,598 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import AdSlot from "@components/ui/AdSlot.astro";
+---
+
+<Layout title="Skrining Kesiapan Catin - Deteksi Risiko Stunting">
+  <Container>
+    <div class="max-w-4xl mx-auto mt-16 mb-20">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <span class="inline-block px-4 py-2 bg-pink-500/20 text-pink-400 rounded-full text-sm font-bold mb-4">
+          🩺 Skrining Kesehatan Pranikah
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          Skrining Kesiapan <span class="text-gradient">Calon Pengantin</span>
+        </h1>
+        <p class="text-slate-400 max-w-2xl mx-auto mb-8">
+          Deteksi dini faktor risiko stunting pada calon pengantin (catin) berdasarkan 
+          antropometri dan gaya hidup. Sesuai standar el-SIMIL Kemenag RI.
+        </p>
+        <AdSlot type="tools" />
+      </div>
+
+      <!-- Main Form -->
+      <div class="glass rounded-3xl p-8" id="skriningForm">
+        <!-- Gender Selection -->
+        <div class="mb-8">
+          <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-sm">1</span>
+            Jenis Kelamin
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            <button 
+              type="button"
+              id="genderMale"
+              class="gender-btn p-6 rounded-2xl border-2 border-slate-700 hover:border-blue-500 transition-all text-center group"
+              data-gender="male"
+            >
+              <div class="text-4xl mb-2">👨</div>
+              <p class="font-bold text-white group-hover:text-blue-400">Calon Suami</p>
+              <p class="text-xs text-slate-500">Laki-laki</p>
+            </button>
+            <button 
+              type="button"
+              id="genderFemale"
+              class="gender-btn p-6 rounded-2xl border-2 border-slate-700 hover:border-pink-500 transition-all text-center group"
+              data-gender="female"
+            >
+              <div class="text-4xl mb-2">👩</div>
+              <p class="font-bold text-white group-hover:text-pink-400">Calon Istri</p>
+              <p class="text-xs text-slate-500">Perempuan</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Anthropometry Data -->
+        <div class="mb-8">
+          <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-sm">2</span>
+            Data Antropometri
+          </h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-2">Usia (tahun)</label>
+              <input 
+                type="number" 
+                id="age"
+                min="17" 
+                max="60"
+                placeholder="Contoh: 25"
+                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-2">Berat Badan (kg)</label>
+              <input 
+                type="number" 
+                id="weight"
+                min="30" 
+                max="200"
+                step="0.1"
+                placeholder="Contoh: 55"
+                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-2">Tinggi Badan (cm)</label>
+              <input 
+                type="number" 
+                id="height"
+                min="100" 
+                max="220"
+                step="0.1"
+                placeholder="Contoh: 160"
+                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-2">Lingkar Lengan Atas / LLA (cm)</label>
+              <input 
+                type="number" 
+                id="lla"
+                min="15" 
+                max="50"
+                step="0.1"
+                placeholder="Contoh: 24"
+                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+              />
+              <p class="text-xs text-slate-500 mt-1">Ukur bagian tengah lengan atas</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Smoking Status (for male) -->
+        <div class="mb-8" id="smokingSection" style="display: none;">
+          <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-sm">3</span>
+            Status Merokok
+          </h3>
+          <div class="space-y-3">
+            <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
+              <input type="radio" name="smoking" value="never" class="w-5 h-5 accent-green-500" />
+              <div>
+                <p class="font-medium text-white">Tidak Pernah Merokok</p>
+                <p class="text-xs text-slate-500">Tidak pernah merokok sama sekali</p>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
+              <input type="radio" name="smoking" value="passive" class="w-5 h-5 accent-yellow-500" />
+              <div>
+                <p class="font-medium text-white">Perokok Pasif</p>
+                <p class="text-xs text-slate-500">Sering terpapar asap rokok orang lain</p>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
+              <input type="radio" name="smoking" value="light" class="w-5 h-5 accent-orange-500" />
+              <div>
+                <p class="font-medium text-white">Perokok Ringan</p>
+                <p class="text-xs text-slate-500">1-10 batang per hari</p>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
+              <input type="radio" name="smoking" value="heavy" class="w-5 h-5 accent-red-500" />
+              <div>
+                <p class="font-medium text-white">Perokok Berat</p>
+                <p class="text-xs text-slate-500">Lebih dari 10 batang per hari</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Pregnancy Status (for female) -->
+        <div class="mb-8" id="pregnancySection" style="display: none;">
+          <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-sm">3</span>
+            Status Tambahan
+          </h3>
+          <div class="space-y-3">
+            <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
+              <input type="checkbox" id="anemia" class="w-5 h-5 accent-pink-500" />
+              <div>
+                <p class="font-medium text-white">Riwayat Anemia</p>
+                <p class="text-xs text-slate-500">Pernah didiagnosis kurang darah</p>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
+              <input type="checkbox" id="chronicDisease" class="w-5 h-5 accent-pink-500" />
+              <div>
+                <p class="font-medium text-white">Penyakit Kronis</p>
+                <p class="text-xs text-slate-500">Diabetes, hipertensi, atau penyakit lainnya</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          type="button"
+          id="analyzeBtn"
+          class="w-full py-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-xl font-bold text-white hover:opacity-90 transition-all flex items-center justify-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+          Analisis Kesiapan
+        </button>
+      </div>
+
+      <!-- Results Section (Hidden initially) -->
+      <div id="resultsSection" class="mt-8 hidden">
+        <!-- Summary Card -->
+        <div class="glass rounded-3xl p-8 mb-6" id="summaryCard">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold">Hasil Skrining</h2>
+            <div id="overallScore" class="text-right">
+              <!-- Score will be inserted here -->
+            </div>
+          </div>
+          
+          <!-- Risk Indicators -->
+          <div class="grid md:grid-cols-3 gap-4 mb-6" id="riskIndicators">
+            <!-- Will be populated by JS -->
+          </div>
+
+          <!-- BMI Gauge -->
+          <div class="bg-slate-800/50 rounded-2xl p-6 mb-6">
+            <h4 class="text-sm text-slate-400 mb-3">Indeks Massa Tubuh (IMT/BMI)</h4>
+            <div class="flex items-end justify-between mb-2">
+              <span id="bmiValue" class="text-4xl font-bold">--</span>
+              <span id="bmiCategory" class="text-sm px-3 py-1 rounded-full">--</span>
+            </div>
+            <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
+              <div id="bmiBar" class="h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-slate-500 mt-1">
+              <span>Kurus (&lt;18.5)</span>
+              <span>Normal (18.5-24.9)</span>
+              <span>Gemuk (&gt;25)</span>
+            </div>
+          </div>
+
+          <!-- LLA Assessment -->
+          <div class="bg-slate-800/50 rounded-2xl p-6" id="llaAssessment">
+            <!-- Will be populated by JS -->
+          </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="glass rounded-3xl p-8" id="recommendationsCard">
+          <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <span class="text-2xl">📋</span> Rekomendasi
+          </h3>
+          <div id="recommendations" class="space-y-3">
+            <!-- Will be populated by JS -->
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 mt-6">
+          <button 
+            id="printBtn"
+            class="flex-1 py-3 bg-slate-700 rounded-xl font-bold text-white hover:bg-slate-600 transition-colors flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            Cetak Hasil
+          </button>
+          <button 
+            id="resetBtn"
+            class="flex-1 py-3 bg-pink-600 rounded-xl font-bold text-white hover:bg-pink-700 transition-colors flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Skrining Ulang
+          </button>
+        </div>
+      </div>
+
+      <!-- Info Section -->
+      <div class="mt-12 grid md:grid-cols-2 gap-6">
+        <div class="glass rounded-2xl p-6">
+          <h4 class="font-bold mb-3 flex items-center gap-2">
+            <span class="text-xl">📏</span> Cara Mengukur LLA
+          </h4>
+          <ol class="text-sm text-slate-400 space-y-2 list-decimal list-inside">
+            <li>Tekuk siku membentuk sudut 90°</li>
+            <li>Tandai titik tengah antara bahu dan siku</li>
+            <li>Luruskan lengan ke bawah</li>
+            <li>Ukur lingkar lengan di titik yang ditandai</li>
+            <li>Pastikan pita pengukur tidak terlalu ketat</li>
+          </ol>
+        </div>
+        <div class="glass rounded-2xl p-6">
+          <h4 class="font-bold mb-3 flex items-center gap-2">
+            <span class="text-xl">⚠️</span> Tentang Risiko Stunting
+          </h4>
+          <p class="text-sm text-slate-400">
+            Stunting pada anak dapat dicegah sejak sebelum kehamilan. 
+            Faktor risiko meliputi status gizi ibu yang kurang (LLA &lt; 23.5 cm), 
+            BMI tidak normal, anemia, dan paparan rokok. Konsultasikan hasil 
+            skrining ini dengan petugas kesehatan.
+          </p>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>
+
+<style>
+  .gender-btn.selected {
+    border-color: var(--selected-color, #6366f1);
+    background: rgba(99, 102, 241, 0.1);
+  }
+  
+  .gender-btn[data-gender="male"].selected {
+    --selected-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+  }
+  
+  .gender-btn[data-gender="female"].selected {
+    --selected-color: #ec4899;
+    background: rgba(236, 72, 153, 0.1);
+  }
+  
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  @media print {
+    .glass {
+      background: white !important;
+      color: black !important;
+    }
+    button {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  // State
+  let selectedGender: 'male' | 'female' | null = null;
+
+  // DOM Elements
+  const genderBtns = document.querySelectorAll('.gender-btn');
+  const smokingSection = document.getElementById('smokingSection');
+  const pregnancySection = document.getElementById('pregnancySection');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  const resultsSection = document.getElementById('resultsSection');
+  const resetBtn = document.getElementById('resetBtn');
+  const printBtn = document.getElementById('printBtn');
+
+  // Gender Selection
+  genderBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      genderBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedGender = btn.getAttribute('data-gender') as 'male' | 'female';
+      
+      if (selectedGender === 'male') {
+        smokingSection!.style.display = 'block';
+        pregnancySection!.style.display = 'none';
+      } else {
+        smokingSection!.style.display = 'none';
+        pregnancySection!.style.display = 'block';
+      }
+    });
+  });
+
+  // Calculate BMI
+  function calculateBMI(weight: number, heightCm: number): number {
+    const heightM = heightCm / 100;
+    return weight / (heightM * heightM);
+  }
+
+  // Get BMI Category
+  function getBMICategory(bmi: number): { category: string; color: string; risk: string } {
+    if (bmi < 17) return { category: 'Sangat Kurus', color: 'bg-red-500', risk: 'high' };
+    if (bmi < 18.5) return { category: 'Kurus', color: 'bg-orange-500', risk: 'medium' };
+    if (bmi < 25) return { category: 'Normal', color: 'bg-green-500', risk: 'low' };
+    if (bmi < 27) return { category: 'Gemuk', color: 'bg-yellow-500', risk: 'medium' };
+    if (bmi < 30) return { category: 'Obesitas I', color: 'bg-orange-500', risk: 'medium' };
+    return { category: 'Obesitas II', color: 'bg-red-500', risk: 'high' };
+  }
+
+  // Get LLA Risk (for women, <23.5 cm indicates risk)
+  function getLLARisk(lla: number, gender: string): { status: string; color: string; risk: string } {
+    if (gender === 'female') {
+      if (lla < 23.5) return { status: 'KEK (Kurang Energi Kronis)', color: 'bg-red-500', risk: 'high' };
+      return { status: 'Normal', color: 'bg-green-500', risk: 'low' };
+    } else {
+      // For men, different threshold
+      if (lla < 25) return { status: 'Di Bawah Normal', color: 'bg-yellow-500', risk: 'medium' };
+      return { status: 'Normal', color: 'bg-green-500', risk: 'low' };
+    }
+  }
+
+  // Get Smoking Risk
+  function getSmokingRisk(status: string): { level: string; color: string; risk: string } {
+    switch (status) {
+      case 'never': return { level: 'Tidak Ada Risiko', color: 'bg-green-500', risk: 'low' };
+      case 'passive': return { level: 'Risiko Rendah', color: 'bg-yellow-500', risk: 'medium' };
+      case 'light': return { level: 'Risiko Sedang', color: 'bg-orange-500', risk: 'medium' };
+      case 'heavy': return { level: 'Risiko Tinggi', color: 'bg-red-500', risk: 'high' };
+      default: return { level: 'Tidak Diketahui', color: 'bg-slate-500', risk: 'unknown' };
+    }
+  }
+
+  // Analyze
+  analyzeBtn?.addEventListener('click', () => {
+    // Get values
+    const age = parseFloat((document.getElementById('age') as HTMLInputElement).value);
+    const weight = parseFloat((document.getElementById('weight') as HTMLInputElement).value);
+    const height = parseFloat((document.getElementById('height') as HTMLInputElement).value);
+    const lla = parseFloat((document.getElementById('lla') as HTMLInputElement).value);
+
+    // Validation
+    if (!selectedGender) {
+      alert('Silakan pilih jenis kelamin');
+      return;
+    }
+    if (!age || !weight || !height || !lla) {
+      alert('Silakan lengkapi semua data antropometri');
+      return;
+    }
+    if (age < 17) {
+      alert('Usia minimal untuk menikah adalah 17 tahun');
+      return;
+    }
+
+    // Calculate
+    const bmi = calculateBMI(weight, height);
+    const bmiInfo = getBMICategory(bmi);
+    const llaInfo = getLLARisk(lla, selectedGender);
+
+    // Smoking (for male)
+    let smokingInfo = { level: '-', color: 'bg-slate-500', risk: 'none' };
+    if (selectedGender === 'male') {
+      const smokingStatus = (document.querySelector('input[name="smoking"]:checked') as HTMLInputElement)?.value || 'never';
+      smokingInfo = getSmokingRisk(smokingStatus);
+    }
+
+    // Additional risks (for female)
+    const hasAnemia = (document.getElementById('anemia') as HTMLInputElement)?.checked || false;
+    const hasChronicDisease = (document.getElementById('chronicDisease') as HTMLInputElement)?.checked || false;
+
+    // Calculate overall risk
+    let riskScore = 0;
+    let maxScore = 0;
+
+    // BMI contributes up to 30 points
+    maxScore += 30;
+    if (bmiInfo.risk === 'low') riskScore += 30;
+    else if (bmiInfo.risk === 'medium') riskScore += 15;
+
+    // LLA contributes up to 30 points
+    maxScore += 30;
+    if (llaInfo.risk === 'low') riskScore += 30;
+    else if (llaInfo.risk === 'medium') riskScore += 15;
+
+    // Smoking contributes up to 20 points (male only)
+    if (selectedGender === 'male') {
+      maxScore += 20;
+      if (smokingInfo.risk === 'low') riskScore += 20;
+      else if (smokingInfo.risk === 'medium') riskScore += 10;
+    }
+
+    // Additional factors (female)
+    if (selectedGender === 'female') {
+      maxScore += 20;
+      if (!hasAnemia && !hasChronicDisease) riskScore += 20;
+      else if (!hasAnemia || !hasChronicDisease) riskScore += 10;
+    }
+
+    // Age factor (optimal 21-35)
+    maxScore += 20;
+    if (age >= 21 && age <= 35) riskScore += 20;
+    else if (age >= 19 && age <= 40) riskScore += 10;
+
+    const overallPercentage = Math.round((riskScore / maxScore) * 100);
+
+    // Display Results
+    resultsSection!.classList.remove('hidden');
+
+    // Overall Score
+    let scoreColor = 'text-green-400';
+    let scoreLabel = 'SIAP';
+    if (overallPercentage < 50) {
+      scoreColor = 'text-red-400';
+      scoreLabel = 'PERLU PERHATIAN';
+    } else if (overallPercentage < 75) {
+      scoreColor = 'text-yellow-400';
+      scoreLabel = 'CUKUP SIAP';
+    }
+
+    document.getElementById('overallScore')!.innerHTML = `
+      <p class="text-sm text-slate-400">Skor Kesiapan</p>
+      <p class="text-3xl font-bold ${scoreColor}">${overallPercentage}%</p>
+      <p class="text-xs ${scoreColor}">${scoreLabel}</p>
+    `;
+
+    // Risk Indicators
+    document.getElementById('riskIndicators')!.innerHTML = `
+      <div class="bg-slate-800/50 rounded-xl p-4 text-center">
+        <p class="text-xs text-slate-500 mb-1">Status Gizi (BMI)</p>
+        <span class="inline-block px-3 py-1 ${bmiInfo.color} text-white text-sm rounded-full">${bmiInfo.category}</span>
+      </div>
+      <div class="bg-slate-800/50 rounded-xl p-4 text-center">
+        <p class="text-xs text-slate-500 mb-1">Status LLA</p>
+        <span class="inline-block px-3 py-1 ${llaInfo.color} text-white text-sm rounded-full">${llaInfo.status}</span>
+      </div>
+      <div class="bg-slate-800/50 rounded-xl p-4 text-center">
+        <p class="text-xs text-slate-500 mb-1">${selectedGender === 'male' ? 'Risiko Merokok' : 'Faktor Risiko Lain'}</p>
+        <span class="inline-block px-3 py-1 ${selectedGender === 'male' ? smokingInfo.color : (hasAnemia || hasChronicDisease ? 'bg-yellow-500' : 'bg-green-500')} text-white text-sm rounded-full">
+          ${selectedGender === 'male' ? smokingInfo.level : (hasAnemia || hasChronicDisease ? 'Ada' : 'Tidak Ada')}
+        </span>
+      </div>
+    `;
+
+    // BMI Details
+    const bmiPercentage = Math.min(Math.max((bmi / 40) * 100, 5), 95);
+    document.getElementById('bmiValue')!.textContent = bmi.toFixed(1);
+    document.getElementById('bmiCategory')!.className = `text-sm px-3 py-1 rounded-full ${bmiInfo.color} text-white`;
+    document.getElementById('bmiCategory')!.textContent = bmiInfo.category;
+    document.getElementById('bmiBar')!.style.width = `${bmiPercentage}%`;
+    document.getElementById('bmiBar')!.className = `h-full rounded-full transition-all duration-500 ${bmiInfo.color}`;
+
+    // LLA Assessment
+    document.getElementById('llaAssessment')!.innerHTML = `
+      <h4 class="text-sm text-slate-400 mb-3">Lingkar Lengan Atas (LLA)</h4>
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-4xl font-bold">${lla}</span>
+          <span class="text-lg text-slate-400">cm</span>
+        </div>
+        <div class="text-right">
+          <span class="inline-block px-3 py-1 ${llaInfo.color} text-white text-sm rounded-full">${llaInfo.status}</span>
+          ${selectedGender === 'female' && lla < 23.5 ? '<p class="text-xs text-red-400 mt-1">Berisiko melahirkan bayi BBLR/Stunting</p>' : ''}
+        </div>
+      </div>
+    `;
+
+    // Recommendations
+    const recommendations: string[] = [];
+
+    if (bmiInfo.risk !== 'low') {
+      if (bmi < 18.5) {
+        recommendations.push('📈 <strong>Perbaiki Status Gizi:</strong> Tingkatkan asupan kalori dan protein. Konsumsi makanan bergizi seimbang 3x sehari dengan 2x selingan.');
+      } else {
+        recommendations.push('📉 <strong>Kontrol Berat Badan:</strong> Kurangi konsumsi makanan tinggi gula dan lemak. Tingkatkan aktivitas fisik minimal 30 menit/hari.');
+      }
+    }
+
+    if (selectedGender === 'female' && lla < 23.5) {
+      recommendations.push('🍽️ <strong>Perbaiki LLA:</strong> LLA < 23.5 cm menandakan Kurang Energi Kronis (KEK). Konsumsi tablet tambah darah dan makanan tinggi protein.');
+    }
+
+    if (selectedGender === 'male' && smokingInfo.risk !== 'low') {
+      recommendations.push('🚭 <strong>Hentikan/Kurangi Rokok:</strong> Paparan rokok meningkatkan risiko stunting pada anak. Pertimbangkan untuk berhenti merokok sebelum menikah.');
+    }
+
+    if (hasAnemia) {
+      recommendations.push('💊 <strong>Atasi Anemia:</strong> Konsumsi tablet tambah darah sesuai anjuran. Perbanyak makanan kaya zat besi seperti daging, sayuran hijau, dan kacang-kacangan.');
+    }
+
+    if (hasChronicDisease) {
+      recommendations.push('🏥 <strong>Kontrol Penyakit Kronis:</strong> Konsultasikan ke dokter untuk mengontrol penyakit sebelum dan selama kehamilan.');
+    }
+
+    if (age < 21) {
+      recommendations.push('📅 <strong>Pertimbangkan Usia:</strong> Usia ideal untuk menikah dan hamil adalah 21-35 tahun untuk mengurangi risiko komplikasi.');
+    }
+
+    if (recommendations.length === 0) {
+      recommendations.push('✅ <strong>Selamat!</strong> Status kesehatan Anda sudah baik untuk mempersiapkan pernikahan. Tetap jaga pola hidup sehat.');
+    }
+
+    recommendations.push('🩺 <strong>Konsultasi Kesehatan:</strong> Lakukan pemeriksaan kesehatan pranikah di Puskesmas atau Rumah Sakit untuk hasil yang lebih akurat.');
+
+    document.getElementById('recommendations')!.innerHTML = recommendations.map(r => `
+      <div class="p-4 bg-slate-800/50 rounded-xl text-sm text-slate-300">${r}</div>
+    `).join('');
+
+    // Scroll to results
+    resultsSection!.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Reset
+  resetBtn?.addEventListener('click', () => {
+    resultsSection!.classList.add('hidden');
+    (document.getElementById('age') as HTMLInputElement).value = '';
+    (document.getElementById('weight') as HTMLInputElement).value = '';
+    (document.getElementById('height') as HTMLInputElement).value = '';
+    (document.getElementById('lla') as HTMLInputElement).value = '';
+    genderBtns.forEach(b => b.classList.remove('selected'));
+    selectedGender = null;
+    smokingSection!.style.display = 'none';
+    pregnancySection!.style.display = 'none';
+    document.querySelectorAll('input[name="smoking"]').forEach((r: any) => r.checked = false);
+    (document.getElementById('anemia') as HTMLInputElement).checked = false;
+    (document.getElementById('chronicDisease') as HTMLInputElement).checked = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Print
+  printBtn?.addEventListener('click', () => {
+    window.print();
+  });
+</script>

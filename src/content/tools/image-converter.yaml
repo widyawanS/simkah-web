@@ -1,0 +1,10 @@
+title: Image Converter
+shortDescription: Konversi HEIC iPhone ke JPG/PNG/WebP. Semua proses dilakukan langsung di browser, data Anda aman.
+category: converter
+icon: 🖼️
+colorFrom: cyan-500
+colorTo: blue-500
+link: /tools/converter
+isActive: true
+showInMenu: true
+order: 3

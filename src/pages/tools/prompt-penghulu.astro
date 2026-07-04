@@ -1,0 +1,313 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import AdSlot from "@components/ui/AdSlot.astro";
+---
+
+<Layout title="Generator Prompt AI Penghulu & Penyuluh">
+  <Container>
+    <div class="max-w-4xl mx-auto mt-16 mb-20">
+      <div class="text-center mb-12">
+        <span class="inline-block px-4 py-2 bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 rounded-full text-sm font-bold mb-4">
+          🕌 Kemenag Tools
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 dark:text-white">
+          Generator Prompt <span class="bg-gradient-to-r from-emerald-400 to-teal-500 text-transparent bg-clip-text">AI Penghulu</span>
+        </h1>
+        <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          Buat prompt AI secara otomatis dengan pendekatan form step-by-step. Output berbentuk <strong>JSON Terstruktur</strong> agar hasil dari ChatGPT, Gemini, atau Claude lebih presisi dan berkualitas tinggi.
+        </p>
+        <AdSlot type="tools" />
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Form Section -->
+        <div class="space-y-6">
+          <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+            
+            <!-- Progress Bar -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-slate-100 dark:bg-slate-700">
+              <div id="formProgress" class="h-full bg-emerald-500 transition-all duration-300 w-1/2"></div>
+            </div>
+
+            <!-- Header Langkah -->
+            <div class="mb-6 mt-2">
+              <h3 id="stepTitle" class="text-lg font-bold text-slate-800 dark:text-white">Langkah 1: Informasi Dasar</h3>
+              <p id="stepDesc" class="text-sm text-slate-500 dark:text-slate-400">Tentukan jenis naskah dan target audiens.</p>
+            </div>
+
+            <!-- STEP 1 -->
+            <div id="step1" class="space-y-5 animate-fade-in block">
+              <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Pilih Jenis Naskah</label>
+                <select id="jenis" class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                  <option value="Khutbah Nikah">Khutbah Nikah</option>
+                  <option value="Khutbah Jumat">Khutbah Jumat</option>
+                  <option value="Materi Pengajian/Majelis Taklim">Materi Pengajian/Majelis Taklim</option>
+                  <option value="Nasihat Singkat Pasca Akad">Nasihat Singkat Pasca Akad</option>
+                  <option value="Doa Penutup Acara">Doa Penutup Acara</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Tema / Topik Utama</label>
+                <input type="text" id="tema" placeholder="Contoh: Tanggung jawab suami, Sabar dalam ujian..." class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Target Audiens</label>
+                <input type="text" id="audiens" placeholder="Contoh: Pasangan pengantin baru, Jamaah Jumat..." class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+              </div>
+
+              <button id="nextBtn" class="w-full py-3 mt-4 bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl font-bold text-white transition-all transition">
+                Lanjut ke Langkah 2 ➡️
+              </button>
+            </div>
+
+            <!-- STEP 2 -->
+            <div id="step2" class="space-y-5 animate-fade-in hidden">
+              <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Suasana Acara</label>
+                <select id="gaya" class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                  <option value="Semi formal, hangat, dan menyentuh hati — retoris">Hangat & Menyentuh Hati</option>
+                  <option value="Formal, lugas, dan berwibawa">Formal & Lugas</option>
+                  <option value="Santai, komunikatif, dan relevan dengan generasi muda">Santai & Kekinian</option>
+                  <option value="Menggugah jiwa dan penuh nasihat tasawuf">Menggugah Jiwa (Tasawuf)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Durasi</label>
+                <select id="durasi" class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                  <option value="7 menit">7 Menit (~1.000 kata)</option>
+                  <option value="15 menit" selected>10-15 Menit (~2.000 kata)</option>
+                  <option value="20 menit">20 Menit (min. 3.000 kata)</option>
+                </select>
+              </div>
+              
+
+
+              <div class="flex gap-3 mt-6">
+                <button id="prevBtn" class="flex-1 py-3 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl font-bold text-slate-700 dark:text-white transition-all">
+                  ⬅️ Kembali
+                </button>
+                <button id="generateBtn" class="flex-[2] py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-xl font-bold text-white shadow-lg shadow-emerald-500/30 transition-all transform hover:scale-[1.02] active:scale-95">
+                  ✨ Buat Prompt (JSON)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="space-y-6">
+          <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 shadow-xl sticky top-24">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                <span class="text-xl">📝</span> Output Data (JSON)
+              </h3>
+              <button id="copyBtn" class="hidden px-4 py-2 text-sm font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-500/30 transition-colors">
+                📋 Salin JSON
+              </button>
+            </div>
+
+            <div id="welcomeOutput" class="h-[300px] flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl">
+              <span class="text-5xl mb-4">🤖</span>
+              <p class="text-slate-500 dark:text-slate-400 text-sm">
+                Selesaikan langkah pengisian di form samping untuk menggenerate prompt berkualitas berformat JSON.
+              </p>
+            </div>
+
+            <div id="resultOutput" class="hidden relative">
+              <textarea id="promptResult" readonly class="w-full h-[380px] p-5 bg-slate-900 border border-slate-700 rounded-xl text-emerald-400 font-mono text-xs md:text-sm leading-relaxed resize-none focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-inner"></textarea>
+              <div class="absolute bottom-4 right-4 text-xs font-bold text-slate-300 bg-slate-800 px-2 py-1 rounded">JSON Format</div>
+            </div>
+            
+            <div id="tipsNote" class="mt-4 p-4 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-xl hidden">
+              <p class="text-xs text-emerald-800 dark:text-emerald-300">
+                <strong>💡 Info:</strong> Struktur JSON ini sangat cocok bagi LLM canggih. Cukup berikan JSON di atas kepada ChatGPT, Gemini, atau Claude agar mereka mengurai instruksi ini dengan akurasi 100%.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const generateBtn = document.getElementById('generateBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    
+    const stepTitle = document.getElementById('stepTitle');
+    const stepDesc = document.getElementById('stepDesc');
+    const formProgress = document.getElementById('formProgress');
+
+    const goToStep1 = () => {
+      step2?.classList.add('hidden');
+      step2?.classList.remove('block');
+      step1?.classList.remove('hidden');
+      step1?.classList.add('block');
+      
+      if(stepTitle) stepTitle.textContent = "Langkah 1: Informasi Dasar";
+      if(stepDesc) stepDesc.textContent = "Tentukan jenis naskah dan target audiens.";
+      if(formProgress) formProgress.className = "h-full bg-emerald-500 transition-all duration-300 w-1/2";
+    };
+
+    const goToStep2 = () => {
+      // Basic validation Step 1
+      const tema = (document.getElementById('tema') as HTMLInputElement).value.trim();
+      const audiens = (document.getElementById('audiens') as HTMLInputElement).value.trim();
+      
+      if (!tema || !audiens) {
+        alert('Mohon isi Tema dan Target Audiens terlebih dahulu.');
+        return;
+      }
+
+      step1?.classList.add('hidden');
+      step1?.classList.remove('block');
+      step2?.classList.remove('hidden');
+      step2?.classList.add('block');
+
+      if(stepTitle) stepTitle.textContent = "Langkah 2: Detail Naskah";
+      if(stepDesc) stepDesc.textContent = "Tentukan durasi dan gaya bahasa atau pembawaan naskah.";
+      if(formProgress) formProgress.className = "h-full bg-emerald-500 transition-all duration-300 w-full";
+    };
+
+    if(nextBtn) nextBtn.addEventListener('click', goToStep2);
+    if(prevBtn) prevBtn.addEventListener('click', goToStep1);
+
+    if (generateBtn) {
+      generateBtn.addEventListener('click', () => {
+        const jenis     = (document.getElementById('jenis') as HTMLSelectElement).value;
+        const tema      = (document.getElementById('tema') as HTMLInputElement).value.trim();
+        const audiens   = (document.getElementById('audiens') as HTMLInputElement).value.trim();
+        const gaya      = (document.getElementById('gaya') as HTMLSelectElement).value;
+        const durasi    = (document.getElementById('durasi') as HTMLSelectElement).value;
+        const pesanInti = `Mendalami dan menjabarkan secara komprehensif mengenai ${tema}`;
+
+        // ── Logika target kata berdasarkan durasi 
+        let targetKata = "sekitar 1.000 kata";
+        let jumlahPoin = "4 (empat)";
+        if (durasi === "15 menit") {
+          targetKata = "antara 1.800 hingga 2.200 kata";
+          jumlahPoin = "6 (enam)";
+        } else if (durasi === "20 menit") {
+          targetKata = "MINIMAL 3.000 kata";
+          jumlahPoin = "8 hingga 10";
+        }
+
+        // ── JSON Object Generation
+        const promptJson: any = {
+          system_role: "Kamu adalah seorang Ulama, Penghulu (Penyuluh Agama Islam), dan penulis naskah dakwah profesional berpengalaman lebih dari 20 tahun. Tugasmu adalah menyusun NASKAH LENGKAP dan SIAP BACA berdasar properti instruksi.",
+          task_inputs: {
+            tipe_pekerjaan: `Menyusun naskah ${jenis}`,
+            audiens_target: audiens,
+            topik_utama: tema,
+            durasi_naskah: durasi,
+            pesan_inti_yang_disampaikan: pesanInti
+          },
+          constraints: {
+            target_jumlah_kata_wajib: targetKata,
+            suasana_dan_gaya_bahasa: gaya,
+            anti_singkat: true,
+            struktur_elaborasi_tiap_poin: [
+              "1. Dalil Al-Quran / Al-Hadits yang dijabarkan mendalam",
+              "2. Konteks Kehidupan Nyata / Masalah zaman sekarang yang relevan",
+              "3. Solusi Praktis atau Cerita Hikmah / Sirah Nabawiyah"
+            ]
+          },
+          output_formatting: {
+            penggunaan_bahasa_arab: "WAJIB teks Arab asli disertai dengan harakat (syakal) yang lengkap",
+            penekanan_visual: "Gunakan bold pada porsi teks penting dan kalimat kunci",
+            format_tampilan: "Gunakan sintaks Markdown agar struktur naskah jelas"
+          },
+          architecture_naskah: {
+            the_opener: [
+              "Muqaddimah bahasa Arab konvensional",
+              "Hook menarik / kalimat pembuka penarik perhatian",
+              "Pantun Pembuka"
+            ],
+            the_body: [
+              `Harus terdiri dari ${jumlahPoin} poin argumentasi utama sesuai instruksi elaborasi`,
+              "Termasuk instruksi tata laku jeda baca dramatis (ditulis dalam kurung)"
+            ],
+            the_closer: [
+              "Paragraf kesimpulan",
+              "Call To Action",
+              "Doa Penutup (Arab beserta harakat + Terjemahan Indonesia)"
+            ]
+          },
+          postscript_statement_wajib: "Tambahkan quote khusus ini di tulisan akhir: 'Naskah ini disusun secara otomatis oleh AI untuk simkah.web.id. Harap verifikasi kembali akurasi dalil sebelum disampaikan.'"
+        };
+
+        if (jenis === "Khutbah Nikah") {
+          promptJson.constraints.modul_pantun_khusus = "Khutbah Nikah mewajibkan minimal 2 pantun indah bersajak a-b-a-b (Satu di opener berisi pujian mempelai, satu di closer berupa doa kedamaian keluarga). Hindari pantun banyolan jalanan.";
+        } else if (jenis === "Khutbah Jumat") {
+          promptJson.constraints.aturan_pantun = "Jika menggunakan pantun, pantun WAJIB tidak bercanda atau main-main. Beri catatan dalam kurung persis setelah teks pantun: (gunakan jika perlu dan sudah biasa)";
+          
+          // Re-structure Khutbah Jumat specific architecture
+          promptJson.architecture_naskah = {
+            the_opener: promptJson.architecture_naskah.the_opener,
+            the_body: promptJson.architecture_naskah.the_body,
+            penutup_khutbah_pertama: "Tebalkan (bold) bagian ini. Berisi kalimat penutup khutbah pertama secara utuh dalam bahasa Arab (beserta harokatnya TANPA arti terjemahan).",
+            isi_khutbah_kedua: [
+              "Nasihat singkat atau Call To Action (Tanpa paragraf kesimpulan)",
+              "Doa Penutup Khutbah (Bahasa Arab beserta harakat + Terjemahan Indonesia)"
+            ]
+          };
+        }
+
+        const promptText = JSON.stringify(promptJson, null, 2);
+
+        const textarea = document.getElementById('promptResult') as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.value = promptText;
+          
+          document.getElementById('welcomeOutput')?.classList.add('hidden');
+          const resultOutput = document.getElementById('resultOutput');
+          resultOutput?.classList.remove('hidden');
+          resultOutput?.classList.add('animate-fade-in');
+          
+          document.getElementById('copyBtn')?.classList.remove('hidden');
+          document.getElementById('tipsNote')?.classList.remove('hidden');
+          
+          if (copyBtn) {
+            copyBtn.innerHTML = "📋 Salin JSON";
+            copyBtn.classList.remove('bg-teal-500', 'text-white', 'dark:bg-teal-500', 'hover:bg-teal-600');
+            copyBtn.classList.add('bg-emerald-100', 'text-emerald-800', 'dark:bg-emerald-500/20', 'dark:text-emerald-300', 'hover:bg-emerald-200');
+          }
+        }
+      });
+    }
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const textarea = document.getElementById('promptResult') as HTMLTextAreaElement;
+        if (!textarea) return;
+        
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+
+        navigator.clipboard.writeText(textarea.value).then(() => {
+          copyBtn.innerHTML = "✅ Berhasil!";
+          copyBtn.classList.remove('bg-emerald-100', 'text-emerald-800', 'dark:bg-emerald-500/20', 'dark:text-emerald-300', 'hover:bg-emerald-200');
+          copyBtn.classList.add('bg-teal-500', 'text-white', 'dark:bg-teal-600', 'dark:text-white', 'hover:bg-teal-600');
+          
+          setTimeout(() => {
+            copyBtn.innerHTML = "📋 Salin JSON";
+            copyBtn.classList.remove('bg-teal-500', 'text-white', 'dark:bg-teal-600', 'dark:text-white', 'hover:bg-teal-600');
+            copyBtn.classList.add('bg-emerald-100', 'text-emerald-800', 'dark:bg-emerald-500/20', 'dark:text-emerald-300', 'hover:bg-emerald-200');
+          }, 2000);
+        }).catch(() => {
+          alert('Gagal menyalin teks. Silakan copy manual.');
+        });
+      });
+    }
+  });
+</script>

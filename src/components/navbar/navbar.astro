@@ -1,0 +1,131 @@
+---
+import Container from "@components/container.astro";
+import { Astronav, MenuItems, MenuIcon, Dropdown, DropdownItems } from "astro-navbar";
+import ThemeToggle from "@components/ui/ThemeToggle.astro";
+import Search from "@components/ui/Search.astro";
+import SearchModal from "@components/ui/SearchModal.astro";
+import { getMenuTools } from "@lib/keystatic";
+
+// Get tools from Keystatic that should appear in menu
+const menuTools = await getMenuTools();
+
+const menuitems = [
+  {
+    title: "Home",
+    path: "/",
+  },
+  {
+    title: "Berita",
+    path: "/category/berita",
+  },
+  {
+    title: "Catatan",
+    path: "/category/catatan",
+  },
+  {
+    title: "Tools",
+    path: "/tools",
+    children: [
+      { title: "Prompt Penghulu", path: "/tools/prompt-penghulu" },
+      { title: "Konten Medsos", path: "/tools/konten-medsos" },
+      ...menuTools.map(tool => ({
+        title: tool?.title?.name || tool?.slug || 'Tool',
+        path: tool?.link || '#',
+      })),
+      { title: "Semua Tools", path: "/tools" },
+    ],
+  },
+  {
+    title: "Login Simkah",
+    path: "https://simkah4.kemenag.go.id",
+    external: true,
+  },
+];
+---
+
+<header class="py-5 sticky top-0 z-50">
+  <Container>
+    <div class="flex flex-col lg:flex-row justify-between items-center bg-white/10 dark:bg-slate-900/50 backdrop-blur-xl px-4 lg:px-6 py-2.5 rounded-[2.5rem] lg:rounded-full border border-slate-200 dark:border-slate-800 shadow-lg transition-all duration-300">
+      <Astronav>
+        <div class="flex w-full lg:w-auto items-center justify-between gap-4">
+          <a href="/" class="text-2xl font-bold dark:text-white flex items-center gap-2 shrink-0 group">
+            <img src="/logo-simkah.png" alt="Logo Simkah" width="36" height="36" class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-500 group-hover:rotate-12 transition-transform shadow-lg shadow-violet-500/20 dark:shadow-violet-500/10">
+            <span class="tracking-tighter lg:inline hidden">SIMKAH<span class="text-brand-primary">.WEB.ID</span></span>
+            <span class="tracking-tighter lg:hidden inline text-xl">SIMKAH</span>
+          </a>
+          
+          <div class="flex lg:hidden items-center gap-1.5 flex-1 justify-end">
+            <Search />
+            <ThemeToggle />
+            <MenuIcon class="w-10 h-10 text-slate-600 dark:text-slate-300 p-2 rounded-full hover:bg-white/10 dark:hover:bg-slate-800 transition-colors" />
+          </div>
+        </div>
+
+        <MenuItems class="hidden lg:flex w-full lg:w-auto">
+          <ul class="flex flex-col lg:flex-row lg:gap-1 lg:items-center py-6 lg:py-0 mt-2 lg:mt-0">
+            {
+              menuitems.map((item, index) => (
+                <li class="relative group px-1">
+                  {item.children ? (
+                    <Dropdown class="group">
+                      <button class="flex w-full items-center justify-between lg:justify-start gap-1 px-4 py-3 lg:py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors rounded-xl hover:bg-white/5">
+                        <span>{item.title}</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="2"
+                          stroke="currentColor"
+                          class="w-4 h-4 transition-transform group-open:rotate-180">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                      </button>
+                      <DropdownItems>
+                        <div class="lg:absolute lg:top-full lg:left-0 lg:mt-2 w-full lg:w-56 z-50">
+                          <div class="bg-slate-100/90 dark:bg-slate-800/90 backdrop-blur-2xl lg:bg-white lg:dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-2 mt-2 lg:mt-0">
+                            {item.children.map((child) => (
+                              <a
+                                href={child.path}
+                                class="block px-4 py-2.5 lg:py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white hover:bg-white dark:hover:bg-slate-800 transition-all rounded-xl mb-1 last:mb-0 font-medium">
+                                {child.title}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      </DropdownItems>
+                    </Dropdown>
+                  ) : (
+                    <a
+                      href={item.path}
+                      target={item.external ? "_blank" : "_self"}
+                      rel={item.external ? "noopener noreferrer" : ""}
+                      class="block px-4 py-3 lg:py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors rounded-xl hover:bg-white/5">
+                      {item.title}
+                    </a>
+                  )}
+                </li>
+              ))
+            }
+            <li class="lg:hidden mt-6 px-4">
+              <a href="/contact" class="block w-full text-center py-4 bg-slate-900 dark:bg-white text-white dark:text-black rounded-2xl text-sm font-bold shadow-xl shadow-slate-900/20 dark:shadow-white/10">
+                Contact Me
+              </a>
+            </li>
+          </ul>
+        </MenuItems>
+      </Astronav>
+
+      <!-- Desktop Actions Section -->
+      <div class="hidden lg:flex items-center gap-4">
+        <Search />
+        <ThemeToggle />
+        <div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-800/50 mx-1"></div>
+        <a href="/contact" class="px-6 py-2 bg-slate-900 dark:bg-white text-white dark:text-black rounded-full text-sm font-bold hover:scale-105 transition-all shadow-lg hover:shadow-brand-primary/20">
+          Contact
+        </a>
+      </div>
+    </div>
+  </Container>
+  <!-- Search Modal Singleton -->
+  <SearchModal />
+</header>

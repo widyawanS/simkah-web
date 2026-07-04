@@ -1,0 +1,93 @@
+/* Fonts are loaded in Layout context for better performance */
+
+:root {
+    --brand-primary: #6366f1;
+    --brand-secondary: #a855f7;
+
+    /* Light Mode Variables */
+    --bg-main: #ffffff;
+    --text-main: #1e293b;
+    --card-bg: rgba(241, 245, 249, 0.7);
+    --glass-border: rgba(0, 0, 0, 0.05);
+}
+
+.dark {
+    /* Dark Mode Variables */
+    --bg-main: #020617;
+    /* Sesuai slate-950 */
+    --text-main: #f8fafc;
+    --card-bg: rgba(15, 23, 42, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1,
+h2,
+h3,
+.font-serif {
+    font-family: 'Playfair Display', serif;
+}
+
+.glass {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+}
+
+.dark .glass {
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.light .glass {
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
+.text-gradient {
+    background: linear-gradient(to right, var(--brand-primary), var(--brand-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.bento-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--glass-border);
+}
+
+.bento-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--brand-primary);
+    box-shadow: 0 20px 40px -20px var(--brand-primary);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.scroll-smooth {
+    scroll-behavior: smooth;
+}

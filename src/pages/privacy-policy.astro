@@ -1,0 +1,39 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import { getLegalPage } from "@lib/content";
+import { marked } from "marked";
+
+const page = await getLegalPage("privacy-policy");
+
+// Fallback if not created in admin yet
+const title = page?.title || "Privacy Policy";
+const contentHtml = page?.content ? marked.parse(page.content) : "Kami sangat menghargai privasi Anda. Halaman ini sedang dalam proses update.";
+const lastUpdated = page?.lastUpdated ? new Date(page.lastUpdated).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "Januari 2026";
+---
+
+<Layout title={title} description="Kebijakan Privasi Penggunaan Layanan SIMKAH Tools">
+  <Container>
+    <main class="py-24 animate-fade-in max-w-4xl mx-auto">
+      <header class="mb-16">
+          <h1 class="text-5xl font-bold mb-6 tracking-tight dark:text-white">{title}</h1>
+          <div class="flex items-center gap-2 text-slate-500 text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Terakhir diperbarui: {lastUpdated}</span>
+          </div>
+      </header>
+
+      <div class="glass p-10 rounded-[3rem] border border-white/5">
+          <div class="prose dark:prose-invert prose-indigo prose-lg max-w-none prose-p:text-slate-600 dark:prose-p:text-slate-400 prose-headings:dark:text-white">
+              <Fragment set:html={contentHtml} />
+          </div>
+      </div>
+
+      <div class="mt-12 text-center text-slate-500 text-sm italic">
+          Data Anda diproses secara transparan. Info selengkapnya ada di halaman <a href="/contact" class="text-brand-primary underline">Kontak</a>.
+      </div>
+    </main>
+  </Container>
+</Layout>

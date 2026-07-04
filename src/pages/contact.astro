@@ -1,0 +1,77 @@
+---
+import Contactform from "@components/contactform.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+import Layout from "@layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { getContactPage } from "@lib/keystatic";
+
+// Get contact page data from Keystatic
+const contactData = await getContactPage();
+
+// Fallback values if no data exists yet
+const title = contactData?.title || "Contact";
+const subtitle = contactData?.subtitle || "We are here to help.";
+const email = contactData?.email || "barokapublisher@gmail.com";
+const phone = contactData?.phone || "+628522890161";
+const address = contactData?.address || "Tulang Bawag Barat, Lampung 34594";
+---
+
+<Layout title={title}>
+  <Container>
+    <main class="py-24 animate-fade-in">
+      <header class="text-center mb-20">
+          <span class="text-brand-primary text-xs font-bold uppercase tracking-widest mb-4 block">Bantuan & Dukungan</span>
+          <h1 class="text-6xl font-bold mb-6 tracking-tighter dark:text-white">{title}</h1>
+          <p class="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-lg">{subtitle}</p>
+      </header>
+
+      <div class="grid md:grid-cols-2 gap-12 mx-auto max-w-5xl">
+        <div class="glass p-10 rounded-[3rem] border border-white/5 flex flex-col justify-between">
+          <div>
+            <h2 class="font-bold text-3xl dark:text-white mb-6">Hubungi Kami</h2>
+            <p class="text-lg leading-relaxed text-slate-500 dark:text-slate-400">
+              Punya pertanyaan atau masukan? Kami siap membantu. Hubungi kami melalui media di samping atau isi formulir pesan.
+            </p>
+            
+            <div class="mt-12 space-y-6">
+              <div class="flex items-center space-x-4 group">
+                <div class="w-12 h-12 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform">
+                  <Icon class="w-6 h-6" name="uil:map-marker" />
+                </div>
+                <div>
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Alamat</p>
+                    <span class="dark:text-slate-200">{address}</span>
+                </div>
+              </div>
+              
+              <div class="flex items-center space-x-4 group">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500 group-hover:scale-110 transition-transform">
+                  <Icon class="w-6 h-6" name="uil:envelope" />
+                </div>
+                <div>
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Email</p>
+                    <a href={`mailto:${email}`} class="dark:text-slate-200 hover:text-brand-primary transition-colors">{email}</a>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-4 group">
+                <div class="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform">
+                  <Icon class="w-6 h-6" name="uil:phone" />
+                </div>
+                <div>
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Telepon</p>
+                    <a href={`tel:${phone}`} class="dark:text-slate-200 hover:text-brand-primary transition-colors">{phone}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass p-10 rounded-[3rem] border border-white/5">
+          <Contactform />
+        </div>
+      </div>
+    </main>
+  </Container>
+</Layout>

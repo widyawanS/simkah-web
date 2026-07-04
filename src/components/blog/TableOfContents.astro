@@ -1,0 +1,83 @@
+---
+---
+<div class="toc-container glass rounded-3xl my-8 overflow-hidden transition-all duration-300">
+  <button 
+    id="toc-toggle"
+    class="w-full text-left p-5 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+  >
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-violet-500/20 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+            </svg>
+        </div>
+        <span class="text-sm font-extrabold text-slate-900 dark:text-white dark:drop-shadow-sm uppercase tracking-wider">Daftar Isi</span>
+    </div>
+    <svg id="toc-chevron" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 dark:text-slate-500 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  
+  <nav id="toc" class="hidden px-6 pb-6">
+    <ul id="toc-list" class="space-y-3 text-sm text-slate-600 dark:text-slate-400 border-l border-slate-200 dark:border-slate-800 ml-2 pl-4">
+    </ul>
+  </nav>
+</div>
+
+<script is:inline>
+  function setupTOC() {
+    const tocList = document.getElementById('toc-list');
+    const tocNav = document.getElementById('toc');
+    const tocToggle = document.getElementById('toc-toggle');
+    const tocChevron = document.getElementById('toc-chevron');
+    const article = document.querySelector('article');
+    
+    if (!article || !tocList || !tocNav || !tocToggle) return;
+
+    // Clear previous items
+    tocList.innerHTML = '';
+
+    const headings = article.querySelectorAll('h2, h3');
+    if (headings.length === 0) {
+      const container = document.querySelector('.toc-container');
+      if (container) container.style.display = 'none';
+      return;
+    }
+
+    headings.forEach((heading, index) => {
+      const id = heading.id || `heading-${index}`;
+      heading.id = id;
+
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + id;
+      a.textContent = heading.textContent;
+      a.className = 'block hover:text-violet-500 transition-colors py-1';
+      
+      if (heading.tagName === 'H3') {
+        li.className = 'pl-4 text-xs opacity-80';
+      }
+
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    // Toggle logic (default is hidden as requested)
+    tocToggle.onclick = function() {
+        const isHidden = tocNav.classList.contains('hidden');
+        if (isHidden) {
+            tocNav.classList.remove('hidden');
+            tocChevron.classList.add('rotate-180');
+        } else {
+            tocNav.classList.add('hidden');
+            tocChevron.classList.remove('rotate-180');
+        }
+    };
+  }
+
+  // Run on load
+  setupTOC();
+  
+  // Handle view transitions
+  document.addEventListener('astro:after-swap', setupTOC);
+</script>

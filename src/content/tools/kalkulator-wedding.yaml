@@ -1,0 +1,10 @@
+title: Kalkulator Wedding
+shortDescription: Estimasi biaya pernikahan lengkap. Venue, catering, dekorasi, entertainment, dokumentasi, dan semua kebutuhan pesta.
+category: calculator
+icon: 💒
+colorFrom: pink-500
+colorTo: purple-500
+link: /tools/kalkulator-wedding
+isActive: true
+showInMenu: true
+order: 2

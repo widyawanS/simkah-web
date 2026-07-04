@@ -1,0 +1,10 @@
+title: Sipp Pa
+shortDescription: Daftar Sipp PA
+category: other
+icon: 🔧
+colorFrom: indigo-500
+colorTo: purple-500
+link: /tools/sipp-pa
+isActive: true
+showInMenu: true
+order: 10

@@ -1,0 +1,31 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import ConverterComponent from "@components/tools/Converter";
+import AdSlot from "@components/ui/AdSlot.astro";
+---
+
+<Layout title="Image & Media Converter - Pro Version">
+  <Container>
+    <div class="py-16 md:py-24 animate-fade-in min-h-screen">
+        <header class="text-center mb-16 max-w-2xl mx-auto">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-500 text-[10px] font-bold uppercase tracking-widest mb-4 border border-indigo-500/20">
+                ⚡ Premium Tool
+            </span>
+            <h1 class="text-5xl font-bold mb-6 tracking-tight dark:text-white">
+                Media <span class="bg-gradient-to-r from-indigo-500 to-blue-500 bg-clip-text text-transparent">Converter</span>
+            </h1>
+            <p class="text-slate-500 text-lg leading-relaxed mb-8">
+                Konversi gambar HEIC, JPG, PNG, dan WebP Anda secara instan. 
+                Semua proses dilakukan di browser Anda untuk privasi maksimal.
+            </p>
+            <AdSlot type="tools" />
+        </header>
+        
+        <div class="max-w-4xl mx-auto">
+            <ConverterComponent client:load />
+        </div>
+    </div>
+  </Container>
+</Layout>
+

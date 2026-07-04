@@ -1,0 +1,27 @@
+{
+    "metadata": {
+        "siteName": "SIMKAH Tools",
+        "description": "Kumpulan tool gratis untuk membantu urusan SIMKAH dan pernikahan.",
+        "ogImage": "/images/opengraph.jpg"
+    },
+    "ads": {
+        "isActive": false,
+        "adClient": "",
+        "homeAd": "Iklan Slot",
+        "postAd": "Iklan Slot",
+        "toolsAd": "Iklan Slot",
+        "customInjectedHeader": ""
+    },
+    "analytics": {
+        "googleAnalyticsId": "",
+        "umamiWebsiteId": ""
+    },
+    "footer": {
+        "profile": "Selamat datang di portal informasi SIMKAH dan alat bantu manajemen pernikahan.",
+        "address": "Jl. Kebon Sirih No. 123,\nJakarta Pusat, Indonesia",
+        "whatsapp": "6285228890161",
+        "telegram": "@sigitmanto",
+        "facebook": "https://facebook.com/cakwied",
+        "instagram": ""
+    }
+}

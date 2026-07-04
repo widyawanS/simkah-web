@@ -1,0 +1,89 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+import AdSlot from "@components/ui/AdSlot.astro";
+import { getAllTools } from "@lib/keystatic";
+
+// Get all tools from Keystatic
+const allTools = await getAllTools();
+---
+
+<Layout title="Tools - Kumpulan Alat Produktivitas">
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">Tools & Calculators</Fragment>
+      <Fragment slot="desc">Kumpulan alat produktivitas untuk membantu perencanaan Anda</Fragment>
+    </Sectionhead>
+
+    <AdSlot type="tools" />
+
+    <div class="grid md:grid-cols-2 gap-6 mt-16 max-w-5xl mx-auto">
+      {allTools.map((tool) => (
+        <a 
+          href={tool?.isActive ? tool?.link : "#"} 
+          class:list={[
+            "group relative glass rounded-3xl p-8 transition-all duration-300",
+            !tool?.isActive ? "opacity-60 cursor-not-allowed" : "hover:scale-[1.02] hover:shadow-2xl"
+          ]}>
+          
+          {!tool?.isActive && (
+            <span class="absolute top-4 right-4 px-3 py-1 text-xs font-bold bg-slate-700 rounded-full text-slate-300">
+              Coming Soon
+            </span>
+          )}
+          
+          <div class={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 bg-${tool?.colorFrom?.split('-')[0] || 'indigo'}-500/10 border border-${tool?.colorFrom?.split('-')[0] || 'indigo'}-500/30`}>
+            {tool?.icon || '🔧'}
+          </div>
+          
+          <h3 class:list={[
+            "text-2xl font-bold mb-3 transition-colors",
+            tool?.isActive && "group-hover:text-indigo-400"
+          ]}>
+            {tool?.title?.name || tool?.slug || 'Tool'}
+          </h3>
+          
+          <p class="text-slate-400 leading-relaxed">
+            {tool?.shortDescription || 'Deskripsi tool'}
+          </p>
+
+          <div class="mt-4 flex items-center gap-2">
+            <span class="text-xs px-2 py-1 bg-slate-800 rounded-full text-slate-400 capitalize">
+              {tool?.category || 'other'}
+            </span>
+          </div>
+          
+          {tool?.isActive && (
+            <div class="mt-4 flex items-center gap-2 text-sm font-bold text-slate-400 group-hover:text-white transition-colors">
+              <span>Buka Tool</span>
+              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </div>
+          )}
+        </a>
+      ))}
+    </div>
+
+    <!-- Stats Section -->
+    <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+      <div class="glass rounded-2xl p-6 text-center">
+        <p class="text-4xl font-bold text-gradient">{allTools.filter(t => t?.isActive).length}</p>
+        <p class="text-sm text-slate-400 mt-1">Active Tools</p>
+      </div>
+      <div class="glass rounded-2xl p-6 text-center">
+        <p class="text-4xl font-bold text-gradient">100%</p>
+        <p class="text-sm text-slate-400 mt-1">Free to Use</p>
+      </div>
+      <div class="glass rounded-2xl p-6 text-center">
+        <p class="text-4xl font-bold text-gradient">0</p>
+        <p class="text-sm text-slate-400 mt-1">Data Upload</p>
+      </div>
+      <div class="glass rounded-2xl p-6 text-center">
+        <p class="text-4xl font-bold text-gradient">∞</p>
+        <p class="text-sm text-slate-400 mt-1">Calculations</p>
+      </div>
+    </div>
+  </Container>
+</Layout>

@@ -1,0 +1,80 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+import { getCalculatorTools } from "@lib/keystatic";
+
+// Get calculator tools from Keystatic
+const calculators = await getCalculatorTools();
+---
+
+<Layout title="Smart Calculators - Kalkulator Online Gratis">
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">Smart Calculators</Fragment>
+      <Fragment slot="desc">Kumpulan kalkulator online untuk berbagai keperluan perencanaan</Fragment>
+    </Sectionhead>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16 max-w-6xl mx-auto">
+      {calculators.map((calc) => (
+        <a 
+          href={calc?.isActive ? calc?.link : "#"} 
+          class:list={[
+            "group relative glass rounded-2xl p-6 transition-all duration-300",
+            !calc?.isActive ? "opacity-60 cursor-not-allowed" : "hover:scale-[1.02] hover:shadow-2xl"
+          ]}>
+          
+          {!calc?.isActive && (
+            <span class="absolute top-4 right-4 px-2 py-1 text-xs font-bold bg-slate-700 rounded-full text-slate-300">
+              Soon
+            </span>
+          )}
+          
+          <div class={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-4 bg-${calc?.colorFrom?.split('-')[0] || 'green'}-500/10 border border-${calc?.colorFrom?.split('-')[0] || 'green'}-500/30`}>
+            {calc?.icon || '🔢'}
+          </div>
+          
+          <h3 class:list={[
+            "text-xl font-bold mb-2 transition-colors",
+            calc?.isActive && "group-hover:text-indigo-400"
+          ]}>
+            {calc?.title?.name || calc?.slug || 'Calculator'}
+          </h3>
+          
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            {calc?.shortDescription || 'Deskripsi kalkulator'}
+          </p>
+          
+          {calc?.isActive && (
+            <div class="mt-4 flex items-center gap-2 text-sm font-bold text-slate-400 group-hover:text-indigo-400 transition-colors">
+              <span>Buka Kalkulator</span>
+              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </div>
+          )}
+        </a>
+      ))}
+    </div>
+
+    {calculators.length === 0 && (
+      <div class="text-center py-20">
+        <p class="text-slate-400">Belum ada kalkulator. Tambahkan melalui dashboard admin.</p>
+        <a href="/keystatic" class="inline-block mt-4 px-6 py-2 bg-brand-primary rounded-full text-white font-bold">
+          Buka Admin
+        </a>
+      </div>
+    )}
+
+    <!-- Info Section -->
+    <div class="mt-16 max-w-3xl mx-auto text-center">
+      <div class="glass rounded-2xl p-8">
+        <h3 class="text-xl font-bold mb-4">🔒 Privasi Terjamin</h3>
+        <p class="text-slate-400 text-sm">
+          Semua kalkulasi dilakukan langsung di browser Anda. Tidak ada data yang dikirim ke server. 
+          Data Anda tetap aman dan privat.
+        </p>
+      </div>
+    </div>
+  </Container>
+</Layout>

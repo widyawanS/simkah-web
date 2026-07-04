@@ -1,0 +1,50 @@
+---
+---
+<button class="theme-toggle-btn relative inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/10 dark:hover:bg-slate-800 transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white group focus:outline-none">
+  <span class="sr-only">Toggle theme</span>
+  <svg class="theme-toggle-dark-icon hidden h-5 w-5 group-hover:rotate-12 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+  </svg>
+  <svg class="theme-toggle-light-icon hidden h-5 w-5 group-hover:rotate-90 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+  </svg>
+</button>
+
+<script is:inline>
+  function setupThemeToggle() {
+    const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn');
+    
+    function updateIcons() {
+      const isDark = document.documentElement.classList.contains('dark');
+      themeToggleBtns.forEach(btn => {
+        const darkIcon = btn.querySelector('.theme-toggle-dark-icon');
+        const lightIcon = btn.querySelector('.theme-toggle-light-icon');
+        if (isDark) {
+          darkIcon?.classList.add('hidden');
+          lightIcon?.classList.remove('hidden');
+        } else {
+          darkIcon?.classList.remove('hidden');
+          lightIcon?.classList.add('hidden');
+        }
+      });
+    }
+
+    // Initial icon state
+    updateIcons();
+
+    themeToggleBtns.forEach(btn => {
+      btn.onclick = function() {
+        document.documentElement.classList.toggle('dark');
+        const isDark = document.documentElement.classList.contains('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        updateIcons();
+      };
+    });
+  }
+
+  // Run on page load
+  setupThemeToggle();
+
+  // Handle Astro view transitions
+  document.addEventListener('astro:after-swap', setupThemeToggle);
+</script>

@@ -1,0 +1,12 @@
+title: AI Prompt Generator
+shortDescription: >-
+  Buat prompt AI untuk generate desain undangan pernikahan, syukuran, dan aqiqah.
+  Output dalam format JSON dan teks siap copy untuk Midjourney, DALL-E, atau Stable Diffusion.
+category: generator
+icon: ✨
+colorFrom: violet-500
+colorTo: purple-500
+link: /tools/prompt-generator
+isActive: true
+showInMenu: true
+order: 1

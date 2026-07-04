@@ -1,0 +1,482 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import AdSlot from "@components/ui/AdSlot.astro";
+---
+
+<Layout title="AI Prompt Generator - Undangan Digital">
+  <Container>
+    <div class="max-w-5xl mx-auto mt-16 mb-20">
+      <div class="text-center mb-12">
+        <span class="inline-block px-4 py-2 bg-violet-500/20 text-violet-400 rounded-full text-sm font-bold mb-4">
+          ✨ AI Prompt Generator
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          Generator Prompt <span class="text-gradient">Undangan Digital</span>
+        </h1>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          Buat prompt AI untuk menggenerate desain undangan pernikahan, syukuran, atau aqiqah. 
+          Output dalam format JSON dan teks siap copy untuk Midjourney, DALL-E, atau Stable Diffusion.
+        </p>
+        <AdSlot type="tools" />
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <div class="space-y-6">
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">1</span>
+              Jenis Acara
+            </h3>
+            <div class="grid grid-cols-3 gap-3">
+              <button type="button" class="event-btn selected p-4 rounded-xl border-2 border-violet-500 bg-violet-500/10 text-center" data-event="wedding">
+                <span class="text-2xl block mb-1">💒</span>
+                <span class="text-sm font-medium">Pernikahan</span>
+              </button>
+              <button type="button" class="event-btn p-4 rounded-xl border-2 border-slate-700 text-center" data-event="syukuran">
+                <span class="text-2xl block mb-1">🎊</span>
+                <span class="text-sm font-medium">Syukuran</span>
+              </button>
+              <button type="button" class="event-btn p-4 rounded-xl border-2 border-slate-700 text-center" data-event="aqiqah">
+                <span class="text-2xl block mb-1">👶</span>
+                <span class="text-sm font-medium">Aqiqah</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">2</span>
+              <span id="namesLabel">Nama Mempelai</span>
+            </h3>
+            <div id="weddingNames" class="space-y-3">
+              <input type="text" id="groomName" placeholder="Nama Mempelai Pria" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
+              <input type="text" id="brideName" placeholder="Nama Mempelai Wanita" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
+            </div>
+            <div id="aqiqahNames" class="space-y-3 hidden">
+              <input type="text" id="babyName" placeholder="Nama Anak" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
+              <div class="flex gap-3" id="genderSelect">
+                <label class="flex-1 flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                  <input type="radio" name="babyGender" value="boy" checked />
+                  <span>👦 Laki-laki</span>
+                </label>
+                <label class="flex-1 flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                  <input type="radio" name="babyGender" value="girl" />
+                  <span>👧 Perempuan</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">3</span>
+              Detail Acara
+            </h3>
+            <div class="grid grid-cols-2 gap-3">
+              <input type="text" id="eventDate" placeholder="Tanggal" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
+              <input type="text" id="eventTime" placeholder="Waktu" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
+            </div>
+            <input type="text" id="eventVenue" placeholder="Tempat Acara" class="w-full mt-3 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
+          </div>
+
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">4</span>
+              Gaya Desain
+            </h3>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <input type="radio" name="style" value="elegant" checked />
+                <span class="text-sm">✨ Elegant</span>
+              </label>
+              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <input type="radio" name="style" value="minimalist" />
+                <span class="text-sm">◻️ Minimalist</span>
+              </label>
+              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <input type="radio" name="style" value="rustic" />
+                <span class="text-sm">🌿 Rustic</span>
+              </label>
+              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <input type="radio" name="style" value="floral" />
+                <span class="text-sm">🌸 Floral</span>
+              </label>
+              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <input type="radio" name="style" value="islamic" />
+                <span class="text-sm">🕌 Islamic</span>
+              </label>
+              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <input type="radio" name="style" value="javanese" />
+                <span class="text-sm">🏛️ Javanese</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">5</span>
+              Palet Warna
+            </h3>
+            <select id="colorPalette" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white">
+              <option value="gold-white">Gold & White</option>
+              <option value="sage-cream">Sage & Cream</option>
+              <option value="dusty-rose">Dusty Rose</option>
+              <option value="navy-gold">Navy & Gold</option>
+              <option value="emerald-gold">Emerald & Gold</option>
+              <option value="black-gold">Black & Gold</option>
+            </select>
+          </div>
+
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">6</span>
+              Elemen Dekorasi
+            </h3>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <input type="checkbox" value="flowers" checked />
+                <span class="text-sm">🌸 Bunga</span>
+              </label>
+              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <input type="checkbox" value="ornaments" />
+                <span class="text-sm">✨ Ornamen</span>
+              </label>
+              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <input type="checkbox" value="islamic-pattern" />
+                <span class="text-sm">🕌 Pola Islami</span>
+              </label>
+              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <input type="checkbox" value="frame" />
+                <span class="text-sm">🖼️ Frame</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-6">
+            <h3 class="font-bold mb-4 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">7</span>
+              Tekstur & Layout
+            </h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Tekstur</label>
+                <select id="texture" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white">
+                  <option value="smooth">Smooth</option>
+                  <option value="paper">Paper</option>
+                  <option value="marble">Marble</option>
+                  <option value="gold-foil">Gold Foil</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-2">Layout</label>
+                <select id="layout" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white">
+                  <option value="centered">Centered</option>
+                  <option value="asymmetric">Asymmetric</option>
+                  <option value="bordered">Bordered</option>
+                </select>
+              </div>
+            </div>
+            <div class="mt-4">
+              <label class="block text-sm text-slate-400 mb-2">Aspect Ratio</label>
+              <div class="flex gap-2">
+                <label class="flex-1 flex items-center justify-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                  <input type="radio" name="ratio" value="1:1" />
+                  <span class="text-sm">1:1</span>
+                </label>
+                <label class="flex-1 flex items-center justify-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                  <input type="radio" name="ratio" value="4:5" checked />
+                  <span class="text-sm">4:5</span>
+                </label>
+                <label class="flex-1 flex items-center justify-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                  <input type="radio" name="ratio" value="9:16" />
+                  <span class="text-sm">9:16</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <button id="generateBtn" class="w-full py-4 bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl font-bold text-white">
+            ⚡ Generate Prompt
+          </button>
+        </div>
+
+        <div class="space-y-6">
+          <div class="glass rounded-2xl p-6 sticky top-24">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-bold">📝 Output Prompt</h3>
+              <div class="flex gap-2">
+                <button id="copyJsonBtn" class="px-3 py-1 text-xs bg-slate-700 rounded-lg">Copy JSON</button>
+                <button id="copyTextBtn" class="px-3 py-1 text-xs bg-violet-600 rounded-lg">Copy Text</button>
+              </div>
+            </div>
+
+            <div class="flex gap-2 mb-4">
+              <button id="tabJson" class="tab-btn active px-4 py-2 bg-violet-600 rounded-lg text-sm font-medium">JSON</button>
+              <button id="tabText" class="tab-btn px-4 py-2 bg-slate-700 rounded-lg text-sm font-medium">Text</button>
+              <button id="tabMidjourney" class="tab-btn px-4 py-2 bg-slate-700 rounded-lg text-sm font-medium">Midjourney</button>
+            </div>
+
+            <div id="jsonOutput" class="bg-slate-900 rounded-xl p-4 max-h-96 overflow-auto">
+              <pre class="text-xs text-green-400 whitespace-pre-wrap font-mono" id="jsonContent">Isi form untuk generate prompt</pre>
+            </div>
+
+            <div id="textOutput" class="bg-slate-900 rounded-xl p-4 max-h-96 overflow-auto hidden">
+              <p class="text-sm text-slate-300 whitespace-pre-wrap" id="textContent">Isi form untuk generate prompt...</p>
+            </div>
+
+            <div id="midjourneyOutput" class="bg-slate-900 rounded-xl p-4 max-h-96 overflow-auto hidden">
+              <p class="text-sm text-blue-300 whitespace-pre-wrap font-mono" id="midjourneyContent">/imagine prompt: ...</p>
+            </div>
+
+            <div class="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+              <p class="text-xs text-amber-300">
+                <strong>💡 Tips:</strong> Gunakan Text Prompt untuk DALL-E/ChatGPT, dan Midjourney untuk MJ/SD.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Layout>
+
+<style>
+  .event-btn.selected {
+    border-color: #8b5cf6 !important;
+    background: rgba(139, 92, 246, 0.1);
+  }
+  .tab-btn.active {
+    background: #8b5cf6 !important;
+  }
+</style>
+
+<script>
+  let selectedEvent = 'wedding';
+  
+  const styleDescriptions = {
+    elegant: 'elegant luxurious style with refined details',
+    minimalist: 'clean minimalist design with simple lines',
+    rustic: 'rustic natural style with organic elements',
+    floral: 'beautiful floral garden theme',
+    islamic: 'Islamic geometric patterns',
+    javanese: 'traditional Javanese batik patterns'
+  };
+
+  const colorDescriptions = {
+    'gold-white': 'luxurious gold and white palette',
+    'sage-cream': 'soft sage green and cream tones',
+    'dusty-rose': 'romantic dusty rose pink',
+    'navy-gold': 'deep navy blue with gold accents',
+    'emerald-gold': 'rich emerald green with gold',
+    'black-gold': 'dramatic black with gold accents'
+  };
+
+  const textureDescriptions = {
+    smooth: 'smooth clean background',
+    paper: 'subtle paper texture',
+    marble: 'elegant marble texture',
+    'gold-foil': 'shimmering gold foil'
+  };
+
+  const layoutDescriptions = {
+    centered: 'centered symmetrical layout',
+    asymmetric: 'asymmetric artistic layout',
+    bordered: 'full decorative border frame'
+  };
+
+  const elementDescriptions = {
+    flowers: 'floral arrangements roses peonies',
+    ornaments: 'gold ornaments decorative flourishes',
+    'islamic-pattern': 'Islamic geometric patterns',
+    frame: 'decorative ornate frame'
+  };
+
+  document.querySelectorAll('.event-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.event-btn').forEach(function(b) { 
+        b.classList.remove('selected'); 
+      });
+      btn.classList.add('selected');
+      selectedEvent = btn.getAttribute('data-event') || 'wedding';
+      
+      var weddingNames = document.getElementById('weddingNames');
+      var aqiqahNames = document.getElementById('aqiqahNames');
+      var namesLabel = document.getElementById('namesLabel');
+      
+      if (selectedEvent === 'aqiqah') {
+        if (weddingNames) weddingNames.classList.add('hidden');
+        if (aqiqahNames) aqiqahNames.classList.remove('hidden');
+        if (namesLabel) namesLabel.textContent = 'Nama Anak';
+      } else {
+        if (weddingNames) weddingNames.classList.remove('hidden');
+        if (aqiqahNames) aqiqahNames.classList.add('hidden');
+        if (namesLabel) namesLabel.textContent = selectedEvent === 'syukuran' ? 'Nama Pasangan' : 'Nama Mempelai';
+      }
+    });
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(function(b) { 
+        b.classList.remove('active');
+        b.classList.remove('bg-violet-600');
+        b.classList.add('bg-slate-700');
+      });
+      btn.classList.add('active');
+      btn.classList.remove('bg-slate-700');
+      btn.classList.add('bg-violet-600');
+
+      var jsonOutput = document.getElementById('jsonOutput');
+      var textOutput = document.getElementById('textOutput');
+      var midjourneyOutput = document.getElementById('midjourneyOutput');
+      
+      if (jsonOutput) jsonOutput.classList.add('hidden');
+      if (textOutput) textOutput.classList.add('hidden');
+      if (midjourneyOutput) midjourneyOutput.classList.add('hidden');
+
+      if (btn.id === 'tabJson' && jsonOutput) jsonOutput.classList.remove('hidden');
+      else if (btn.id === 'tabText' && textOutput) textOutput.classList.remove('hidden');
+      else if (midjourneyOutput) midjourneyOutput.classList.remove('hidden');
+    });
+  });
+
+  var generateBtn = document.getElementById('generateBtn');
+  if (generateBtn) {
+    generateBtn.addEventListener('click', function() {
+      var groomNameEl = document.getElementById('groomName');
+      var brideNameEl = document.getElementById('brideName');
+      var babyNameEl = document.getElementById('babyName');
+      var babyGenderEl = document.querySelector('input[name="babyGender"]:checked');
+      var eventDateEl = document.getElementById('eventDate');
+      var eventTimeEl = document.getElementById('eventTime');
+      var eventVenueEl = document.getElementById('eventVenue');
+      var styleEl = document.querySelector('input[name="style"]:checked');
+      var colorEl = document.getElementById('colorPalette');
+      var textureEl = document.getElementById('texture');
+      var layoutEl = document.getElementById('layout');
+      var ratioEl = document.querySelector('input[name="ratio"]:checked');
+
+      var groomName = groomNameEl ? groomNameEl.value.trim() : '';
+      var brideName = brideNameEl ? brideNameEl.value.trim() : '';
+      var babyName = babyNameEl ? babyNameEl.value.trim() : '';
+      var babyGender = babyGenderEl ? babyGenderEl.value : 'boy';
+      var eventDate = eventDateEl ? eventDateEl.value.trim() : '25 Januari 2025';
+      var eventTime = eventTimeEl ? eventTimeEl.value.trim() : '09:00 WIB';
+      var eventVenue = eventVenueEl ? eventVenueEl.value.trim() : 'Gedung Serbaguna';
+      var style = styleEl ? styleEl.value : 'elegant';
+      var color = colorEl ? colorEl.value : 'gold-white';
+      var texture = textureEl ? textureEl.value : 'smooth';
+      var layout = layoutEl ? layoutEl.value : 'centered';
+      var ratio = ratioEl ? ratioEl.value : '4:5';
+
+      var elements = [];
+      document.querySelectorAll('input[type="checkbox"]:checked').forEach(function(cb) {
+        elements.push(cb.value);
+      });
+
+      var eventTitle = '';
+      var names = '';
+      var eventType = '';
+
+      if (selectedEvent === 'wedding') {
+        eventTitle = 'Wedding Invitation';
+        eventType = 'Undangan Pernikahan';
+        names = groomName && brideName ? groomName + ' & ' + brideName : 'Ahmad & Fatimah';
+      } else if (selectedEvent === 'syukuran') {
+        eventTitle = 'Wedding Celebration Invitation';
+        eventType = 'Undangan Syukuran';
+        names = groomName && brideName ? groomName + ' & ' + brideName : 'Ahmad & Fatimah';
+      } else {
+        eventTitle = 'Aqiqah Celebration';
+        eventType = 'Undangan Aqiqah';
+        names = babyName || (babyGender === 'boy' ? 'Muhammad Azzam' : 'Aisyah Zahra');
+      }
+
+      var generatedData = {
+        prompt_type: 'invitation_design',
+        event: { type: selectedEvent, title: eventTitle, title_id: eventType },
+        content: { names: names, date: eventDate, time: eventTime, venue: eventVenue },
+        design: {
+          style: style,
+          style_description: styleDescriptions[style],
+          color_palette: color,
+          color_description: colorDescriptions[color],
+          texture: texture,
+          texture_description: textureDescriptions[texture],
+          layout: layout,
+          layout_description: layoutDescriptions[layout],
+          elements: elements,
+          element_descriptions: elements.map(function(e) { return elementDescriptions[e]; })
+        },
+        format: { aspect_ratio: ratio, resolution: 'high resolution 4K' },
+        text_content: {
+          main_text: selectedEvent === 'aqiqah' ? 'Aqiqah ' + names : 'The Wedding of ' + names,
+          date_text: eventDate,
+          time_text: eventTime,
+          venue_text: eventVenue
+        }
+      };
+
+      var textPrompt = 'Create a beautiful ' + eventTitle.toLowerCase() + ' design:\n\n' +
+        'Event: ' + eventType + '\n' +
+        'Names: ' + names + '\n' +
+        'Date: ' + eventDate + '\n' +
+        'Time: ' + eventTime + '\n' +
+        'Venue: ' + eventVenue + '\n\n' +
+        'Design Style: ' + styleDescriptions[style] + '\n' +
+        'Color Palette: ' + colorDescriptions[color] + '\n' +
+        'Texture: ' + textureDescriptions[texture] + '\n' +
+        'Layout: ' + layoutDescriptions[layout] + '\n' +
+        'Elements: ' + elements.map(function(e) { return elementDescriptions[e]; }).join(', ') + '\n\n' +
+        'Main title: "' + generatedData.text_content.main_text + '"\n' +
+        'Aspect ratio: ' + ratio + '\n' +
+        'CRITICAL: All text must be spelled EXACTLY as provided.';
+
+      var mjElements = elements.map(function(e) { return elementDescriptions[e].split(' ')[0]; }).join(', ');
+      var midjourneyPrompt = '/imagine prompt: ' + eventTitle.toLowerCase() + ' design, ' + names + ', ' + 
+        styleDescriptions[style] + ', ' + colorDescriptions[color] + ', ' + 
+        mjElements + ', elegant typography, professional invitation, 4K --ar ' + 
+        ratio.replace(':', '/') + ' --v 6 --style raw';
+
+      var jsonContentEl = document.getElementById('jsonContent');
+      var textContentEl = document.getElementById('textContent');
+      var midjourneyContentEl = document.getElementById('midjourneyContent');
+      
+      if (jsonContentEl) jsonContentEl.textContent = JSON.stringify(generatedData, null, 2);
+      if (textContentEl) textContentEl.textContent = textPrompt;
+      if (midjourneyContentEl) midjourneyContentEl.textContent = midjourneyPrompt;
+    });
+  }
+
+  var copyJsonBtn = document.getElementById('copyJsonBtn');
+  if (copyJsonBtn) {
+    copyJsonBtn.addEventListener('click', function() {
+      var el = document.getElementById('jsonContent');
+      var text = el ? el.textContent : '';
+      navigator.clipboard.writeText(text || '');
+      alert('JSON copied!');
+    });
+  }
+
+  var copyTextBtn = document.getElementById('copyTextBtn');
+  if (copyTextBtn) {
+    copyTextBtn.addEventListener('click', function() {
+      var activeTabEl = document.querySelector('.tab-btn.active');
+      var activeTab = activeTabEl ? activeTabEl.id : '';
+      var text = '';
+      if (activeTab === 'tabJson') {
+        var el = document.getElementById('jsonContent');
+        text = el ? el.textContent : '';
+      } else if (activeTab === 'tabText') {
+        var el = document.getElementById('textContent');
+        text = el ? el.textContent : '';
+      } else {
+        var el = document.getElementById('midjourneyContent');
+        text = el ? el.textContent : '';
+      }
+      navigator.clipboard.writeText(text || '');
+      alert('Copied!');
+    });
+  }
+</script>

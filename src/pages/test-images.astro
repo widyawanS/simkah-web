@@ -1,0 +1,116 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import { getPosts } from "@lib/content.ts";
+
+const posts = await getPosts();
+---
+
+<Layout title="Image Test Page">
+  <Container>
+    <main class="py-20">
+      <h1 class="text-4xl font-bold mb-8">🖼️ Image Test Page</h1>
+      
+      <div class="mb-12 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+        <h2 class="text-2xl font-bold mb-4">Test 1: Direct Image Access</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="font-bold mb-2">Image 1: welcome.jpg</h3>
+            <img src="/images/blog/welcome.jpg" alt="Welcome" class="w-full rounded-lg border-2 border-green-500">
+            <p class="text-sm mt-2">Path: /images/blog/welcome.jpg</p>
+          </div>
+          <div>
+            <h3 class="font-bold mb-2">Image 2: test-post-1/image.jpg</h3>
+            <img src="/images/blog/test-post-1/image.jpg" alt="Test Post" class="w-full rounded-lg border-2 border-blue-500">
+            <p class="text-sm mt-2">Path: /images/blog/test-post-1/image.jpg</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-12 p-6 bg-green-50 dark:bg-green-900/20 rounded-lg">
+        <h2 class="text-2xl font-bold mb-4">Test 2: Images from getPosts()</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          {posts.map(post => (
+            <div class="border-2 border-purple-500 rounded-lg p-4">
+              <h3 class="font-bold mb-2">{post.title}</h3>
+              <img 
+                src={post.image} 
+                alt={post.title}
+                onerror="this.style.border='3px solid red'; this.alt='❌ FAILED TO LOAD';"
+                class="w-full rounded-lg mb-2"
+              >
+              <p class="text-sm">
+                <strong>Raw Path:</strong> <code class="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">{post.image}</code>
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="mb-12 p-6 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+        <h2 class="text-2xl font-bold mb-4">Test 3: With Error Handler (Fallback)</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div>
+            <h3 class="font-bold mb-2">✅ Valid Image</h3>
+            <img 
+              src="/images/blog/welcome.jpg" 
+              alt="Valid"
+              onerror="this.src='/opengraph.jpg'; this.style.border='3px solid orange';"
+              class="w-full rounded-lg"
+            >
+            <p class="text-xs mt-2">Should show green border if loaded</p>
+          </div>
+          <div>
+            <h3 class="font-bold mb-2">❌ Invalid Path</h3>
+            <img 
+              src="/images/blog/nonexistent.jpg" 
+              alt="Invalid"
+              onerror="this.src='/opengraph.jpg'; this.style.border='3px solid red';"
+              class="w-full rounded-lg"
+            >
+            <p class="text-xs mt-2">Should fallback to opengraph.jpg (red border)</p>
+          </div>
+          <div>
+            <h3 class="font-bold mb-2">🎯 Fallback Direct</h3>
+            <img 
+              src="/opengraph.jpg" 
+              alt="Fallback"
+              class="w-full rounded-lg border-2 border-green-500"
+            >
+            <p class="text-xs mt-2">Opengraph.jpg as default</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg">
+        <h2 class="text-2xl font-bold mb-4">📊 Diagnostic Info</h2>
+        <pre class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-xs">
+{JSON.stringify({
+  totalPosts: posts.length,
+  posts: posts.map(p => ({
+    slug: p.slug,
+    title: p.title,
+    image: p.image,
+    hasImage: !!p.image
+  }))
+}, null, 2)}
+        </pre>
+      </div>
+
+      <div class="mt-8 text-center">
+        <a href="/blog" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          ← Back to Blog
+        </a>
+      </div>
+    </main>
+  </Container>
+</Layout>
+
+<style>
+  img {
+    border: 2px solid green;
+  }
+  img[alt*="FAILED"] {
+    border: 3px solid red !important;
+  }
+</style>

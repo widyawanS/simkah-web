@@ -1,0 +1,424 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import { getKecamatanBySlug, getTetangga, getVariasiPembuka, shortKota } from "@lib/wilayah";
+
+// ── SSR: ambil slug dari URL ──────────────────────────────────────────────────
+const { kecamatan: slugParam } = Astro.params;
+const data = getKecamatanBySlug(slugParam as string);
+
+if (!data) {
+  return Astro.redirect("/404");
+}
+
+const tetangga = getTetangga(data, 5);
+const variasiPembuka = getVariasiPembuka(data.kecamatan, data.kota);
+const kotaShort = shortKota(data.kota);
+const tahun = new Date().getFullYear();
+
+const pageTitle = `Cara Daftar Nikah di KUA ${data.kecamatan}, ${data.kota} ${tahun}`;
+const pageDesc = `Panduan lengkap syarat dan alur pendaftaran nikah di KUA Kecamatan ${data.kecamatan}, ${data.kota}, ${data.provinsi} berdasarkan Permenag No. 30 Tahun 2024. Gratis, resmi, dan terpercaya.`;
+const pageUrl = `https://simkah.web.id/panduan-nikah-di-KUA/${data.slug}`;
+
+// JSON-LD Schema
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "GovernmentService",
+      "@id": `${pageUrl}#service`,
+      "name": `KUA Kecamatan ${data.kecamatan}`,
+      "description": `Kantor Urusan Agama Kecamatan ${data.kecamatan} melayani pendaftaran pernikahan warga ${data.kota}, ${data.provinsi}.`,
+      "serviceType": "Pendaftaran Pernikahan",
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": `Kecamatan ${data.kecamatan}, ${data.kota}, ${data.provinsi}, Indonesia`
+      },
+      "provider": {
+        "@type": "GovernmentOrganization",
+        "name": "Kementerian Agama Republik Indonesia",
+        "url": "https://kemenag.go.id"
+      },
+      "url": pageUrl
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Beranda", "item": "https://simkah.web.id" },
+        { "@type": "ListItem", "position": 2, "name": "Panduan Nikah di KUA", "item": "https://simkah.web.id/panduan-nikah-di-KUA" },
+        { "@type": "ListItem", "position": 3, "name": `KUA ${data.kecamatan}`, "item": pageUrl }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": `Berapa biaya nikah di KUA ${data.kecamatan}?`,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": `Nikah di KUA ${data.kecamatan} pada hari dan jam kerja GRATIS (Rp 0). Apabila dilangsungkan di luar KUA atau di luar jam kerja, dikenakan biaya sebesar Rp 600.000 yang dibayarkan via SIMKAH.`
+          }
+        },
+        {
+          "@type": "Question",
+          "name": `Apa saja syarat nikah di KUA ${data.kecamatan} ${tahun}?`,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": `Syarat nikah di KUA ${data.kecamatan} meliputi: (1) N1 - Surat keterangan untuk nikah, (2) N2 - Surat keterangan asal usul, (3) N3 - Surat persetujuan mempelai, (4) N4 - Surat keterangan tentang orang tua, (5) Fotokopi KTP, KK, Akta Kelahiran, (6) Sertifikat skrining kesehatan calon pengantin, (7) Pas foto 2x3 dan 3x4 masing-masing 4 lembar, serta (8) Bukti pendaftaran melalui SIMKAH.`
+          }
+        },
+        {
+          "@type": "Question",
+          "name": `Berapa lama proses pendaftaran nikah di KUA ${data.kecamatan}?`,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": `Pendaftaran nikah di KUA ${data.kecamatan} dilakukan minimal 10 hari kerja sebelum tanggal pernikahan. Proses pemeriksaan berkas membutuhkan 1-3 hari kerja setelah dokumen dinyatakan lengkap.`
+          }
+        }
+      ]
+    }
+  ]
+});
+---
+
+<Layout title={pageTitle} description={pageDesc}>
+  <!-- JSON-LD Schema -->
+  <script type="application/ld+json" set:html={jsonLd} slot="head" />
+
+  <Container>
+    <!-- ── Breadcrumb ─────────────────────────────────────────────────────── -->
+    <nav class="max-w-4xl mx-auto pt-8 pb-2" aria-label="Breadcrumb">
+      <ol class="flex flex-wrap items-center gap-2 text-sm text-slate-400">
+        <li><a href="/" class="hover:text-white transition-colors">Beranda</a></li>
+        <li class="text-slate-600">›</li>
+        <li><a href="/panduan-nikah-di-KUA" class="hover:text-white transition-colors">Panduan Nikah di KUA</a></li>
+        <li class="text-slate-600">›</li>
+        <li class="text-slate-300">{data.kecamatan}</li>
+      </ol>
+    </nav>
+
+    <!-- ── Hero ──────────────────────────────────────────────────────────── -->
+    <header class="max-w-4xl mx-auto mt-6 mb-12">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-6">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        {data.provinsi} · {data.kota}
+      </div>
+
+      <h1 class="text-3xl md:text-5xl font-bold leading-tight mb-6 text-white">
+        Panduan Daftar Nikah di<br />
+        <span class="text-gradient">KUA {data.kecamatan}</span>
+      </h1>
+
+      <p class="text-lg text-slate-300 leading-relaxed mb-6" set:html={variasiPembuka} />
+
+      <div class="flex flex-wrap gap-3">
+        <span class="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-sm">
+          📋 Permenag No. 30/2024
+        </span>
+        <span class="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-sm">
+          🆓 Nikah di KUA: Gratis
+        </span>
+        <span class="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-sm">
+          🗓️ Update {tahun}
+        </span>
+      </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto">
+
+      <!-- ── Persyaratan Nikah ────────────────────────────────────────────── -->
+      <section class="glass rounded-3xl p-8 mb-8" id="persyaratan">
+        <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-xl">📄</span>
+          Persyaratan Nikah di KUA {data.kecamatan}
+        </h2>
+        <p class="text-slate-400 text-sm mb-6">Berdasarkan Peraturan Menteri Agama No. 30 Tahun 2024</p>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <!-- Dokumen Wajib -->
+          <div class="bg-slate-800/50 rounded-2xl p-6">
+            <h3 class="font-bold text-white mb-4 flex items-center gap-2">
+              <span class="text-blue-400">📑</span> Surat Keterangan (Form N)
+            </h3>
+            <ul class="space-y-3">
+              {[
+                { kode: "N1", nama: "Surat Pengantar Nikah", dari: "dari Kelurahan/Desa" },
+                { kode: "N2", nama: "Surat Kehendak Nikah", dari: "dari Kelurahan/Desa" },
+                { kode: "N4", nama: "Surat Persetujuan Mempelai", dari: "ditandatangani berdua" },
+              ].map(({ kode, nama, dari }) => (
+                <li class="flex items-start gap-3">
+                  <span class="shrink-0 w-10 h-6 rounded bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center mt-0.5">{kode}</span>
+                  <div>
+                    <p class="text-white text-sm font-medium">{nama}</p>
+                    <p class="text-slate-500 text-xs">{dari}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <p class="text-slate-500 text-xs mt-4 pt-4 border-t border-slate-700">*) N5 diperlukan jika calon pengantin berusia di bawah 21 tahun (izin orang tua)</p>
+          </div>
+
+          <!-- Dokumen Fotokopi -->
+          <div class="bg-slate-800/50 rounded-2xl p-6">
+            <h3 class="font-bold text-white mb-4 flex items-center gap-2">
+              <span class="text-purple-400">🪪</span> Dokumen Identitas
+            </h3>
+            <ul class="space-y-3">
+              {[
+                { icon: "🪪", text: "Fotokopi KTP calon pengantin (pria & wanita)" },
+                { icon: "👨‍👩‍👧", text: "Fotokopi Kartu Keluarga (KK)" },
+                { icon: "📋", text: "Fotokopi Akta Kelahiran" },
+                { icon: "📑", text: "surat rekomendasi nikah dari KUA setempat bagi Catin yang melangsungkan nikah di luar wilayah kecamatan tempat tinggalnya"},
+                { icon: "🏥", text: "surat keterangan sehat dari fasilitas kesehatan" },
+                { icon: "🏛️", text: "surat dispensasi kawin dari Pengadilan bagi Catin yang belum berusia 19 (sembilan belas) tahun dihitung pada tanggal pelaksanaan akad nikah" },
+                { icon: "🏛️", text: "penetapan izin poligami dari Pengadilan bagi suami yang hendak beristri lebih dari seorang" },
+                { icon: "🏛️", text: "Akta Perceraian Asli dari Pengadilan" },
+                { icon: "🏛️", text: "surat izin dari instansi tempat bertugas bagi anggota TNI/Polri" },
+                { icon: "🖼️", text: "Pas foto 2×3 cm (4 lembar) latar biru" },
+                { icon: "🖼️", text: "Pas foto 3×4 cm (4 lembar) latar biru" },
+                { icon: "📋", text: "Akta Kematian bagi janda atau duda ditinggal mati" },
+                { icon: "💻", text: "Bukti pendaftaran SIMKAH Online (jika daftar secara mandiri/online)" },
+              ].map(({ icon, text }) => (
+                <li class="flex items-start gap-3">
+                  <span class="shrink-0 text-lg">{icon}</span>
+                  <p class="text-slate-300 text-sm">{text}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <!-- Biaya -->
+        <div class="mt-6 p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
+          <p class="text-emerald-400 font-bold flex items-center gap-2">
+            <span class="text-xl">💰</span> Informasi Biaya
+          </p>
+          <div class="mt-3 grid md:grid-cols-2 gap-3 text-sm">
+            <div class="flex items-center text-slate-300">
+              <span>Nikah di KUA (jam kerja) : </span>
+              <span class="font-bold text-emerald-400 text-base"> GRATIS</span>
+            </div>
+            <div class="flex items-center text-slate-300">
+              <span>Nikah di luar KUA / di luar jam kerja : </span>
+              <span class="font-bold text-amber-400 text-base"> Rp 600.000</span>
+            </div>
+          </div>
+          <p class="text-slate-500 text-xs mt-3">Pembayaran dilakukan melalui bank/aplikasi, bukan tunai ke KUA. (segera lakukan pembayaran setelah mendapatkan kode billing agar tidak hangus)</p>
+        </div>
+      </section>
+
+      <!-- ── Alur Pendaftaran ─────────────────────────────────────────────── -->
+      <section class="glass rounded-3xl p-8 mb-8" id="alur">
+        <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-xl">🗂️</span>
+          Alur Pendaftaran Nikah di KUA {kotaShort}
+        </h2>
+        <p class="text-slate-400 text-sm mb-8">5 langkah mudah mendaftarkan pernikahan Anda</p>
+
+        <div class="space-y-4">
+          {[
+            {
+              step: "01",
+              icon: "🏘️",
+              judul: "Mengurus Surat Pengantar RT/RW",
+              isi: `Datangi RT dan RW tempat tinggal Anda untuk mendapatkan surat pengantar. Surat ini menjadi dasar pengurusan dokumen N1–N4 di Kelurahan/Desa.`,
+              color: "from-blue-500/20 to-blue-500/5",
+              border: "border-blue-500/30",
+              badge: "bg-blue-500",
+            },
+            {
+              step: "02",
+              icon: "🏛️",
+              judul: "Mengurus Dokumen di Kelurahan/Desa",
+              isi: `Bawa surat pengantar RT/RW ke kantor Kelurahan/Desa untuk mendapatkan Surat Keterangan N1, N2, N3, dan N4.`,
+              color: "from-purple-500/20 to-purple-500/5",
+              border: "border-purple-500/30",
+              badge: "bg-purple-500",
+            },
+            {
+              step: "03",
+              icon: "🏥",
+              judul: "Skrining Kesehatan Calon Pengantin",
+              isi: `Lakukan pemeriksaan kesehatan di Puskesmas atau klinik yang bekerja sama. Pastikan mendapatkan sertifikat skrining sebagai syarat wajib berdasarkan Permenag 30/2024.`,
+              color: "from-emerald-500/20 to-emerald-500/5",
+              border: "border-emerald-500/30",
+              badge: "bg-emerald-500",
+            },
+            {
+              step: "04",
+              icon: "💻",
+              judul: "Daftar Online via SIMKAH",
+              isi: `Buka simkah.kemenag.go.id, buat akun, lalu isi formulir pendaftaran. Pilih KUA Kecamatan ${data.kecamatan} sebagai lokasi, tentukan tanggal nikah, dan unggah dokumen.`,
+              color: "from-amber-500/20 to-amber-500/5",
+              border: "border-amber-500/30",
+              badge: "bg-amber-500",
+            },
+            {
+              step: "05",
+              icon: "✅",
+              judul: "Pemeriksaan Berkas & Akad Nikah",
+              isi: `Serahkan dokumen fisik ke KUA ${data.kecamatan} minimal 10 hari kerja sebelum pernikahan. Petugas KUA akan memeriksa kelengkapan berkas dan menjadwalkan akad nikah.`,
+              color: "from-rose-500/20 to-rose-500/5",
+              border: "border-rose-500/30",
+              badge: "bg-rose-500",
+            },
+          ].map(({ step, icon, judul, isi, color, border, badge }) => (
+            <div class={`flex gap-5 p-5 rounded-2xl bg-gradient-to-r ${color} border ${border}`}>
+              <div class="shrink-0 flex flex-col items-center gap-2">
+                <span class={`w-10 h-10 rounded-xl ${badge} flex items-center justify-center text-white font-bold text-sm`}>{step}</span>
+                <span class="text-2xl">{icon}</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-white mb-1">{judul}</h3>
+                <p class="text-slate-300 text-sm leading-relaxed">{isi}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- ── CTA Tools ────────────────────────────────────────────────────── -->
+      <section class="glass rounded-3xl p-8 mb-8" id="tools">
+        <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center text-xl">🛠️</span>
+          Tools Bantu Persiapan Nikah
+        </h2>
+        <p class="text-slate-400 text-sm mb-6">Gratis, langsung pakai — tidak perlu daftar</p>
+
+        <div class="grid md:grid-cols-3 gap-4">
+          <a href="/tools/kalkulator-wedding"
+            class="group p-5 rounded-2xl bg-gradient-to-br from-pink-500/20 to-rose-500/10 border border-pink-500/30 hover:border-pink-400/60 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-pink-500/10">
+            <span class="text-3xl block mb-3">💒</span>
+            <h3 class="font-bold text-white mb-1 group-hover:text-pink-400 transition-colors">Kalkulator Wedding</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">Estimasi biaya pernikahan lengkap: venue, katering, dekorasi, foto & video.</p>
+            <div class="mt-3 text-xs font-semibold text-pink-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+              Hitung sekarang <span>→</span>
+            </div>
+          </a>
+
+          <a href="/tools/kalkulator-keluarga"
+            class="group p-5 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/10 border border-blue-500/30 hover:border-blue-400/60 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-500/10">
+            <span class="text-3xl block mb-3">👨‍👩‍👧‍👦</span>
+            <h3 class="font-bold text-white mb-1 group-hover:text-blue-400 transition-colors">Kalkulator Keluarga</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">Rencanakan keuangan keluarga baru Anda — dari kebutuhan bulanan hingga tabungan.</p>
+            <div class="mt-3 text-xs font-semibold text-blue-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+              Coba gratis <span>→</span>
+            </div>
+          </a>
+
+          <a href="/tools/skrining-catin"
+            class="group p-5 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/30 hover:border-emerald-400/60 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-500/10">
+            <span class="text-3xl block mb-3">🏥</span>
+            <h3 class="font-bold text-white mb-1 group-hover:text-emerald-400 transition-colors">Skrining Catin</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">Panduan dan checklist pemeriksaan kesehatan calon pengantin sebelum menikah.</p>
+            <div class="mt-3 text-xs font-semibold text-emerald-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+              Lihat panduan <span>→</span>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- ── FAQ ─────────────────────────────────────────────────────────── -->
+      <section class="glass rounded-3xl p-8 mb-8" id="faq">
+        <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-xl">❓</span>
+          Pertanyaan Umum — KUA {data.kecamatan}
+        </h2>
+
+        <div class="space-y-4" id="faq-list">
+          {[
+            {
+              q: `Berapa biaya nikah di KUA ${data.kecamatan}?`,
+              a: `Nikah di KUA ${data.kecamatan} pada hari dan jam kerja sepenuhnya GRATIS (Rp 0). Jika Anda ingin melangsungkan akad di luar gedung KUA atau di luar jam kerja, biayanya Rp 600.000 yang dibayarkan melalui SIMKAH — bukan diserahkan tunai ke petugas.`,
+            },
+            {
+              q: `Berapa hari sebelumnya harus mendaftar di KUA ${data.kecamatan}?`,
+              a: `Pendaftaran harus dilakukan minimal 10 hari kerja sebelum tanggal akad nikah. Usahakan mendaftar lebih awal — 2 hingga 4 minggu sebelumnya — agar ada waktu jika ada dokumen yang perlu dilengkapi.`,
+            },
+            {
+              q: `Apa itu sertifikat skrining catin dan wajibkah?`,
+              a: `Sertifikat Skrining Kesehatan Calon Pengantin adalah bukti bahwa Anda telah menjalani pemeriksaan kesehatan dasar di Puskesmas atau klinik rujukan. Berdasarkan Permenag No. 30 Tahun 2024, dokumen ini wajib disertakan sebagai syarat pendaftaran nikah di KUA ${data.kecamatan}.`,
+            },
+            {
+              q: `Apakah bisa mendaftar nikah di KUA ${data.kecamatan} secara online?`,
+              a: `Ya. Pendaftaran dilakukan melalui portal SIMKAH (simkah.kemenag.go.id) atau aplikasi SIMKAH Mobile. Setelah mendaftar online, Anda tetap perlu menyerahkan berkas fisik ke KUA ${data.kecamatan} sebelum hari-H pemeriksaan.`,
+            },
+          ].map(({ q, a }, i) => (
+            <div class="faq-item border border-slate-700/60 rounded-2xl overflow-hidden">
+              <button
+                class="faq-btn w-full text-left p-5 flex items-start justify-between gap-4 hover:bg-slate-800/50 transition-colors"
+                aria-expanded="false"
+                aria-controls={`faq-answer-${i}`}
+              >
+                <span class="font-medium text-white">{q}</span>
+                <svg class="faq-icon shrink-0 w-5 h-5 text-slate-400 mt-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <div id={`faq-answer-${i}`} class="faq-answer hidden px-5 pb-5">
+                <p class="text-slate-300 text-sm leading-relaxed">{a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- ── KUA Terdekat (Internal Linking) ────────────────────────────── -->
+      {tetangga.length > 0 && (
+        <section class="glass rounded-3xl p-8 mb-12" id="terdekat">
+          <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+            <span class="w-10 h-10 rounded-xl bg-slate-700 flex items-center justify-center text-xl">📍</span>
+            KUA Kecamatan Lain di {kotaShort}
+          </h2>
+          <p class="text-slate-400 text-sm mb-6">Panduan nikah di kecamatan tetangga</p>
+
+          <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+            {tetangga.map((t) => (
+              <a
+                href={`/panduan-nikah-di-KUA/${t.slug}`}
+                class="flex items-center gap-3 p-4 rounded-xl bg-slate-800/50 border border-slate-700/60 hover:border-slate-500 hover:bg-slate-800 transition-all group"
+              >
+                <span class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center text-sm shrink-0 group-hover:bg-emerald-500/20 group-hover:text-emerald-400 transition-colors">🏛️</span>
+                <div>
+                  <p class="text-white text-sm font-medium group-hover:text-emerald-400 transition-colors">KUA {t.kecamatan}</p>
+                  <p class="text-slate-500 text-xs">{t.kota}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+    </div>
+  </Container>
+</Layout>
+
+<script>
+  // ── Accordion FAQ ───────────────────────────────────────────────────────────
+  document.querySelectorAll('.faq-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      const answerId = btn.getAttribute('aria-controls');
+      const answer = answerId ? document.getElementById(answerId) : null;
+      const icon = btn.querySelector('.faq-icon');
+
+      btn.setAttribute('aria-expanded', String(!expanded));
+      answer?.classList.toggle('hidden', expanded);
+      icon?.classList.toggle('rotate-180', !expanded);
+    });
+  });
+</script>
+
+<style>
+  .text-gradient {
+    background: linear-gradient(135deg, #6ee7b7, #3b82f6, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .faq-icon {
+    transition: transform 0.3s ease;
+  }
+</style>

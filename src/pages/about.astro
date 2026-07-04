@@ -1,0 +1,125 @@
+---
+import { getCollection } from "astro:content";
+import { Picture } from "astro:assets";
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+import { getAboutPage, getAllTeamMembers } from "@lib/keystatic";
+import { DocumentRenderer } from "@keystatic/core/renderer";
+
+// Get about page data from Keystatic
+const aboutData = await getAboutPage();
+
+// Fallback values if no data exists yet
+const title = aboutData?.title || "About";
+const subtitle = aboutData?.subtitle || "Platform informasi dan alat bantu manajemen pernikahan.";
+const heading = aboutData?.heading || "Melayani dengan Integritas dan Inovasi Digital.";
+const content = aboutData?.content ? await aboutData.content() : null;
+
+// Use Keystatic Reader for REAL-TIME updates (No rebuild needed)
+const allMembers = await getAllTeamMembers();
+const publishedTeamMembers = allMembers
+  .filter(member => member && !member.draft) // Filter out drafts
+  .map(member => ({
+    data: member // Map to match existing structure used below
+  }));
+---
+
+<Layout title={title}>
+  <Container>
+    <main class="py-24 animate-fade-in">
+      <header class="text-center mb-20">
+          <span class="text-brand-primary text-xs font-bold uppercase tracking-widest mb-4 block">Tentang Kami</span>
+          <h1 class="text-6xl font-bold mb-6 tracking-tighter dark:text-white">{title}</h1>
+          <p class="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-lg">{subtitle}</p>
+      </header>
+
+      <div class="flex flex-col gap-8 mx-auto max-w-4xl mt-16 glass p-12 rounded-[3rem] border border-white/5">
+        <h2 class="font-bold text-4xl dark:text-white tracking-tight">
+          {heading}
+        </h2>
+        <div class="prose dark:prose-invert prose-lg max-w-none text-slate-600 dark:text-slate-400 leading-relaxed">
+          {content ? <DocumentRenderer document={content} /> : (
+            <>
+              <p>
+                Selamat datang di SIMKAH Tools, platform inovatif yang dirancang untuk mempermudah operasional dan pengelolaan data pernikahan di bawah naungan Bimas Islam, Kementerian Agama RI.
+              </p>
+              <p>
+                Kami adalah tim yang berdedikasi untuk menghadirkan solusi digital yang efisien, transparan, dan mudah digunakan bagi para petugas KUA maupun masyarakat umum. Dengan semangat pembaruan, kami terus mengembangkan berbagai alat bantu (tools) yang dapat mempercepat proses administrasi pernikahan.
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div class="mt-32">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold dark:text-white mb-4">Tim Kami</h2>
+            <p class="text-slate-500">Orang-orang di balik layar SIMKAH Tools</p>
+        </div>
+        
+        <div class="flex flex-wrap justify-center gap-12 mx-auto max-w-5xl">
+          {
+            publishedTeamMembers.map((teamMemberEntry) => {
+              const { name, title, avatar } = teamMemberEntry.data;
+              
+              // Handle Avatar: It can be a String path (YAML) or an Image Object (Markdown/Import)
+              let avatarSrc;
+              let avatarAlt = name;
+
+              if (typeof avatar === 'string') {
+                  // If it's just a filename or relative path, prepend the correct public directory
+                  if (!avatar.startsWith('/') && !avatar.startsWith('http')) {
+                      avatarSrc = `/images/team/${avatar}`;
+                  } else {
+                      avatarSrc = avatar;
+                  }
+              } else if (avatar && typeof avatar === 'object') {
+                  avatarSrc = avatar.src || avatar; // ImageMetadata or object wrapper
+                  if (avatar.alt) avatarAlt = avatar.alt;
+              } else {
+                  // Fallback if no avatar
+                  avatarSrc = "/opengraph.jpg";
+              }
+              
+              // Final cleanup
+              if (typeof avatarSrc === 'string') {
+                  avatarSrc = avatarSrc.replace(/\/+/g, '/');
+              }
+              
+              return (
+                <div class="group flex flex-col items-center w-full max-w-[350px]">
+                  <div class="w-full aspect-square rounded-[2.5rem] overflow-hidden mb-6 glass transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-brand-primary/20 group-hover:-translate-y-2 border border-white/5">
+                    {typeof avatarSrc === 'string' ? (
+                      <img 
+                        src={avatarSrc} 
+                        alt={avatarAlt}
+                        class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-110"
+                      />
+                    ) : (
+                      <Picture
+                        src={avatarSrc}
+                        alt={avatarAlt}
+                        sizes="(max-width: 800px) 100vw, 400px"
+                        width={400}
+                        height={400}
+                        class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-110"
+                      />
+                    )}
+                  </div>
+
+                  <div class="text-center">
+                    <h3 class="text-2xl font-bold dark:text-white mb-1 group-hover:text-brand-primary transition-colors">{name}</h3>
+                    <p class="text-sm text-slate-500 uppercase tracking-widest font-medium">
+                      {title || "Team Member"}
+                    </p>
+                  </div>
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
+    </main>
+  </Container>
+</Layout>
