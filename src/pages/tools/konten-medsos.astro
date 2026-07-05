@@ -8,29 +8,30 @@ import Container from "@components/container.astro";
   <Container>
     <div class="konten-medsos-app">
       
+      
 
     
-    <div class="text-center mb-12 mt-8">
-        <span class="inline-block px-4 py-2 bg-violet-500/20 text-violet-400 rounded-full text-sm font-bold mb-4">
+    <div class="text-center mb-16 mt-12 flex flex-col items-center">
+        <span class='inline-block px-4 py-2 brutal-badge bg-brutal-accent text-brutal-text text-sm font-bold mb-4'>
           ✨ AI Prompt Generator
         </span>
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">
-          Generator Prompt <span class="text-gradient">Konten Sosial</span>
-        </h1>
-        <p class="text-slate-400 max-w-2xl mx-auto">
+        <h1 class="text-3xl md:text-5xl font-black text-brutal-text text-center mb-4 drop-shadow-md">
+    Generator Prompt <span class="text-pink-500">Konten Sosial Media</span>
+</h1>
+<p class="text-center text-brutal-text-muted max-w-2xl mx-auto mb-8 text-lg font-medium">
           12 langkah sistematis · klik kartu untuk membuka form · salin prompt atau ekspor JSON per langkah
         </p>
     </div>
 
 
-    <div class="config-strip">
-        <div class="cfg">
-            <label>👤 Profesi Anda</label>
-            <input type="text" id="profesi" placeholder="guru, dokter, chef…" value="guru">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 brutal-card bg-[#c0e6ff] dark:bg-brutal-card mb-10">
+        <div class="flex flex-col gap-2">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">👤 Profesi Anda</label>
+            <input type="text" id="profesi" class="brutal-input bg-white dark:bg-slate-800" placeholder="guru, dokter, chef…" value="guru">
         </div>
-        <div class="cfg">
-            <label>📱 Platform</label>
-            <select id="platform">
+        <div class="flex flex-col gap-2">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">📱 Platform</label>
+            <select id="platform" class="brutal-input bg-white dark:bg-slate-800">
                 <option value="Facebook (FB Pro)">Facebook (FB Pro)</option>
                 <option value="Instagram">Instagram</option>
                 <option value="LinkedIn">LinkedIn</option>
@@ -40,16 +41,15 @@ import Container from "@components/container.astro";
                 <option value="YouTube">YouTube</option>
             </select>
         </div>
-        <div class="cfg">
-            <label>🎯 Target Audiens</label>
-            <input type="text" id="audiens" placeholder="sesama guru, pasien…" value="sesama guru">
+        <div class="flex flex-col gap-2">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">🎯 Target Audiens</label>
+            <input type="text" id="audiens" class="brutal-input bg-white dark:bg-slate-800" placeholder="sesama guru, pasien…" value="sesama guru">
         </div>
-        <div class="cfg">
-            <label>🏷️ Niche / Topik Utama</label>
-            <input type="text" id="niche" placeholder="pengalaman mengajar…" value="pengalaman mengajar">
+        <div class="flex flex-col gap-2">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">🏷️ Niche / Topik</label>
+            <input type="text" id="niche" class="brutal-input bg-white dark:bg-slate-800" placeholder="pengalaman mengajar…" value="pengalaman mengajar">
         </div>
     </div>
-
     <div class="grid-wrapper">
         <div class="section-eyebrow">— Klik kartu untuk membuka dan menyalin prompt —</div>
         <div class="cards-grid" id="cardsGrid"></div>
@@ -84,7 +84,7 @@ import Container from "@components/container.astro";
     
     border-radius: 1.5rem;
     padding-bottom: 2rem;
-    margin-top: 2rem;
+    margin-top: 0;
     margin-bottom: 4rem;
     overflow: hidden;
     box-sizing: border-box;
@@ -207,115 +207,6 @@ import Container from "@components/container.astro";
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 0.9rem;
             align-items: start;
-        }
-
-        /* ── STEP CARD ── */
-        .step-card {
-            
-            
-            border-radius: 14px;
-            padding: 1.2rem 1.2rem 1rem;
-            cursor: pointer;
-            transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s;
-            position: relative;
-            overflow: hidden;
-         
-    background: rgba(30, 41, 59, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-        .step-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at top left, var(--gold-glow), transparent 65%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .step-card:hover {
-            border-color: var(--border-hi);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        .step-card:hover::after {
-            opacity: 1;
-        }
-
-        .step-card.selected {
-            border-color: var(--gold);
-            background: rgba(139, 92, 246, 0.15);
-            box-shadow: 0 0 0 1px var(--gold), 0 10px 36px rgba(201, 165, 90, 0.1);
-        }
-
-        .step-card.selected::after {
-            opacity: 1;
-        }
-
-        .card-badge {
-            position: absolute;
-            top: 0.8rem;
-            right: 0.8rem;
-            width: 17px;
-            height: 17px;
-            border-radius: 50%;
-            background: var(--green);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            color: white;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .step-card.done .card-badge {
-            opacity: 1;
-        }
-
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.8rem;
-        }
-
-        .step-num {
-            
-            font-size: 1.9rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            line-height: 1;
-            transition: color 0.2s;
-        }
-
-        .step-card:hover .step-num,
-        .step-card.selected .step-num {
-            color: var(--gold);
-        }
-
-        .card-icon {
-            font-size: 1.2rem;
-            opacity: 0.65;
-        }
-
-        .card-title-sm {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 0.3rem;
-            line-height: 1.3;
-        }
-
-        .card-desc {
-            font-size: 0.73rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-            font-weight: 300;
         }
 
         /* ── EXPAND PANEL ── */
@@ -1194,7 +1085,7 @@ Pastikan gaya bahasanya tidak kaku, humanis, dan relevan dengan audiens.`,
         function hlPrompt(text) {
             const c = cfg();
             const vars = [c.profesi, c.platform, c.audiens, c.niche].filter(x => x && x.length > 2);
-            let out = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            let out = text.replace(/&/g, '&amp;').replace(/\x3C/g, '&lt;').replace(/\x3E/g, '&gt;');
             vars.forEach(v => {
                 const esc = v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 out = out.replace(new RegExp(esc, 'g'), `<span class="var">${v}</span>`);
@@ -1219,7 +1110,7 @@ Pastikan gaya bahasanya tidak kaku, humanis, dan relevan dengan audiens.`,
 
         function hlJson(raw) {
             return raw
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/&/g, '&amp;').replace(/\x3C/g, '&lt;').replace(/\x3E/g, '&gt;')
                 .replace(/"([^"\n]+)":/g, '<span class="jk">"$1"</span>:')
                 .replace(/: (\d+)/g, ': <span class="jn">$1</span>')
                 .replace(/: (true|false|null)/g, ': <span class="jb">$1</span>')
@@ -1236,16 +1127,16 @@ Pastikan gaya bahasanya tidak kaku, humanis, dan relevan dengan audiens.`,
             STEPS.forEach((step, i) => {
                 // CARD
                 const card = document.createElement('div');
-                card.className = 'step-card' + (openId === step.id ? ' selected' : '');
+                card.className = 'brutal-card bg-[#e8dff5] dark:bg-brutal-card cursor-pointer p-6 transition-all hover:-translate-y-1 hover:shadow-brutal-lg flex flex-col relative' + (openId === step.id ? ' ring-4 ring-brutal-accent ring-offset-2' : '');
                 card.style.order = i * 2;
                 card.innerHTML = `
-      <div class="card-badge">✓</div>
-      <div class="card-top">
-        <span class="step-num">${String(step.id).padStart(2, '0')}</span>
-        <span class="card-icon">${step.icon}</span>
+      <div class="absolute top-3 right-3 w-5 h-5 rounded-full bg-brutal-accent flex items-center justify-center text-white text-[10px] opacity-0 transition-opacity${openId === step.id ? ' opacity-100' : ''}">✓</div>
+      <div class="flex justify-between items-start mb-3">
+        <span class="text-4xl font-black text-brutal-text-muted transition-colors group-hover:text-brutal-accent${openId === step.id ? ' text-brutal-accent' : ''}">${String(step.id).padStart(2, '0')}</span>
+        <span class="text-2xl opacity-80">${step.icon}</span>
       </div>
-      <div class="card-title-sm">${step.title}</div>
-      <div class="card-desc">${step.desc}</div>
+      <div class="text-base font-bold text-brutal-text mb-2 leading-tight">${step.title}</div>
+      <div class="text-xs text-brutal-text-muted leading-relaxed font-medium">${step.desc}</div>
     `;
                 card.addEventListener('click', () => {
                     openId = openId === step.id ? null : step.id;
@@ -1270,42 +1161,41 @@ Pastikan gaya bahasanya tidak kaku, humanis, dan relevan dengan audiens.`,
             const promptText = buildPrompt(step.template, ex);
 
             const panel = document.createElement('div');
-            panel.className = 'expand-panel';
+            panel.className = 'brutal-card bg-[#fae870] dark:bg-brutal-card col-span-full p-6 md:p-8 mt-2 mb-6 expand-panel';
 
             // ── Build input fields HTML
             const inputsHTML = step.inputs.map(inp => `
     <div class="extra-field">
       <label>${inp.label}</label>
-      <textarea data-key="${inp.key}" placeholder="${inp.placeholder}" rows="4">${ex[inp.key] || ''}</textarea>
+      <textarea class='brutal-input bg-white dark:bg-slate-800' data-key="${inp.key}" placeholder="${inp.placeholder}" rows="4">${ex[inp.key] || ''}</textarea>
     </div>
   `).join('');
 
             panel.innerHTML = `
-    <div class="panel-header">
-      <div class="panel-title">${step.icon} ${step.title}</div>
-      <button class="panel-close">✕</button>
+    <div class="flex justify-between items-center mb-4 border-b-4 border-brutal-border pb-4">
+      <div class="text-2xl font-black text-brutal-accent">${step.icon} ${step.title}</div>
+      <button class="panel-close w-8 h-8 rounded-full border-4 border-brutal-border bg-transparent text-brutal-text-muted hover:bg-brutal-border hover:text-white flex items-center justify-center transition-all font-bold">✕</button>
     </div>
-    <div class="skill-tags">
-      ${step.skills.map(s => `<span class="skill-tag">${s}</span>`).join('')}
+    <div class="flex flex-wrap gap-2 mb-6">
+      ${step.skills.map(s => `<span class="text-[10px] px-3 py-1 rounded-full border-2 border-brutal-border text-slate-500 font-bold uppercase tracking-wider">${s}</span>`).join('')}
     </div>
-    <div class="panel-body">
-      <div class="panel-left">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="flex flex-col gap-4">
         ${inputsHTML}
-        <div class="tip-box"><strong>💡 Tips:</strong><br>${step.tip}</div>
-        <div class="panel-actions">
-          <button class="btn btn-gold btn-copy-prompt">📋 Salin Prompt</button>
-          <div class="btn-divider"></div>
-          <button class="btn btn-green btn-copy-json">{ } Salin JSON</button>
-          <button class="btn btn-outline-green btn-dl-json">⬇ JSON</button>
+        <div class="bg-yellow-100 border-4 border-yellow-400 p-4 rounded-xl text-sm text-yellow-900 font-medium"><strong>💡 Tips:</strong><br>${step.tip}</div>
+        <div class="flex flex-wrap gap-2 mt-4">
+          <button class='brutal-btn brutal-btn-primary btn-copy-prompt py-2 px-3 text-xs font-bold'>📋 Salin Prompt</button>
+          <button class='brutal-btn bg-[#bbf7d0] text-brutal-text btn-copy-json py-2 px-3 text-xs font-bold'>{ } Salin JSON</button>
+          <button class='brutal-btn brutal-btn-white btn-dl-json py-2 px-3 text-xs font-bold'>⬇ JSON</button>
         </div>
         <div class="json-preview-wrap" id="jsonWrap_${step.id}">
-          <div class="json-preview-label">Output JSON — Langkah ${step.id}</div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2 mt-4">Output JSON — Langkah ${step.id}</div>
           <div class="json-preview-box" id="jsonBox_${step.id}"></div>
         </div>
       </div>
-      <div class="panel-right">
-        <div class="preview-label">Preview Prompt</div>
-        <div class="prompt-preview preview-area">${hlPrompt(promptText)}</div>
+      <div class="flex flex-col gap-3">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Preview Prompt</div>
+        <div class="prompt-preview preview-area bg-white dark:bg-slate-900 border-4 border-brutal-border p-5 rounded-2xl text-sm leading-relaxed min-h-[140px] max-h-[340px] overflow-y-auto whitespace-pre-wrap break-words">${hlPrompt(promptText)}</div>
       </div>
     </div>
   `;

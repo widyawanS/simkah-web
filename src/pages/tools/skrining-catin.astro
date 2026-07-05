@@ -6,24 +6,23 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
 <Layout title="Skrining Kesiapan Catin - Deteksi Risiko Stunting">
   <Container>
-    <div class="max-w-4xl mx-auto mt-16 mb-20">
+    <div class="max-w-4xl mx-auto mb-20">
       <!-- Header -->
-      <div class="text-center mb-12">
-        <span class="inline-block px-4 py-2 bg-pink-500/20 text-pink-400 rounded-full text-sm font-bold mb-4">
+      <div class="text-center mb-16 mt-12 flex flex-col items-center">
+        <span class="inline-block px-4 py-2 brutal-badge bg-rose-200 text-brutal-text text-sm font-bold mb-4 border-2 border-brutal-border">
           🩺 Skrining Kesehatan Pranikah
         </span>
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">
-          Skrining Kesiapan <span class="text-gradient">Calon Pengantin</span>
+        <h1 class="text-3xl md:text-5xl font-black text-brutal-text text-center mb-4 drop-shadow-md">
+          Skrining Kesiapan <span class="text-rose-500">Calon Pengantin</span>
         </h1>
-        <p class="text-slate-400 max-w-2xl mx-auto mb-8">
-          Deteksi dini faktor risiko stunting pada calon pengantin (catin) berdasarkan 
-          antropometri dan gaya hidup. Sesuai standar el-SIMIL Kemenag RI.
+        <p class="text-center text-brutal-text-muted max-w-2xl mx-auto mb-8 text-lg font-medium">
+          Deteksi dini faktor risiko stunting pada calon pengantin (catin) berdasarkan antropometri dan gaya hidup. Sesuai standar el-SIMIL Kemenag RI.
         </p>
         <AdSlot type="tools" />
       </div>
 
       <!-- Main Form -->
-      <div class="glass rounded-3xl p-8" id="skriningForm">
+      <div class=" brutal-card bg-[#fae870] dark:bg-brutal-card  rounded-3xl p-8" id="skriningForm">
         <!-- Gender Selection -->
         <div class="mb-8">
           <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
@@ -34,21 +33,21 @@ import AdSlot from "@components/ui/AdSlot.astro";
             <button 
               type="button"
               id="genderMale"
-              class="gender-btn p-6 rounded-2xl border-2 border-slate-700 hover:border-blue-500 transition-all text-center group"
+              class="gender-btn p-6 rounded-2xl border-2 border-brutal-border hover:border-blue-500 transition-all text-center group"
               data-gender="male"
             >
-              <div class="text-4xl mb-2">👨</div>
-              <p class="font-bold text-white group-hover:text-blue-400">Calon Suami</p>
+              <div class="text-3xl mb-2">👨</div>
+              <p class="font-bold text-brutal-text dark:text-white group-hover:text-blue-400">Calon Suami</p>
               <p class="text-xs text-slate-500">Laki-laki</p>
             </button>
             <button 
               type="button"
               id="genderFemale"
-              class="gender-btn p-6 rounded-2xl border-2 border-slate-700 hover:border-pink-500 transition-all text-center group"
+              class="gender-btn p-6 rounded-2xl border-2 border-brutal-border hover:border-pink-500 transition-all text-center group"
               data-gender="female"
             >
-              <div class="text-4xl mb-2">👩</div>
-              <p class="font-bold text-white group-hover:text-pink-400">Calon Istri</p>
+              <div class="text-3xl mb-2">👩</div>
+              <p class="font-bold text-brutal-text dark:text-white group-hover:text-pink-400">Calon Istri</p>
               <p class="text-xs text-slate-500">Perempuan</p>
             </button>
           </div>
@@ -62,18 +61,18 @@ import AdSlot from "@components/ui/AdSlot.astro";
           </h3>
           <div class="grid md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm text-slate-400 mb-2">Usia (tahun)</label>
+              <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Usia (tahun)</label>
               <input 
                 type="number" 
                 id="age"
                 min="17" 
                 max="60"
                 placeholder="Contoh: 25"
-                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+                class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl  placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
               />
             </div>
             <div>
-              <label class="block text-sm text-slate-400 mb-2">Berat Badan (kg)</label>
+              <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Berat Badan (kg)</label>
               <input 
                 type="number" 
                 id="weight"
@@ -81,11 +80,11 @@ import AdSlot from "@components/ui/AdSlot.astro";
                 max="200"
                 step="0.1"
                 placeholder="Contoh: 55"
-                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+                class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl  placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
               />
             </div>
             <div>
-              <label class="block text-sm text-slate-400 mb-2">Tinggi Badan (cm)</label>
+              <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Tinggi Badan (cm)</label>
               <input 
                 type="number" 
                 id="height"
@@ -93,11 +92,11 @@ import AdSlot from "@components/ui/AdSlot.astro";
                 max="220"
                 step="0.1"
                 placeholder="Contoh: 160"
-                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+                class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl  placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
               />
             </div>
             <div>
-              <label class="block text-sm text-slate-400 mb-2">Lingkar Lengan Atas / LLA (cm)</label>
+              <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Lingkar Lengan Atas / LLA (cm)</label>
               <input 
                 type="number" 
                 id="lla"
@@ -105,7 +104,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
                 max="50"
                 step="0.1"
                 placeholder="Contoh: 24"
-                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+                class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl  placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
               />
               <p class="text-xs text-slate-500 mt-1">Ukur bagian tengah lengan atas</p>
             </div>
@@ -122,28 +121,28 @@ import AdSlot from "@components/ui/AdSlot.astro";
             <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
               <input type="radio" name="smoking" value="never" class="w-5 h-5 accent-green-500" />
               <div>
-                <p class="font-medium text-white">Tidak Pernah Merokok</p>
+                <p class="font-medium text-brutal-text dark:text-white">Tidak Pernah Merokok</p>
                 <p class="text-xs text-slate-500">Tidak pernah merokok sama sekali</p>
               </div>
             </label>
             <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
               <input type="radio" name="smoking" value="passive" class="w-5 h-5 accent-yellow-500" />
               <div>
-                <p class="font-medium text-white">Perokok Pasif</p>
+                <p class="font-medium text-brutal-text dark:text-white">Perokok Pasif</p>
                 <p class="text-xs text-slate-500">Sering terpapar asap rokok orang lain</p>
               </div>
             </label>
             <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
               <input type="radio" name="smoking" value="light" class="w-5 h-5 accent-orange-500" />
               <div>
-                <p class="font-medium text-white">Perokok Ringan</p>
+                <p class="font-medium text-brutal-text dark:text-white">Perokok Ringan</p>
                 <p class="text-xs text-slate-500">1-10 batang per hari</p>
               </div>
             </label>
             <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
               <input type="radio" name="smoking" value="heavy" class="w-5 h-5 accent-red-500" />
               <div>
-                <p class="font-medium text-white">Perokok Berat</p>
+                <p class="font-medium text-brutal-text dark:text-white">Perokok Berat</p>
                 <p class="text-xs text-slate-500">Lebih dari 10 batang per hari</p>
               </div>
             </label>
@@ -160,14 +159,14 @@ import AdSlot from "@components/ui/AdSlot.astro";
             <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
               <input type="checkbox" id="anemia" class="w-5 h-5 accent-pink-500" />
               <div>
-                <p class="font-medium text-white">Riwayat Anemia</p>
+                <p class="font-medium text-brutal-text dark:text-white">Riwayat Anemia</p>
                 <p class="text-xs text-slate-500">Pernah didiagnosis kurang darah</p>
               </div>
             </label>
             <label class="flex items-center gap-3 p-4 bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors">
               <input type="checkbox" id="chronicDisease" class="w-5 h-5 accent-pink-500" />
               <div>
-                <p class="font-medium text-white">Penyakit Kronis</p>
+                <p class="font-medium text-brutal-text dark:text-white">Penyakit Kronis</p>
                 <p class="text-xs text-slate-500">Diabetes, hipertensi, atau penyakit lainnya</p>
               </div>
             </label>
@@ -178,7 +177,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
         <button 
           type="button"
           id="analyzeBtn"
-          class="w-full py-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-xl font-bold text-white hover:opacity-90 transition-all flex items-center justify-center gap-2"
+          class="w-full py-4 text-lg brutal-btn brutal-btn-primary"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -190,9 +189,9 @@ import AdSlot from "@components/ui/AdSlot.astro";
       <!-- Results Section (Hidden initially) -->
       <div id="resultsSection" class="mt-8 hidden">
         <!-- Summary Card -->
-        <div class="glass rounded-3xl p-8 mb-6" id="summaryCard">
+        <div class=" brutal-card bg-[#c0e6ff] dark:bg-brutal-card  rounded-3xl p-8 mb-6" id="summaryCard">
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold">Hasil Skrining</h2>
+            <h2 class="text-xl font-bold">Hasil Skrining</h2>
             <div id="overallScore" class="text-right">
               <!-- Score will be inserted here -->
             </div>
@@ -205,9 +204,9 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
           <!-- BMI Gauge -->
           <div class="bg-slate-800/50 rounded-2xl p-6 mb-6">
-            <h4 class="text-sm text-slate-400 mb-3">Indeks Massa Tubuh (IMT/BMI)</h4>
+            <h4 class="text-sm text-brutal-text-muted dark:text-slate-400 mb-3">Indeks Massa Tubuh (IMT/BMI)</h4>
             <div class="flex items-end justify-between mb-2">
-              <span id="bmiValue" class="text-4xl font-bold">--</span>
+              <span id="bmiValue" class="text-3xl font-bold">--</span>
               <span id="bmiCategory" class="text-sm px-3 py-1 rounded-full">--</span>
             </div>
             <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
@@ -227,9 +226,9 @@ import AdSlot from "@components/ui/AdSlot.astro";
         </div>
 
         <!-- Recommendations -->
-        <div class="glass rounded-3xl p-8" id="recommendationsCard">
+        <div class=" brutal-card bg-[#f8ddb2] dark:bg-brutal-card  rounded-3xl p-8" id="recommendationsCard">
           <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-            <span class="text-2xl">📋</span> Rekomendasi
+            <span class="text-xl">📋</span> Rekomendasi
           </h3>
           <div id="recommendations" class="space-y-3">
             <!-- Will be populated by JS -->
@@ -261,11 +260,11 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
       <!-- Info Section -->
       <div class="mt-12 grid md:grid-cols-2 gap-6">
-        <div class="glass rounded-2xl p-6">
+        <div class=" brutal-card bg-[#e8dff5] dark:bg-brutal-card  rounded-2xl p-6">
           <h4 class="font-bold mb-3 flex items-center gap-2">
             <span class="text-xl">📏</span> Cara Mengukur LLA
           </h4>
-          <ol class="text-sm text-slate-400 space-y-2 list-decimal list-inside">
+          <ol class="text-sm text-brutal-text-muted dark:text-slate-400 space-y-2 list-decimal list-inside">
             <li>Tekuk siku membentuk sudut 90°</li>
             <li>Tandai titik tengah antara bahu dan siku</li>
             <li>Luruskan lengan ke bawah</li>
@@ -273,11 +272,11 @@ import AdSlot from "@components/ui/AdSlot.astro";
             <li>Pastikan pita pengukur tidak terlalu ketat</li>
           </ol>
         </div>
-        <div class="glass rounded-2xl p-6">
+        <div class=" brutal-card bg-[#bbf7d0] dark:bg-brutal-card  rounded-2xl p-6">
           <h4 class="font-bold mb-3 flex items-center gap-2">
             <span class="text-xl">⚠️</span> Tentang Risiko Stunting
           </h4>
-          <p class="text-sm text-slate-400">
+          <p class="text-sm text-brutal-text-muted dark:text-slate-400">
             Stunting pada anak dapat dicegah sejak sebelum kehamilan. 
             Faktor risiko meliputi status gizi ibu yang kurang (LLA &lt; 23.5 cm), 
             BMI tidak normal, anemia, dan paparan rokok. Konsultasikan hasil 
@@ -483,8 +482,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
     }
 
     document.getElementById('overallScore')!.innerHTML = `
-      <p class="text-sm text-slate-400">Skor Kesiapan</p>
-      <p class="text-3xl font-bold ${scoreColor}">${overallPercentage}%</p>
+      <p class="text-sm text-brutal-text-muted dark:text-slate-400">Skor Kesiapan</p>
+      <p class="text-2xl font-bold ${scoreColor}">${overallPercentage}%</p>
       <p class="text-xs ${scoreColor}">${scoreLabel}</p>
     `;
 
@@ -492,11 +491,11 @@ import AdSlot from "@components/ui/AdSlot.astro";
     document.getElementById('riskIndicators')!.innerHTML = `
       <div class="bg-slate-800/50 rounded-xl p-4 text-center">
         <p class="text-xs text-slate-500 mb-1">Status Gizi (BMI)</p>
-        <span class="inline-block px-3 py-1 ${bmiInfo.color} text-white text-sm rounded-full">${bmiInfo.category}</span>
+        <span class="inline-block px-3 py-1 ${bmiInfo.color} text-brutal-text dark:text-white text-sm rounded-full">${bmiInfo.category}</span>
       </div>
       <div class="bg-slate-800/50 rounded-xl p-4 text-center">
         <p class="text-xs text-slate-500 mb-1">Status LLA</p>
-        <span class="inline-block px-3 py-1 ${llaInfo.color} text-white text-sm rounded-full">${llaInfo.status}</span>
+        <span class="inline-block px-3 py-1 ${llaInfo.color} text-brutal-text dark:text-white text-sm rounded-full">${llaInfo.status}</span>
       </div>
       <div class="bg-slate-800/50 rounded-xl p-4 text-center">
         <p class="text-xs text-slate-500 mb-1">${selectedGender === 'male' ? 'Risiko Merokok' : 'Faktor Risiko Lain'}</p>
@@ -516,14 +515,14 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
     // LLA Assessment
     document.getElementById('llaAssessment')!.innerHTML = `
-      <h4 class="text-sm text-slate-400 mb-3">Lingkar Lengan Atas (LLA)</h4>
+      <h4 class="text-sm text-brutal-text-muted dark:text-slate-400 mb-3">Lingkar Lengan Atas (LLA)</h4>
       <div class="flex items-center justify-between">
         <div>
-          <span class="text-4xl font-bold">${lla}</span>
-          <span class="text-lg text-slate-400">cm</span>
+          <span class="text-3xl font-bold">${lla}</span>
+          <span class="text-lg text-brutal-text-muted dark:text-slate-400">cm</span>
         </div>
         <div class="text-right">
-          <span class="inline-block px-3 py-1 ${llaInfo.color} text-white text-sm rounded-full">${llaInfo.status}</span>
+          <span class="inline-block px-3 py-1 ${llaInfo.color} text-brutal-text dark:text-white text-sm rounded-full">${llaInfo.status}</span>
           ${selectedGender === 'female' && lla < 23.5 ? '<p class="text-xs text-red-400 mt-1">Berisiko melahirkan bayi BBLR/Stunting</p>' : ''}
         </div>
       </div>
@@ -567,7 +566,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
     recommendations.push('🩺 <strong>Konsultasi Kesehatan:</strong> Lakukan pemeriksaan kesehatan pranikah di Puskesmas atau Rumah Sakit untuk hasil yang lebih akurat.');
 
     document.getElementById('recommendations')!.innerHTML = recommendations.map(r => `
-      <div class="p-4 bg-slate-800/50 rounded-xl text-sm text-slate-300">${r}</div>
+      <div class="p-4 bg-slate-800/50 rounded-xl text-sm text-brutal-text-muted dark:text-slate-300">${r}</div>
     `).join('');
 
     // Scroll to results

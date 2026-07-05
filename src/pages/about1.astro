@@ -34,12 +34,12 @@ const publishedTeamMembers = await getCollection("team", ({ data }) => {
     <main class="py-24 animate-fade-in">
       <header class="text-center mb-20">
           <span class="text-brand-primary text-xs font-bold uppercase tracking-widest mb-4 block">Tentang Kami</span>
-          <h1 class="text-6xl font-bold mb-6 tracking-tighter dark:text-white">{title}</h1>
+          <h1 class="text-5xl font-bold mb-6 tracking-tighter dark:text-white">{title}</h1>
           <p class="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-lg">{subtitle}</p>
       </header>
 
       <div class="flex flex-col gap-8 mx-auto max-w-4xl mt-16 glass p-12 rounded-[3rem] border border-white/5">
-        <h2 class="font-bold text-4xl dark:text-white tracking-tight">
+        <h2 class="font-bold text-3xl dark:text-white tracking-tight">
           {heading}
         </h2>
         <div class="prose dark:prose-invert prose-lg max-w-none text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -58,7 +58,7 @@ const publishedTeamMembers = await getCollection("team", ({ data }) => {
 
       <div class="mt-32">
         <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold dark:text-white mb-4">Tim Kami</h2>
+            <h2 class="text-3xl font-bold dark:text-white mb-4">Tim Kami</h2>
             <p class="text-slate-500">Orang-orang di balik layar SIMKAH Tools</p>
         </div>
         
@@ -91,7 +91,7 @@ const publishedTeamMembers = await getCollection("team", ({ data }) => {
                   </div>
 
                   <div class="text-center">
-                    <h3 class="text-2xl font-bold dark:text-white mb-1 group-hover:text-brand-primary transition-colors">{name}</h3>
+                    <h3 class="text-xl font-bold dark:text-white mb-1 group-hover:text-brand-primary transition-colors">{name}</h3>
                     <p class="text-sm text-slate-500 uppercase tracking-widest font-medium">
                       {title || "Team Member"}
                     </p>

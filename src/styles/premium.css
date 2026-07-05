@@ -1,93 +1,251 @@
-/* Fonts are loaded in Layout context for better performance */
+/* ==========================================================================
+   SIMKAH PREMIUM STYLE - XGRIND NEO-BRUTALISM EDITION
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700;800&display=swap');
 
 :root {
-    --brand-primary: #6366f1;
-    --brand-secondary: #a855f7;
+    /* === Neo-Brutalism Color Tokens (Xgrind Pro inspired) === */
+    --brutal-primary: #e85d75;       /* Pink/Rose */
+    --brutal-secondary: #004170;     /* Deep Navy */
+    --brutal-accent: #fde047;        /* Vibrant Yellow */
+    --brutal-success: #2dd4bf;       /* Teal/Mint */
+    --brutal-destructive: #ef4444;   /* Red */
+    --brutal-warning: #fbbf24;       /* Amber */
+    --brutal-info: #60a5fa;          /* Blue */
 
-    /* Light Mode Variables */
-    --bg-main: #ffffff;
-    --text-main: #1e293b;
-    --card-bg: rgba(241, 245, 249, 0.7);
-    --glass-border: rgba(0, 0, 0, 0.05);
+    /* === Structural Tokens === */
+    --brutal-border-width: 3px;
+    --brutal-border-color: #0f172a;  /* Slate 900 */
+    --brutal-shadow-color: rgba(15, 23, 42, 1);
+    
+    /* Standard Card offsets */
+    --brutal-shadow-offset-x: 4px;
+    --brutal-shadow-offset-y: 6px;
+    
+    /* Button/Small offsets */
+    --brutal-shadow-sm-x: 2px;
+    --brutal-shadow-sm-y: 4px;
+    
+    /* Radii */
+    --brutal-radius: 24px;
+    --brutal-radius-pill: 9999px;
+    
+    /* Interactions */
+    --brutal-pressed-offset: 4px;
+
+    /* === Surface Colors === */
+    --brutal-bg: #faf8f5;            /* Off-white warm cream */
+    --brutal-bg-alt: #f0ebe1;
+    --brutal-card-bg: #ffffff;       /* Pure white for cards */
+    --brutal-text: #0f172a;
+    --brutal-text-muted: #475569;
+    --brutal-ring: #0f172a;
 }
 
 .dark {
-    /* Dark Mode Variables */
-    --bg-main: #020617;
-    /* Sesuai slate-950 */
-    --text-main: #f8fafc;
-    --card-bg: rgba(15, 23, 42, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    /* === Dark Neo-Brutalism (Xgrind style) === */
+    --brutal-primary: #fb7185;
+    --brutal-secondary: #3b82f6;
+    --brutal-accent: #fde047;
+    --brutal-success: #2dd4bf;
+    --brutal-destructive: #ef4444;
+    --brutal-warning: #f59e0b;
+    --brutal-info: #6366f1;
+
+    --brutal-border-color: #312e81;  /* Deep Indigo border */
+    --brutal-shadow-color: #4f46e5;  /* Bright Indigo shadow */
+    
+    --brutal-bg: #09090b;            /* Almost black */
+    --brutal-bg-alt: #18181b;
+    --brutal-card-bg: #111827;       /* Very dark slate/navy */
+    --brutal-text: #f8fafc;
+    --brutal-text-muted: #94a3b8;
+    --brutal-ring: #4f46e5;
 }
 
-body {
-    font-family: 'Outfit', sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    overflow-x: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease;
+/* Base Body Styling */
+body.brutal-bg {
+    background-color: var(--brutal-bg);
+    color: var(--brutal-text);
+    /* Subtle grid pattern for texture */
+    background-image: radial-gradient(var(--brutal-text-muted) 1px, transparent 0);
+    background-size: 40px 40px;
+    background-position: -19px -19px;
+    background-attachment: fixed;
+    /* Opacity adjustment for the grid via pseudo element or directly if colors permit, 
+       here we make it very subtle using color mixing if possible, 
+       but standard CSS fallback is fine. Let's just use a very transparent color */
+}
+body.brutal-bg::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 0);
+    background-size: 32px 32px;
+    z-index: -1;
+    pointer-events: none;
+}
+.dark body.brutal-bg::before {
+    background-image: radial-gradient(rgba(248, 250, 252, 0.05) 1px, transparent 0);
 }
 
-h1,
-h2,
-h3,
-.font-serif {
-    font-family: 'Playfair Display', serif;
+/* === UTILITY CLASSES === */
+
+/* Brutal Card (Large Containers) */
+.brutal-card {
+    border: var(--brutal-border-width) solid var(--brutal-border-color);
+    border-radius: var(--brutal-radius);
+    box-shadow: var(--brutal-shadow-offset-x) var(--brutal-shadow-offset-y) 0 var(--brutal-shadow-color);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--brutal-text);
 }
 
-.glass {
-    background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
+.brutal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: calc(var(--brutal-shadow-offset-x) + 2px) calc(var(--brutal-shadow-offset-y) + 2px) 0 var(--brutal-shadow-color);
 }
 
-.dark .glass {
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+/* Brutal Pill Card (For Headers/Search bars) */
+.brutal-pill {
+    background-color: var(--brutal-card-bg);
+    border: var(--brutal-border-width) solid var(--brutal-border-color);
+    border-radius: var(--brutal-radius-pill);
+    box-shadow: var(--brutal-shadow-offset-x) var(--brutal-shadow-offset-y) 0 var(--brutal-shadow-color);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--brutal-text);
 }
 
-.light .glass {
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+/* Brutal Button */
+.brutal-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--brutal-border-color);
+    border-radius: var(--brutal-radius-pill);
+    box-shadow: var(--brutal-shadow-sm-x) var(--brutal-shadow-sm-y) 0 var(--brutal-shadow-color);
+    transition: all 0.15s ease-out;
+    cursor: pointer;
+    background-color: var(--brutal-card-bg);
+    color: var(--brutal-text);
+    text-decoration: none;
 }
 
+.brutal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: calc(var(--brutal-shadow-sm-x) + 2px) calc(var(--brutal-shadow-sm-y) + 2px) 0 var(--brutal-shadow-color);
+}
+
+.brutal-btn:active {
+    transform: translate(var(--brutal-shadow-sm-x), var(--brutal-shadow-sm-y));
+    box-shadow: 0 0 0 var(--brutal-shadow-color);
+}
+
+/* Button Variants */
+.brutal-btn-primary { background-color: var(--brutal-primary); color: #fff; border-color: var(--brutal-border-color); }
+.brutal-btn-secondary { background-color: var(--brutal-secondary); color: #fff; }
+.brutal-btn-accent { background-color: var(--brutal-accent); color: var(--brutal-text); }
+.brutal-btn-white { background-color: #ffffff; color: #0f172a; }
+
+/* Brutal Badge/Pill (Small tags) */
+.brutal-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 0.25rem 0.75rem;
+    border: 2px solid var(--brutal-border-color);
+    border-radius: var(--brutal-radius-pill);
+    box-shadow: 2px 2px 0 var(--brutal-shadow-color);
+    background-color: var(--brutal-card-bg);
+    color: var(--brutal-text);
+}
+
+/* Brutal Input */
+.brutal-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: var(--brutal-bg);
+    border: 2px solid var(--brutal-border-color);
+    border-radius: var(--brutal-radius);
+    color: var(--brutal-text);
+    font-weight: 500;
+    transition: all 0.2s ease-out;
+}
+.brutal-input:focus {
+    outline: none;
+    background-color: var(--brutal-card-bg);
+    box-shadow: var(--brutal-shadow-sm-x) var(--brutal-shadow-sm-y) 0 var(--brutal-shadow-color);
+}
+
+/* Background Color Utilities for dynamic badges */
+.bg-brutal-primary { background-color: var(--brutal-primary); color: #fff; }
+.bg-brutal-secondary { background-color: var(--brutal-secondary); color: #fff; }
+.bg-brutal-accent { background-color: var(--brutal-accent); color: #0f172a; }
+.bg-brutal-success { background-color: var(--brutal-success); color: #0f172a; }
+.bg-brutal-warning { background-color: var(--brutal-warning); color: #0f172a; }
+.bg-brutal-info { background-color: var(--brutal-info); color: #fff; }
+.bg-brutal-destructive { background-color: var(--brutal-destructive); color: #fff; }
+
+/* Typography Overrides */
 .text-gradient {
-    background: linear-gradient(to right, var(--brand-primary), var(--brand-secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--brutal-primary);
+    background: none;
+    -webkit-text-fill-color: initial;
+}
+
+.font-extrabold {
+    font-weight: 900 !important;
+}
+
+/* LEGACY GLASS/BENTO REMAPS (to prevent layout breakage on older components) */
+.glass {
+    background-color: var(--brutal-card-bg) !important;
+    border: var(--brutal-border-width) solid var(--brutal-border-color) !important;
+    border-radius: var(--brutal-radius) !important;
+    box-shadow: var(--brutal-shadow-offset-x) var(--brutal-shadow-offset-y) 0 var(--brutal-shadow-color) !important;
+    backdrop-filter: none !important;
 }
 
 .bento-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: 2rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid var(--glass-border);
+    background-color: var(--brutal-card-bg) !important;
+    border: var(--brutal-border-width) solid var(--brutal-border-color) !important;
+    border-radius: var(--brutal-radius) !important;
+    box-shadow: var(--brutal-shadow-offset-x) var(--brutal-shadow-offset-y) 0 var(--brutal-shadow-color) !important;
+    transition: all 0.2s ease-out;
 }
-
 .bento-item:hover {
-    transform: translateY(-5px);
-    border-color: var(--brand-primary);
-    box-shadow: 0 20px 40px -20px var(--brand-primary);
+  transform: translateY(-4px);
+  box-shadow: calc(var(--brutal-shadow-offset-x) + 2px) calc(var(--brutal-shadow-offset-y) + 2px) 0 var(--brutal-shadow-color) !important;
 }
 
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Custom Sparkle Animation */
+@keyframes sparkle-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.65);
+  }
 }
 
-.animate-fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
+.animate-sparkle {
+  animation: sparkle-pulse 2s ease-in-out infinite;
 }
 
-.scroll-smooth {
-    scroll-behavior: smooth;
+/* Float Smooth for Cards */
+@keyframes float-smooth {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.animate-float-smooth {
+  animation: float-smooth 4s ease-in-out infinite;
 }

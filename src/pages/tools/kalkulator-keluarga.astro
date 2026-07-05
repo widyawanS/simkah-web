@@ -7,22 +7,26 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
 <Layout title="Kalkulator Keluarga - Perencanaan Biaya Keluarga">
   <Container>
-    <Sectionhead>
-      <Fragment slot="title">Kalkulator Keluarga</Fragment>
-      <Fragment slot="desc">Rencanakan kebutuhan finansial keluarga Anda dengan akurat</Fragment>
-    </Sectionhead>
+          <div class="text-center mb-16 mt-12 flex flex-col items-center">
+        <span class="inline-block px-4 py-2 brutal-badge bg-[#c0e6ff] text-brutal-text text-sm font-bold mb-4 border-2 border-brutal-border">
+          👨‍👩‍👧‍👦 Kalkulator Biaya
+        </span>
+        <h1 class="text-3xl md:text-5xl font-black text-brutal-text text-center mb-4 drop-shadow-md">
+          Kalkulator <span class="text-blue-500">Keluarga</span>
+        </h1>
+        <p class="text-center text-brutal-text-muted max-w-2xl mx-auto mb-8 text-lg font-medium">
+          Rencanakan kebutuhan finansial keluarga Anda dengan akurat.
+        </p>
+        <AdSlot type="tools" />
+      </div>
 
-    <div class="max-w-4xl mx-auto mt-8">
-      <AdSlot type="tools" />
-    </div>
-
-    <div class="max-w-4xl mx-auto mt-16">
+    <div class="max-w-4xl mx-auto">
       <!-- Calculator Card -->
-      <div class="glass rounded-3xl p-8 md:p-12">
+      <div class=" brutal-card bg-[#fae870] dark:bg-brutal-card  rounded-3xl p-8 md:p-12">
         <form id="familyCalculator" class="space-y-8">
           <!-- Income Section -->
           <div class="space-y-4">
-            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+            <h3 class="text-xl font-bold text-brutal-text dark:text-white flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
                 <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -32,19 +36,19 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </h3>
             <div class="grid md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Pendapatan Suami</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Pendapatan Suami</label>
                 <div class="relative">
                   <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
                   <input type="number" id="husbandIncome" value="10000000" 
-                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                    class="w-full bg-slate-800/50 border border-brutal-border rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                 </div>
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Pendapatan Istri</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Pendapatan Istri</label>
                 <div class="relative">
                   <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
                   <input type="number" id="wifeIncome" value="5000000"
-                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                    class="w-full bg-slate-800/50 border border-brutal-border rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                 </div>
               </div>
             </div>
@@ -52,7 +56,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
           <!-- Family Members Section -->
           <div class="space-y-4">
-            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+            <h3 class="text-xl font-bold text-brutal-text dark:text-white flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
                 <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -62,26 +66,26 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </h3>
             <div class="grid md:grid-cols-3 gap-4">
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Jumlah Anak</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Jumlah Anak</label>
                 <input type="number" id="childrenCount" value="2" min="0" max="10"
-                  class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Anak Sekolah</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Anak Sekolah</label>
                 <input type="number" id="schoolChildren" value="1" min="0" max="10"
-                  class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Anak Kuliah</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Anak Kuliah</label>
                 <input type="number" id="collegeChildren" value="0" min="0" max="10"
-                  class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
               </div>
             </div>
           </div>
 
           <!-- Monthly Expenses Section -->
           <div class="space-y-4">
-            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+            <h3 class="text-xl font-bold text-brutal-text dark:text-white flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
                 <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -91,73 +95,73 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </h3>
             <div class="grid md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Kebutuhan Pokok</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Kebutuhan Pokok</label>
                 <div class="relative">
                   <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
                   <input type="number" id="groceries" value="3000000"
-                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                    class="w-full bg-slate-800/50 border border-brutal-border rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                 </div>
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Listrik & Air</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Listrik & Air</label>
                 <div class="relative">
                   <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
                   <input type="number" id="utilities" value="500000"
-                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                    class="w-full bg-slate-800/50 border border-brutal-border rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                 </div>
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Transportasi</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Transportasi</label>
                 <div class="relative">
                   <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
                   <input type="number" id="transport" value="1000000"
-                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                    class="w-full bg-slate-800/50 border border-brutal-border rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                 </div>
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Internet & Telepon</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Internet & Telepon</label>
                 <div class="relative">
                   <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">Rp</span>
                   <input type="number" id="internet" value="300000"
-                    class="w-full bg-slate-800/50 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                    class="w-full bg-slate-800/50 border border-brutal-border rounded-xl pl-12 pr-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                 </div>
               </div>
             </div>
           </div>
 
           <button type="button" id="calculateBtn" 
-            class="w-full py-4 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-xl font-bold text-white hover:opacity-90 transition-opacity">
+            class="w-full py-4 text-lg brutal-btn brutal-btn-primary">
             Hitung Kebutuhan Keluarga
           </button>
         </form>
 
         <!-- Results Section -->
-        <div id="results" class="hidden mt-10 pt-10 border-t border-slate-700">
-          <h3 class="text-2xl font-bold text-white mb-6">📊 Hasil Perhitungan</h3>
+        <div id="results" class="hidden mt-10 pt-10 border-t border-brutal-border">
+          <h3 class="text-xl font-bold text-brutal-text dark:text-white mb-6">📊 Hasil Perhitungan</h3>
           
           <div class="grid md:grid-cols-2 gap-6 mb-8">
             <div class="bg-green-500/10 border border-green-500/30 rounded-2xl p-6">
               <p class="text-sm text-green-400 mb-1">Total Pendapatan</p>
-              <p id="totalIncome" class="text-3xl font-bold text-green-400">Rp 0</p>
+              <p id="totalIncome" class="text-2xl font-bold text-green-400">Rp 0</p>
             </div>
             <div class="bg-red-500/10 border border-red-500/30 rounded-2xl p-6">
               <p class="text-sm text-red-400 mb-1">Total Pengeluaran</p>
-              <p id="totalExpense" class="text-3xl font-bold text-red-400">Rp 0</p>
+              <p id="totalExpense" class="text-2xl font-bold text-red-400">Rp 0</p>
             </div>
           </div>
 
           <div class="space-y-4">
-            <div class="flex justify-between items-center py-3 border-b border-slate-700">
-              <span class="text-slate-400">Biaya Pendidikan (estimasi)</span>
-              <span id="educationCost" class="font-bold text-white">Rp 0</span>
+            <div class="flex justify-between items-center py-3 border-b border-brutal-border">
+              <span class="text-brutal-text-muted dark:text-slate-400">Biaya Pendidikan (estimasi)</span>
+              <span id="educationCost" class="font-bold text-brutal-text dark:text-white">Rp 0</span>
             </div>
-            <div class="flex justify-between items-center py-3 border-b border-slate-700">
-              <span class="text-slate-400">Sisa untuk Tabungan</span>
-              <span id="savings" class="font-bold text-white">Rp 0</span>
+            <div class="flex justify-between items-center py-3 border-b border-brutal-border">
+              <span class="text-brutal-text-muted dark:text-slate-400">Sisa untuk Tabungan</span>
+              <span id="savings" class="font-bold text-brutal-text dark:text-white">Rp 0</span>
             </div>
-            <div class="flex justify-between items-center py-3 border-b border-slate-700">
-              <span class="text-slate-400">Persentase Tabungan</span>
-              <span id="savingsPercent" class="font-bold text-white">0%</span>
+            <div class="flex justify-between items-center py-3 border-b border-brutal-border">
+              <span class="text-brutal-text-muted dark:text-slate-400">Persentase Tabungan</span>
+              <span id="savingsPercent" class="font-bold text-brutal-text dark:text-white">0%</span>
             </div>
           </div>
 
@@ -209,13 +213,13 @@ import AdSlot from "@components/ui/AdSlot.astro";
     const recEl = document.getElementById('recommendation') as HTMLElement;
     if (savingsPercent >= 20) {
       recEl.className = 'mt-8 p-6 rounded-2xl bg-green-500/10 border border-green-500/30';
-      recEl.innerHTML = `<p class="text-green-400 font-bold">✅ Keuangan Sehat!</p><p class="text-slate-300 mt-2">Tabungan Anda ${savingsPercent.toFixed(1)}% dari pendapatan sudah ideal. Pertahankan!</p>`;
+      recEl.innerHTML = `<p class="text-green-400 font-bold">✅ Keuangan Sehat!</p><p class="text-brutal-text-muted dark:text-slate-300 mt-2">Tabungan Anda ${savingsPercent.toFixed(1)}% dari pendapatan sudah ideal. Pertahankan!</p>`;
     } else if (savingsPercent >= 10) {
       recEl.className = 'mt-8 p-6 rounded-2xl bg-yellow-500/10 border border-yellow-500/30';
-      recEl.innerHTML = `<p class="text-yellow-400 font-bold">⚠️ Perlu Perhatian</p><p class="text-slate-300 mt-2">Tabungan ${savingsPercent.toFixed(1)}% masih kurang dari ideal (20%). Coba kurangi pengeluaran.</p>`;
+      recEl.innerHTML = `<p class="text-yellow-400 font-bold">⚠️ Perlu Perhatian</p><p class="text-brutal-text-muted dark:text-slate-300 mt-2">Tabungan ${savingsPercent.toFixed(1)}% masih kurang dari ideal (20%). Coba kurangi pengeluaran.</p>`;
     } else {
       recEl.className = 'mt-8 p-6 rounded-2xl bg-red-500/10 border border-red-500/30';
-      recEl.innerHTML = `<p class="text-red-400 font-bold">🚨 Perlu Evaluasi</p><p class="text-slate-300 mt-2">Pengeluaran melebihi atau hampir sama dengan pendapatan. Segera evaluasi budget.</p>`;
+      recEl.innerHTML = `<p class="text-red-400 font-bold">🚨 Perlu Evaluasi</p><p class="text-brutal-text-muted dark:text-slate-300 mt-2">Pengeluaran melebihi atau hampir sama dengan pendapatan. Segera evaluasi budget.</p>`;
     }
   }
 </script>
@@ -224,10 +228,6 @@ import AdSlot from "@components/ui/AdSlot.astro";
   /* Fix input visibility and spacing */
   input[type="number"],
   select {
-    background-color: rgba(15, 23, 42, 0.8) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(100, 116, 139, 0.5) !important;
-    caret-color: #ffffff;
     padding: 0.875rem 1rem !important;
     padding-left: 3.5rem !important;
     font-size: 1rem;

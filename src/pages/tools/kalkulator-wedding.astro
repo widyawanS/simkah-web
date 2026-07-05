@@ -7,22 +7,26 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
 <Layout title="Kalkulator Wedding Party - Estimasi Biaya Pernikahan">
   <Container>
-    <Sectionhead>
-      <Fragment slot="title">Kalkulator Wedding Party</Fragment>
-      <Fragment slot="desc">Rencanakan anggaran pernikahan impian Anda dengan detail</Fragment>
-    </Sectionhead>
+          <div class="text-center mb-16 mt-12 flex flex-col items-center">
+        <span class="inline-block px-4 py-2 brutal-badge bg-[#fae870] text-brutal-text text-sm font-bold mb-4 border-2 border-brutal-border">
+          💍 Kalkulator Biaya
+        </span>
+        <h1 class="text-3xl md:text-5xl font-black text-brutal-text text-center mb-4 drop-shadow-md">
+          Kalkulator <span class="text-pink-500">Wedding Party</span>
+        </h1>
+        <p class="text-center text-brutal-text-muted max-w-2xl mx-auto mb-8 text-lg font-medium">
+          Rencanakan anggaran pernikahan impian Anda dengan detail dan akurat.
+        </p>
+        <AdSlot type="tools" />
+      </div>
 
-    <div class="max-w-4xl mx-auto mt-8">
-      <AdSlot type="tools" />
-    </div>
-
-    <div class="max-w-4xl mx-auto mt-16">
+    <div class="max-w-4xl mx-auto">
       <!-- Calculator Card -->
-      <div class="glass rounded-3xl p-8 md:p-12">
+      <div class=" brutal-card bg-[#fae870] dark:bg-brutal-card  rounded-3xl p-8 md:p-12">
         <form id="weddingCalculator" class="space-y-8">
           <!-- Guest Section -->
           <div class="space-y-4">
-            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+            <h3 class="text-xl font-bold text-brutal-text dark:text-white flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center">
                 <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -32,21 +36,21 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </h3>
             <div class="grid md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Tamu Pria</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Tamu Pria</label>
                 <input type="number" id="guestsMale" value="150" min="0"
-                  class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Tamu Wanita</label>
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Tamu Wanita</label>
                 <input type="number" id="guestsFemale" value="150" min="0"
-                  class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                  class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
               </div>
             </div>
           </div>
 
           <!-- Venue Section -->
           <div class="space-y-4">
-            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+            <h3 class="text-xl font-bold text-brutal-text dark:text-white flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
                 <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
@@ -55,8 +59,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
               Venue & Gedung
             </h3>
             <div>
-              <label class="block text-sm text-slate-400 mb-2">Tipe Venue</label>
-              <select id="venueType" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+              <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Tipe Venue</label>
+              <select id="venueType" class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                 <option value="rumah">Rumah / Tenda (Rp 5-15 juta)</option>
                 <option value="gedung">Gedung Serbaguna (Rp 15-40 juta)</option>
                 <option value="hotel" selected>Ballroom Hotel (Rp 40-100 juta)</option>
@@ -67,7 +71,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
           <!-- Catering Section -->
           <div class="space-y-4">
-            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+            <h3 class="text-xl font-bold text-brutal-text dark:text-white flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
                 <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -77,8 +81,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </h3>
             <div class="grid md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Tipe Catering</label>
-                <select id="cateringType" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Tipe Catering</label>
+                <select id="cateringType" class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                   <option value="prasmanan_simple">Prasmanan Sederhana (Rp 75K/pax)</option>
                   <option value="prasmanan_medium" selected>Prasmanan Menengah (Rp 125K/pax)</option>
                   <option value="prasmanan_premium">Prasmanan Premium (Rp 200K/pax)</option>
@@ -86,8 +90,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
                 </select>
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Tambahan Snack Box</label>
-                <select id="snackBox" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Tambahan Snack Box</label>
+                <select id="snackBox" class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                   <option value="0">Tidak Ada</option>
                   <option value="25000">Standar (Rp 25K/box)</option>
                   <option value="50000" selected>Premium (Rp 50K/box)</option>
@@ -98,7 +102,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
           <!-- Decoration Section -->
           <div class="space-y-4">
-            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+            <h3 class="text-xl font-bold text-brutal-text dark:text-white flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
                 <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
@@ -108,8 +112,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </h3>
             <div class="grid md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Paket Dekorasi</label>
-                <select id="decoration" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Paket Dekorasi</label>
+                <select id="decoration" class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                   <option value="10000000">Minimalis (Rp 10 juta)</option>
                   <option value="25000000">Standar (Rp 25 juta)</option>
                   <option value="50000000" selected>Premium (Rp 50 juta)</option>
@@ -117,8 +121,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
                 </select>
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Entertainment</label>
-                <select id="entertainment" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Entertainment</label>
+                <select id="entertainment" class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                   <option value="5000000">MC + Sound System (Rp 5 juta)</option>
                   <option value="15000000" selected>MC + Band Akustik (Rp 15 juta)</option>
                   <option value="30000000">MC + Full Band (Rp 30 juta)</option>
@@ -130,7 +134,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
           <!-- Photography Section -->
           <div class="space-y-4">
-            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+            <h3 class="text-xl font-bold text-brutal-text dark:text-white flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
                 <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
@@ -141,8 +145,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </h3>
             <div class="grid md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Paket Foto & Video</label>
-                <select id="photography" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Paket Foto & Video</label>
+                <select id="photography" class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                   <option value="5000000">Basic (Rp 5 juta)</option>
                   <option value="15000000" selected>Standar (Rp 15 juta)</option>
                   <option value="35000000">Premium (Rp 35 juta)</option>
@@ -150,8 +154,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
                 </select>
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Pre-Wedding</label>
-                <select id="prewedding" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Pre-Wedding</label>
+                <select id="prewedding" class="w-full bg-slate-800/50 border border-brutal-border rounded-xl px-4 py-3 text-white focus:border-brand-primary focus:outline-none transition-colors">
                   <option value="0">Tidak Ada</option>
                   <option value="5000000">Lokal (Rp 5 juta)</option>
                   <option value="15000000" selected>Out of Town (Rp 15 juta)</option>
@@ -163,7 +167,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
           <!-- Extras Section -->
           <div class="space-y-4">
-            <h3 class="text-xl font-bold text-white flex items-center gap-3">
+            <h3 class="text-xl font-bold text-brutal-text dark:text-white flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
                 <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
@@ -172,48 +176,48 @@ import AdSlot from "@components/ui/AdSlot.astro";
               Tambahan
             </h3>
             <div class="grid md:grid-cols-3 gap-4">
-              <label class="flex items-center gap-3 p-4 bg-slate-800/50 border border-slate-700 rounded-xl cursor-pointer hover:border-brand-primary transition-colors">
+              <label class="flex items-center gap-3 p-4 bg-slate-800/50 border border-brutal-border rounded-xl cursor-pointer hover:border-brand-primary transition-colors">
                 <input type="checkbox" id="makeup" checked class="w-5 h-5 accent-brand-primary">
-                <span class="text-white">MUA (Rp 15 juta)</span>
+                <span class="text-brutal-text dark:text-white">MUA (Rp 15 juta)</span>
               </label>
-              <label class="flex items-center gap-3 p-4 bg-slate-800/50 border border-slate-700 rounded-xl cursor-pointer hover:border-brand-primary transition-colors">
+              <label class="flex items-center gap-3 p-4 bg-slate-800/50 border border-brutal-border rounded-xl cursor-pointer hover:border-brand-primary transition-colors">
                 <input type="checkbox" id="souvenir" checked class="w-5 h-5 accent-brand-primary">
-                <span class="text-white">Souvenir</span>
+                <span class="text-brutal-text dark:text-white">Souvenir</span>
               </label>
-              <label class="flex items-center gap-3 p-4 bg-slate-800/50 border border-slate-700 rounded-xl cursor-pointer hover:border-brand-primary transition-colors">
+              <label class="flex items-center gap-3 p-4 bg-slate-800/50 border border-brutal-border rounded-xl cursor-pointer hover:border-brand-primary transition-colors">
                 <input type="checkbox" id="invitation" checked class="w-5 h-5 accent-brand-primary">
-                <span class="text-white">Undangan Digital</span>
+                <span class="text-brutal-text dark:text-white">Undangan Digital</span>
               </label>
             </div>
           </div>
 
           <button type="button" id="calculateBtn" 
-            class="w-full py-4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl font-bold text-white hover:opacity-90 transition-opacity">
+            class="w-full py-4 text-lg brutal-btn brutal-btn-primary">
             💒 Hitung Total Biaya Wedding
           </button>
         </form>
 
         <!-- Results Section -->
-        <div id="results" class="hidden mt-10 pt-10 border-t border-slate-700">
-          <h3 class="text-2xl font-bold text-white mb-6">💍 Estimasi Biaya Pernikahan</h3>
+        <div id="results" class="hidden mt-10 pt-10 border-t border-brutal-border">
+          <h3 class="text-xl font-bold text-brutal-text dark:text-white mb-6">💍 Estimasi Biaya Pernikahan</h3>
           
           <div class="bg-gradient-to-r from-pink-500/20 to-purple-500/20 border border-pink-500/30 rounded-2xl p-8 mb-8 text-center">
             <p class="text-sm text-pink-300 mb-2">Total Estimasi</p>
-            <p id="grandTotal" class="text-5xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Rp 0</p>
+            <p id="grandTotal" class="text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Rp 0</p>
           </div>
 
-          <h4 class="font-bold text-white mb-4">📋 Rincian Biaya</h4>
+          <h4 class="font-bold text-brutal-text dark:text-white mb-4">📋 Rincian Biaya</h4>
           <div class="space-y-3" id="breakdown">
             <!-- Breakdown will be inserted here -->
           </div>
 
           <div class="mt-8 p-6 rounded-2xl bg-blue-500/10 border border-blue-500/30">
             <p class="text-blue-400 font-bold">💡 Tips Hemat</p>
-            <ul class="text-slate-300 mt-3 space-y-2 text-sm">
+            <ul class="text-brutal-text-muted dark:text-slate-300 mt-3 space-y-2 text-sm">
               <li>• Pilih hari weekday untuk diskon venue hingga 30%</li>
               <li>• Gunakan vendor all-in-one untuk negosiasi paket</li>
               <li>• Undangan digital bisa hemat hingga Rp 5 juta</li>
-              <li>• Pertimbangkan intimate wedding (< 100 tamu) untuk efisiensi</li>
+              <li>• Pertimbangkan intimate wedding (&lt; 100 tamu) untuk efisiensi</li>
             </ul>
           </div>
         </div>
@@ -280,41 +284,41 @@ import AdSlot from "@components/ui/AdSlot.astro";
     // Breakdown
     const breakdown = document.getElementById('breakdown') as HTMLElement;
     breakdown.innerHTML = `
-      <div class="flex justify-between py-3 border-b border-slate-700/50">
-        <span class="text-slate-400">🏛️ Venue (${venueType})</span>
-        <span class="font-bold text-white">${formatRupiah(venueCost)}</span>
+      <div class="flex justify-between py-3 border-b border-brutal-border/50">
+        <span class="text-brutal-text-muted dark:text-slate-400">🏛️ Venue (${venueType})</span>
+        <span class="font-bold text-brutal-text dark:text-white">${formatRupiah(venueCost)}</span>
       </div>
-      <div class="flex justify-between py-3 border-b border-slate-700/50">
-        <span class="text-slate-400">🍽️ Catering (${totalGuests} pax)</span>
-        <span class="font-bold text-white">${formatRupiah(cateringCost)}</span>
+      <div class="flex justify-between py-3 border-b border-brutal-border/50">
+        <span class="text-brutal-text-muted dark:text-slate-400">🍽️ Catering (${totalGuests} pax)</span>
+        <span class="font-bold text-brutal-text dark:text-white">${formatRupiah(cateringCost)}</span>
       </div>
-      <div class="flex justify-between py-3 border-b border-slate-700/50">
-        <span class="text-slate-400">🌸 Dekorasi</span>
-        <span class="font-bold text-white">${formatRupiah(decoration)}</span>
+      <div class="flex justify-between py-3 border-b border-brutal-border/50">
+        <span class="text-brutal-text-muted dark:text-slate-400">🌸 Dekorasi</span>
+        <span class="font-bold text-brutal-text dark:text-white">${formatRupiah(decoration)}</span>
       </div>
-      <div class="flex justify-between py-3 border-b border-slate-700/50">
-        <span class="text-slate-400">🎤 Entertainment</span>
-        <span class="font-bold text-white">${formatRupiah(entertainment)}</span>
+      <div class="flex justify-between py-3 border-b border-brutal-border/50">
+        <span class="text-brutal-text-muted dark:text-slate-400">🎤 Entertainment</span>
+        <span class="font-bold text-brutal-text dark:text-white">${formatRupiah(entertainment)}</span>
       </div>
-      <div class="flex justify-between py-3 border-b border-slate-700/50">
-        <span class="text-slate-400">📸 Foto & Video</span>
-        <span class="font-bold text-white">${formatRupiah(photography)}</span>
+      <div class="flex justify-between py-3 border-b border-brutal-border/50">
+        <span class="text-brutal-text-muted dark:text-slate-400">📸 Foto & Video</span>
+        <span class="font-bold text-brutal-text dark:text-white">${formatRupiah(photography)}</span>
       </div>
-      <div class="flex justify-between py-3 border-b border-slate-700/50">
-        <span class="text-slate-400">💑 Pre-Wedding</span>
-        <span class="font-bold text-white">${formatRupiah(prewedding)}</span>
+      <div class="flex justify-between py-3 border-b border-brutal-border/50">
+        <span class="text-brutal-text-muted dark:text-slate-400">💑 Pre-Wedding</span>
+        <span class="font-bold text-brutal-text dark:text-white">${formatRupiah(prewedding)}</span>
       </div>
-      <div class="flex justify-between py-3 border-b border-slate-700/50">
-        <span class="text-slate-400">💄 MUA</span>
-        <span class="font-bold text-white">${formatRupiah(makeup)}</span>
+      <div class="flex justify-between py-3 border-b border-brutal-border/50">
+        <span class="text-brutal-text-muted dark:text-slate-400">💄 MUA</span>
+        <span class="font-bold text-brutal-text dark:text-white">${formatRupiah(makeup)}</span>
       </div>
-      <div class="flex justify-between py-3 border-b border-slate-700/50">
-        <span class="text-slate-400">🎁 Souvenir (${totalGuests} pcs)</span>
-        <span class="font-bold text-white">${formatRupiah(souvenir)}</span>
+      <div class="flex justify-between py-3 border-b border-brutal-border/50">
+        <span class="text-brutal-text-muted dark:text-slate-400">🎁 Souvenir (${totalGuests} pcs)</span>
+        <span class="font-bold text-brutal-text dark:text-white">${formatRupiah(souvenir)}</span>
       </div>
       <div class="flex justify-between py-3">
-        <span class="text-slate-400">💌 Undangan Digital</span>
-        <span class="font-bold text-white">${formatRupiah(invitation)}</span>
+        <span class="text-brutal-text-muted dark:text-slate-400">💌 Undangan Digital</span>
+        <span class="font-bold text-brutal-text dark:text-white">${formatRupiah(invitation)}</span>
       </div>
     `;
   }
@@ -324,10 +328,6 @@ import AdSlot from "@components/ui/AdSlot.astro";
   /* Fix input and select visibility and spacing */
   input[type="number"],
   select {
-    background-color: rgba(15, 23, 42, 0.9) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(100, 116, 139, 0.5) !important;
-    caret-color: #ffffff;
     padding: 0.875rem 1.25rem !important;
     font-size: 1rem;
   }

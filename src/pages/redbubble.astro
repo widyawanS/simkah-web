@@ -460,7 +460,7 @@
               {/* Sidebar */}
               <aside className="w-64 bg-slate-800 border-r border-slate-700 hidden md:flex flex-col">
                 <div className="p-6">
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent flex items-center gap-2">
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent flex items-center gap-2">
                     <Zap className="text-purple-400" /> MarketSight
                   </h1>
                   <p className="text-xs text-slate-400 mt-2">{t('app_subtitle')}</p>
@@ -633,21 +633,21 @@
                 <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
                     <div>
                         <p className="text-xs text-slate-400">{t('dash_stats_total')}</p>
-                        <span className="text-2xl font-bold">{totalSaved}</span>
+                        <span className="text-xl font-bold">{totalSaved}</span>
                     </div>
                     <Save size={24} className="text-slate-600 opacity-50"/>
                 </div>
                 <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between border-l-4 border-l-green-500">
                     <div>
                         <p className="text-xs text-slate-400">{t('dash_stats_win')}</p>
-                        <span className="text-2xl font-bold text-green-400">{winningCount}</span>
+                        <span className="text-xl font-bold text-green-400">{winningCount}</span>
                     </div>
                     <Sparkles size={24} className="text-green-500 opacity-50"/>
                 </div>
                 <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between border-l-4 border-l-yellow-500">
                     <div>
                         <p className="text-xs text-slate-400">{t('dash_stats_potential')}</p>
-                        <span className="text-2xl font-bold text-yellow-400">{potentialCount}</span>
+                        <span className="text-xl font-bold text-yellow-400">{potentialCount}</span>
                     </div>
                     <Flame size={24} className="text-yellow-500 opacity-50"/>
                 </div>
@@ -875,7 +875,7 @@
               <div className="flex items-center gap-2 mb-6">
                 <Target className="text-purple-400" size={28} />
                 <div>
-                   <h2 className="text-2xl font-bold">{t('calc_title')}</h2>
+                   <h2 className="text-xl font-bold">{t('calc_title')}</h2>
                    <p className="text-xs text-slate-400">{t('calc_desc')}</p>
                 </div>
               </div>
@@ -995,11 +995,11 @@
                           strokeDasharray={377} strokeDashoffset={377 - (377 * analysis.score) / 100} className={analysis.color} 
                         />
                       </svg>
-                      <span className={`absolute text-3xl font-bold ${analysis.color}`}>{analysis.score}</span>
+                      <span className={`absolute text-2xl font-bold ${analysis.color}`}>{analysis.score}</span>
                     </div>
                     
                     <div className="flex-1">
-                      <h4 className={`text-2xl font-bold mb-2 ${analysis.color}`}>{analysis.verdict}</h4>
+                      <h4 className={`text-xl font-bold mb-2 ${analysis.color}`}>{analysis.verdict}</h4>
                       <div className="bg-slate-900/50 border border-slate-700 p-4 rounded-lg mb-4">
                         <p className="text-slate-200 text-sm leading-relaxed">{analysis.narrative}</p>
                       </div>
@@ -1518,7 +1518,7 @@
             <div className="max-w-4xl mx-auto space-y-8">
               {/* Header */}
               <div className="text-center">
-                <h2 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+                <h2 className="text-2xl font-bold mb-2 flex items-center justify-center gap-2">
                   <FileText className="text-purple-400" /> {t('list_title')}
                 </h2>
                 <p className="text-slate-400">{t('list_desc')}</p>
@@ -2074,7 +2074,7 @@
               {/* Sidebar */}
               <aside className="w-64 bg-slate-800 border-r border-slate-700 hidden md:flex flex-col">
                 <div className="p-6">
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent flex items-center gap-2">
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent flex items-center gap-2">
                     <Zap className="text-purple-400" /> MarketSight
                   </h1>
                   <p className="text-xs text-slate-400 mt-2">{t('app_subtitle')}</p>
@@ -2247,21 +2247,21 @@
                 <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
                     <div>
                         <p className="text-xs text-slate-400">{t('dash_stats_total')}</p>
-                        <span className="text-2xl font-bold">{totalSaved}</span>
+                        <span className="text-xl font-bold">{totalSaved}</span>
                     </div>
                     <Save size={24} className="text-slate-600 opacity-50"/>
                 </div>
                 <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between border-l-4 border-l-green-500">
                     <div>
                         <p className="text-xs text-slate-400">{t('dash_stats_win')}</p>
-                        <span className="text-2xl font-bold text-green-400">{winningCount}</span>
+                        <span className="text-xl font-bold text-green-400">{winningCount}</span>
                     </div>
                     <Sparkles size={24} className="text-green-500 opacity-50"/>
                 </div>
                 <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex items-center justify-between border-l-4 border-l-yellow-500">
                     <div>
                         <p className="text-xs text-slate-400">{t('dash_stats_potential')}</p>
-                        <span className="text-2xl font-bold text-yellow-400">{potentialCount}</span>
+                        <span className="text-xl font-bold text-yellow-400">{potentialCount}</span>
                     </div>
                     <Flame size={24} className="text-yellow-500 opacity-50"/>
                 </div>
@@ -2489,7 +2489,7 @@
               <div className="flex items-center gap-2 mb-6">
                 <Target className="text-purple-400" size={28} />
                 <div>
-                   <h2 className="text-2xl font-bold">{t('calc_title')}</h2>
+                   <h2 className="text-xl font-bold">{t('calc_title')}</h2>
                    <p className="text-xs text-slate-400">{t('calc_desc')}</p>
                 </div>
               </div>
@@ -2609,11 +2609,11 @@
                           strokeDasharray={377} strokeDashoffset={377 - (377 * analysis.score) / 100} className={analysis.color} 
                         />
                       </svg>
-                      <span className={`absolute text-3xl font-bold ${analysis.color}`}>{analysis.score}</span>
+                      <span className={`absolute text-2xl font-bold ${analysis.color}`}>{analysis.score}</span>
                     </div>
                     
                     <div className="flex-1">
-                      <h4 className={`text-2xl font-bold mb-2 ${analysis.color}`}>{analysis.verdict}</h4>
+                      <h4 className={`text-xl font-bold mb-2 ${analysis.color}`}>{analysis.verdict}</h4>
                       <div className="bg-slate-900/50 border border-slate-700 p-4 rounded-lg mb-4">
                         <p className="text-slate-200 text-sm leading-relaxed">{analysis.narrative}</p>
                       </div>
@@ -3132,7 +3132,7 @@
             <div className="max-w-4xl mx-auto space-y-8">
               {/* Header */}
               <div className="text-center">
-                <h2 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+                <h2 className="text-2xl font-bold mb-2 flex items-center justify-center gap-2">
                   <FileText className="text-purple-400" /> {t('list_title')}
                 </h2>
                 <p className="text-slate-400">{t('list_desc')}</p>

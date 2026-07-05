@@ -6,15 +6,15 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
 <Layout title="Generator Prompt AI Penghulu & Penyuluh">
   <Container>
-    <div class="max-w-4xl mx-auto mt-16 mb-20">
-      <div class="text-center mb-12">
-        <span class="inline-block px-4 py-2 bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 rounded-full text-sm font-bold mb-4">
+    <div class="max-w-4xl mx-auto mt-0 mb-20">
+            <div class="text-center mb-16 mt-12 flex flex-col items-center">
+        <span class="inline-block px-4 py-2 brutal-badge bg-brutal-accent text-brutal-text text-sm font-bold mb-4 border-2 border-brutal-border">
           🕌 Kemenag Tools
         </span>
-        <h1 class="text-4xl md:text-5xl font-bold mb-4 dark:text-white">
-          Generator Prompt <span class="bg-gradient-to-r from-emerald-400 to-teal-500 text-transparent bg-clip-text">AI Penghulu</span>
+        <h1 class="text-3xl md:text-5xl font-black text-brutal-text text-center mb-4 drop-shadow-md">
+          Generator Prompt <span class="text-emerald-500">AI Penghulu</span>
         </h1>
-        <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+        <p class="text-center text-brutal-text-muted max-w-2xl mx-auto mb-8 text-lg font-medium">
           Buat prompt AI secara otomatis dengan pendekatan form step-by-step. Output berbentuk <strong>JSON Terstruktur</strong> agar hasil dari ChatGPT, Gemini, atau Claude lebih presisi dan berkualitas tinggi.
         </p>
         <AdSlot type="tools" />
@@ -23,7 +23,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
       <div class="grid lg:grid-cols-2 gap-8">
         <!-- Form Section -->
         <div class="space-y-6">
-          <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+          <div class="brutal-card bg-[#fae870] dark:bg-brutal-card rounded-2xl p-6 relative overflow-hidden">
             
             <!-- Progress Bar -->
             <div class="absolute top-0 left-0 w-full h-1 bg-slate-100 dark:bg-slate-700">
@@ -32,15 +32,15 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
             <!-- Header Langkah -->
             <div class="mb-6 mt-2">
-              <h3 id="stepTitle" class="text-lg font-bold text-slate-800 dark:text-white">Langkah 1: Informasi Dasar</h3>
-              <p id="stepDesc" class="text-sm text-slate-500 dark:text-slate-400">Tentukan jenis naskah dan target audiens.</p>
+              <h3 id="stepTitle" class="text-lg font-bold text-slate-800 dark:text-brutal-text dark:text-white">Langkah 1: Informasi Dasar</h3>
+              <p id="stepDesc" class="text-sm text-slate-500 dark:text-brutal-text-muted dark:text-slate-400">Tentukan jenis naskah dan target audiens.</p>
             </div>
 
             <!-- STEP 1 -->
             <div id="step1" class="space-y-5 animate-fade-in block">
               <div>
-                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Pilih Jenis Naskah</label>
-                <select id="jenis" class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                <label class="block text-sm font-bold text-slate-700 dark:text-brutal-text-muted dark:text-slate-300 mb-2">Pilih Jenis Naskah</label>
+                <select id="jenis" class="brutal-input bg-white dark:bg-slate-800">
                   <option value="Khutbah Nikah">Khutbah Nikah</option>
                   <option value="Khutbah Jumat">Khutbah Jumat</option>
                   <option value="Materi Pengajian/Majelis Taklim">Materi Pengajian/Majelis Taklim</option>
@@ -50,16 +50,16 @@ import AdSlot from "@components/ui/AdSlot.astro";
               </div>
 
               <div>
-                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Tema / Topik Utama</label>
-                <input type="text" id="tema" placeholder="Contoh: Tanggung jawab suami, Sabar dalam ujian..." class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                <label class="block text-sm font-bold text-slate-700 dark:text-brutal-text-muted dark:text-slate-300 mb-2">Tema / Topik Utama</label>
+                <input type="text" id="tema" placeholder="Contoh: Tanggung jawab suami, Sabar dalam ujian..." class="brutal-input bg-white dark:bg-slate-800" />
               </div>
 
               <div>
-                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Target Audiens</label>
-                <input type="text" id="audiens" placeholder="Contoh: Pasangan pengantin baru, Jamaah Jumat..." class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                <label class="block text-sm font-bold text-slate-700 dark:text-brutal-text-muted dark:text-slate-300 mb-2">Target Audiens</label>
+                <input type="text" id="audiens" placeholder="Contoh: Pasangan pengantin baru, Jamaah Jumat..." class="brutal-input bg-white dark:bg-slate-800" />
               </div>
 
-              <button id="nextBtn" class="w-full py-3 mt-4 bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl font-bold text-white transition-all transition">
+              <button id="nextBtn" class="w-full py-4 text-lg brutal-btn brutal-btn-accent">
                 Lanjut ke Langkah 2 ➡️
               </button>
             </div>
@@ -67,8 +67,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
             <!-- STEP 2 -->
             <div id="step2" class="space-y-5 animate-fade-in hidden">
               <div>
-                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Suasana Acara</label>
-                <select id="gaya" class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                <label class="block text-sm font-bold text-slate-700 dark:text-brutal-text-muted dark:text-slate-300 mb-2">Suasana Acara</label>
+                <select id="gaya" class="brutal-input bg-white dark:bg-slate-800">
                   <option value="Semi formal, hangat, dan menyentuh hati — retoris">Hangat & Menyentuh Hati</option>
                   <option value="Formal, lugas, dan berwibawa">Formal & Lugas</option>
                   <option value="Santai, komunikatif, dan relevan dengan generasi muda">Santai & Kekinian</option>
@@ -77,8 +77,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
               </div>
 
               <div>
-                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Durasi</label>
-                <select id="durasi" class="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                <label class="block text-sm font-bold text-slate-700 dark:text-brutal-text-muted dark:text-slate-300 mb-2">Durasi</label>
+                <select id="durasi" class="brutal-input bg-white dark:bg-slate-800">
                   <option value="7 menit">7 Menit (~1.000 kata)</option>
                   <option value="15 menit" selected>10-15 Menit (~2.000 kata)</option>
                   <option value="20 menit">20 Menit (min. 3.000 kata)</option>
@@ -88,10 +88,10 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
 
               <div class="flex gap-3 mt-6">
-                <button id="prevBtn" class="flex-1 py-3 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl font-bold text-slate-700 dark:text-white transition-all">
+                <button id="prevBtn" class="flex-1 py-4 brutal-btn brutal-btn-white">
                   ⬅️ Kembali
                 </button>
-                <button id="generateBtn" class="flex-[2] py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-xl font-bold text-white shadow-lg shadow-emerald-500/30 transition-all transform hover:scale-[1.02] active:scale-95">
+                <button id="generateBtn" class="w-full py-4 text-lg brutal-btn brutal-btn-primary">
                   ✨ Buat Prompt (JSON)
                 </button>
               </div>
@@ -101,29 +101,29 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
         <!-- Output Section -->
         <div class="space-y-6">
-          <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 shadow-xl sticky top-24">
+          <div class="brutal-card bg-[#c0e6ff] dark:bg-brutal-card rounded-2xl p-6 sticky top-24">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+              <h3 class="font-bold text-slate-800 dark:text-brutal-text dark:text-white flex items-center gap-2">
                 <span class="text-xl">📝</span> Output Data (JSON)
               </h3>
-              <button id="copyBtn" class="hidden px-4 py-2 text-sm font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-500/30 transition-colors">
+              <button id="copyBtn" class="hidden brutal-btn brutal-btn-primary">
                 📋 Salin JSON
               </button>
             </div>
 
-            <div id="welcomeOutput" class="h-[300px] flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl">
-              <span class="text-5xl mb-4">🤖</span>
-              <p class="text-slate-500 dark:text-slate-400 text-sm">
+            <div id="welcomeOutput" class="h-[300px] flex flex-col items-center justify-center text-center p-6 border-4 border-dashed border-brutal-border rounded-xl bg-white/50 dark:bg-transparent">
+              <span class="text-4xl mb-4">🤖</span>
+              <p class="text-slate-500 dark:text-brutal-text-muted dark:text-slate-400 text-sm">
                 Selesaikan langkah pengisian di form samping untuk menggenerate prompt berkualitas berformat JSON.
               </p>
             </div>
 
             <div id="resultOutput" class="hidden relative">
-              <textarea id="promptResult" readonly class="w-full h-[380px] p-5 bg-slate-900 border border-slate-700 rounded-xl text-emerald-400 font-mono text-xs md:text-sm leading-relaxed resize-none focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-inner"></textarea>
-              <div class="absolute bottom-4 right-4 text-xs font-bold text-slate-300 bg-slate-800 px-2 py-1 rounded">JSON Format</div>
+              <textarea id="promptResult" readonly class="w-full h-[380px] p-5 bg-slate-900 border border-brutal-border rounded-xl text-emerald-400 font-mono text-xs md:text-sm leading-relaxed resize-none focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-inner"></textarea>
+              <div class="absolute bottom-4 right-4 text-xs font-bold text-brutal-text-muted dark:text-slate-300 bg-slate-800 px-2 py-1 rounded">JSON Format</div>
             </div>
             
-            <div id="tipsNote" class="mt-4 p-4 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-xl hidden">
+            <div id="tipsNote" class="mt-4 p-4 brutal-card bg-[#bbf7d0] dark:bg-brutal-card hidden">
               <p class="text-xs text-emerald-800 dark:text-emerald-300">
                 <strong>💡 Info:</strong> Struktur JSON ini sangat cocok bagi LLM canggih. Cukup berikan JSON di atas kepada ChatGPT, Gemini, atau Claude agar mereka mengurai instruksi ini dengan akurasi 100%.
               </p>

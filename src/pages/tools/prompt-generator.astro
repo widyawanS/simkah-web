@@ -6,61 +6,60 @@ import AdSlot from "@components/ui/AdSlot.astro";
 
 <Layout title="AI Prompt Generator - Undangan Digital">
   <Container>
-    <div class="max-w-5xl mx-auto mt-16 mb-20">
-      <div class="text-center mb-12">
-        <span class="inline-block px-4 py-2 bg-violet-500/20 text-violet-400 rounded-full text-sm font-bold mb-4">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-16 mt-12 flex flex-col items-center">
+        <span class="inline-block px-4 py-2 brutal-badge bg-brutal-accent text-brutal-text text-sm font-bold mb-4 border-2 border-brutal-border">
           ✨ AI Prompt Generator
         </span>
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">
-          Generator Prompt <span class="text-gradient">Undangan Digital</span>
+        <h1 class="text-3xl md:text-5xl font-black text-brutal-text text-center mb-4 drop-shadow-md">
+          Generator Prompt <span class="text-pink-500">Undangan Digital</span>
         </h1>
-        <p class="text-slate-400 max-w-2xl mx-auto">
-          Buat prompt AI untuk menggenerate desain undangan pernikahan, syukuran, atau aqiqah. 
-          Output dalam format JSON dan teks siap copy untuk Midjourney, DALL-E, atau Stable Diffusion.
+        <p class="text-center text-brutal-text-muted max-w-2xl mx-auto mb-8 text-lg font-medium">
+          Buat prompt AI untuk menggenerate desain undangan pernikahan, syukuran, atau aqiqah. Output dalam format JSON dan teks siap copy untuk Midjourney, DALL-E, atau Stable Diffusion.
         </p>
         <AdSlot type="tools" />
       </div>
 
       <div class="grid lg:grid-cols-2 gap-8">
         <div class="space-y-6">
-          <div class="glass rounded-2xl p-6">
+          <div class=" brutal-card bg-[#fae870] dark:bg-brutal-card  rounded-2xl p-6">
             <h3 class="font-bold mb-4 flex items-center gap-2">
               <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">1</span>
               Jenis Acara
             </h3>
             <div class="grid grid-cols-3 gap-3">
               <button type="button" class="event-btn selected p-4 rounded-xl border-2 border-violet-500 bg-violet-500/10 text-center" data-event="wedding">
-                <span class="text-2xl block mb-1">💒</span>
+                <span class="text-xl block mb-1">💒</span>
                 <span class="text-sm font-medium">Pernikahan</span>
               </button>
-              <button type="button" class="event-btn p-4 rounded-xl border-2 border-slate-700 text-center" data-event="syukuran">
-                <span class="text-2xl block mb-1">🎊</span>
+              <button type="button" class="event-btn p-4 rounded-xl border-2 border-brutal-border text-center" data-event="syukuran">
+                <span class="text-xl block mb-1">🎊</span>
                 <span class="text-sm font-medium">Syukuran</span>
               </button>
-              <button type="button" class="event-btn p-4 rounded-xl border-2 border-slate-700 text-center" data-event="aqiqah">
-                <span class="text-2xl block mb-1">👶</span>
+              <button type="button" class="event-btn p-4 rounded-xl border-2 border-brutal-border text-center" data-event="aqiqah">
+                <span class="text-xl block mb-1">👶</span>
                 <span class="text-sm font-medium">Aqiqah</span>
               </button>
             </div>
           </div>
 
-          <div class="glass rounded-2xl p-6">
+          <div class=" brutal-card bg-[#c0e6ff] dark:bg-brutal-card  rounded-2xl p-6">
             <h3 class="font-bold mb-4 flex items-center gap-2">
               <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">2</span>
               <span id="namesLabel">Nama Mempelai</span>
             </h3>
             <div id="weddingNames" class="space-y-3">
-              <input type="text" id="groomName" placeholder="Nama Mempelai Pria" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
-              <input type="text" id="brideName" placeholder="Nama Mempelai Wanita" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
+              <input type="text" id="groomName" placeholder="Nama Mempelai Pria" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl  placeholder-slate-500" />
+              <input type="text" id="brideName" placeholder="Nama Mempelai Wanita" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl  placeholder-slate-500" />
             </div>
             <div id="aqiqahNames" class="space-y-3 hidden">
-              <input type="text" id="babyName" placeholder="Nama Anak" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
+              <input type="text" id="babyName" placeholder="Nama Anak" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl  placeholder-slate-500" />
               <div class="flex gap-3" id="genderSelect">
-                <label class="flex-1 flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <label class="flex-1 flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                   <input type="radio" name="babyGender" value="boy" checked />
                   <span>👦 Laki-laki</span>
                 </label>
-                <label class="flex-1 flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <label class="flex-1 flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                   <input type="radio" name="babyGender" value="girl" />
                   <span>👧 Perempuan</span>
                 </label>
@@ -68,57 +67,57 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </div>
           </div>
 
-          <div class="glass rounded-2xl p-6">
+          <div class=" brutal-card bg-[#f8ddb2] dark:bg-brutal-card  rounded-2xl p-6">
             <h3 class="font-bold mb-4 flex items-center gap-2">
               <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">3</span>
               Detail Acara
             </h3>
             <div class="grid grid-cols-2 gap-3">
-              <input type="text" id="eventDate" placeholder="Tanggal" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
-              <input type="text" id="eventTime" placeholder="Waktu" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
+              <input type="text" id="eventDate" placeholder="Tanggal" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl  placeholder-slate-500" />
+              <input type="text" id="eventTime" placeholder="Waktu" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl  placeholder-slate-500" />
             </div>
-            <input type="text" id="eventVenue" placeholder="Tempat Acara" class="w-full mt-3 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500" />
+            <input type="text" id="eventVenue" placeholder="Tempat Acara" class="w-full mt-3 px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl  placeholder-slate-500" />
           </div>
 
-          <div class="glass rounded-2xl p-6">
+          <div class=" brutal-card bg-[#e8dff5] dark:bg-brutal-card  rounded-2xl p-6">
             <h3 class="font-bold mb-4 flex items-center gap-2">
               <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">4</span>
               Gaya Desain
             </h3>
             <div class="grid grid-cols-2 gap-2">
-              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+              <label class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                 <input type="radio" name="style" value="elegant" checked />
                 <span class="text-sm">✨ Elegant</span>
               </label>
-              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+              <label class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                 <input type="radio" name="style" value="minimalist" />
                 <span class="text-sm">◻️ Minimalist</span>
               </label>
-              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+              <label class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                 <input type="radio" name="style" value="rustic" />
                 <span class="text-sm">🌿 Rustic</span>
               </label>
-              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+              <label class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                 <input type="radio" name="style" value="floral" />
                 <span class="text-sm">🌸 Floral</span>
               </label>
-              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+              <label class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                 <input type="radio" name="style" value="islamic" />
                 <span class="text-sm">🕌 Islamic</span>
               </label>
-              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+              <label class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                 <input type="radio" name="style" value="javanese" />
                 <span class="text-sm">🏛️ Javanese</span>
               </label>
             </div>
           </div>
 
-          <div class="glass rounded-2xl p-6">
+          <div class=" brutal-card bg-[#bbf7d0] dark:bg-brutal-card  rounded-2xl p-6">
             <h3 class="font-bold mb-4 flex items-center gap-2">
               <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">5</span>
               Palet Warna
             </h3>
-            <select id="colorPalette" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white">
+            <select id="colorPalette" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl ">
               <option value="gold-white">Gold & White</option>
               <option value="sage-cream">Sage & Cream</option>
               <option value="dusty-rose">Dusty Rose</option>
@@ -128,40 +127,40 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </select>
           </div>
 
-          <div class="glass rounded-2xl p-6">
+          <div class=" brutal-card bg-[#ffcdd2] dark:bg-brutal-card  rounded-2xl p-6">
             <h3 class="font-bold mb-4 flex items-center gap-2">
               <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">6</span>
               Elemen Dekorasi
             </h3>
             <div class="grid grid-cols-2 gap-2">
-              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+              <label class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                 <input type="checkbox" value="flowers" checked />
                 <span class="text-sm">🌸 Bunga</span>
               </label>
-              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+              <label class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                 <input type="checkbox" value="ornaments" />
                 <span class="text-sm">✨ Ornamen</span>
               </label>
-              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+              <label class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                 <input type="checkbox" value="islamic-pattern" />
                 <span class="text-sm">🕌 Pola Islami</span>
               </label>
-              <label class="flex items-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+              <label class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                 <input type="checkbox" value="frame" />
                 <span class="text-sm">🖼️ Frame</span>
               </label>
             </div>
           </div>
 
-          <div class="glass rounded-2xl p-6">
+          <div class=" brutal-card bg-[#fae870] dark:bg-brutal-card  rounded-2xl p-6">
             <h3 class="font-bold mb-4 flex items-center gap-2">
               <span class="w-6 h-6 rounded-full bg-violet-500/20 flex items-center justify-center text-xs">7</span>
               Tekstur & Layout
             </h3>
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Tekstur</label>
-                <select id="texture" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white">
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Tekstur</label>
+                <select id="texture" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl ">
                   <option value="smooth">Smooth</option>
                   <option value="paper">Paper</option>
                   <option value="marble">Marble</option>
@@ -169,8 +168,8 @@ import AdSlot from "@components/ui/AdSlot.astro";
                 </select>
               </div>
               <div>
-                <label class="block text-sm text-slate-400 mb-2">Layout</label>
-                <select id="layout" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white">
+                <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Layout</label>
+                <select id="layout" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] text-brutal-text dark:text-white rounded-xl ">
                   <option value="centered">Centered</option>
                   <option value="asymmetric">Asymmetric</option>
                   <option value="bordered">Bordered</option>
@@ -178,17 +177,17 @@ import AdSlot from "@components/ui/AdSlot.astro";
               </div>
             </div>
             <div class="mt-4">
-              <label class="block text-sm text-slate-400 mb-2">Aspect Ratio</label>
+              <label class="block text-sm text-brutal-text-muted dark:text-slate-400 mb-2">Aspect Ratio</label>
               <div class="flex gap-2">
-                <label class="flex-1 flex items-center justify-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <label class="flex-1 flex items-center justify-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                   <input type="radio" name="ratio" value="1:1" />
                   <span class="text-sm">1:1</span>
                 </label>
-                <label class="flex-1 flex items-center justify-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <label class="flex-1 flex items-center justify-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                   <input type="radio" name="ratio" value="4:5" checked />
                   <span class="text-sm">4:5</span>
                 </label>
-                <label class="flex-1 flex items-center justify-center gap-2 p-3 bg-slate-800 rounded-xl cursor-pointer">
+                <label class="flex-1 flex items-center justify-center gap-2 p-3 bg-white dark:bg-slate-800 border-2 border-brutal-border shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#f8fafc] rounded-xl text-brutal-text dark:text-white cursor-pointer">
                   <input type="radio" name="ratio" value="9:16" />
                   <span class="text-sm">9:16</span>
                 </label>
@@ -196,13 +195,13 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </div>
           </div>
 
-          <button id="generateBtn" class="w-full py-4 bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl font-bold text-white">
+          <button id="generateBtn" class="w-full py-4 brutal-btn brutal-btn-primary text-lg w-full">
             ⚡ Generate Prompt
           </button>
         </div>
 
         <div class="space-y-6">
-          <div class="glass rounded-2xl p-6 sticky top-24">
+          <div class=" brutal-card bg-[#c0e6ff] dark:bg-brutal-card  rounded-2xl p-6 sticky top-24">
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-bold">📝 Output Prompt</h3>
               <div class="flex gap-2">
@@ -222,7 +221,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
             </div>
 
             <div id="textOutput" class="bg-slate-900 rounded-xl p-4 max-h-96 overflow-auto hidden">
-              <p class="text-sm text-slate-300 whitespace-pre-wrap" id="textContent">Isi form untuk generate prompt...</p>
+              <p class="text-sm text-brutal-text-muted dark:text-slate-300 whitespace-pre-wrap" id="textContent">Isi form untuk generate prompt...</p>
             </div>
 
             <div id="midjourneyOutput" class="bg-slate-900 rounded-xl p-4 max-h-96 overflow-auto hidden">
@@ -254,7 +253,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
 <script>
   let selectedEvent = 'wedding';
   
-  const styleDescriptions = {
+  const styleDescriptions: Record<string, string> = {
     elegant: 'elegant luxurious style with refined details',
     minimalist: 'clean minimalist design with simple lines',
     rustic: 'rustic natural style with organic elements',
@@ -263,7 +262,7 @@ import AdSlot from "@components/ui/AdSlot.astro";
     javanese: 'traditional Javanese batik patterns'
   };
 
-  const colorDescriptions = {
+  const colorDescriptions: Record<string, string> = {
     'gold-white': 'luxurious gold and white palette',
     'sage-cream': 'soft sage green and cream tones',
     'dusty-rose': 'romantic dusty rose pink',
@@ -272,20 +271,20 @@ import AdSlot from "@components/ui/AdSlot.astro";
     'black-gold': 'dramatic black with gold accents'
   };
 
-  const textureDescriptions = {
+  const textureDescriptions: Record<string, string> = {
     smooth: 'smooth clean background',
     paper: 'subtle paper texture',
     marble: 'elegant marble texture',
     'gold-foil': 'shimmering gold foil'
   };
 
-  const layoutDescriptions = {
+  const layoutDescriptions: Record<string, string> = {
     centered: 'centered symmetrical layout',
     asymmetric: 'asymmetric artistic layout',
     bordered: 'full decorative border frame'
   };
 
-  const elementDescriptions = {
+  const elementDescriptions: Record<string, string> = {
     flowers: 'floral arrangements roses peonies',
     ornaments: 'gold ornaments decorative flourishes',
     'islamic-pattern': 'Islamic geometric patterns',
@@ -344,18 +343,18 @@ import AdSlot from "@components/ui/AdSlot.astro";
   var generateBtn = document.getElementById('generateBtn');
   if (generateBtn) {
     generateBtn.addEventListener('click', function() {
-      var groomNameEl = document.getElementById('groomName');
-      var brideNameEl = document.getElementById('brideName');
-      var babyNameEl = document.getElementById('babyName');
-      var babyGenderEl = document.querySelector('input[name="babyGender"]:checked');
-      var eventDateEl = document.getElementById('eventDate');
-      var eventTimeEl = document.getElementById('eventTime');
-      var eventVenueEl = document.getElementById('eventVenue');
-      var styleEl = document.querySelector('input[name="style"]:checked');
-      var colorEl = document.getElementById('colorPalette');
-      var textureEl = document.getElementById('texture');
-      var layoutEl = document.getElementById('layout');
-      var ratioEl = document.querySelector('input[name="ratio"]:checked');
+      var groomNameEl = document.getElementById('groomName') as HTMLInputElement | null;
+      var brideNameEl = document.getElementById('brideName') as HTMLInputElement | null;
+      var babyNameEl = document.getElementById('babyName') as HTMLInputElement | null;
+      var babyGenderEl = document.querySelector('input[name="babyGender"]:checked') as HTMLInputElement | null;
+      var eventDateEl = document.getElementById('eventDate') as HTMLInputElement | null;
+      var eventTimeEl = document.getElementById('eventTime') as HTMLInputElement | null;
+      var eventVenueEl = document.getElementById('eventVenue') as HTMLInputElement | null;
+      var styleEl = document.querySelector('input[name="style"]:checked') as HTMLInputElement | null;
+      var colorEl = document.getElementById('colorPalette') as HTMLSelectElement | null;
+      var textureEl = document.getElementById('texture') as HTMLSelectElement | null;
+      var layoutEl = document.getElementById('layout') as HTMLSelectElement | null;
+      var ratioEl = document.querySelector('input[name="ratio"]:checked') as HTMLInputElement | null;
 
       var groomName = groomNameEl ? groomNameEl.value.trim() : '';
       var brideName = brideNameEl ? brideNameEl.value.trim() : '';
@@ -370,9 +369,9 @@ import AdSlot from "@components/ui/AdSlot.astro";
       var layout = layoutEl ? layoutEl.value : 'centered';
       var ratio = ratioEl ? ratioEl.value : '4:5';
 
-      var elements = [];
+      var elements: string[] = [];
       document.querySelectorAll('input[type="checkbox"]:checked').forEach(function(cb) {
-        elements.push(cb.value);
+        elements.push((cb as HTMLInputElement).value);
       });
 
       var eventTitle = '';

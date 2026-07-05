@@ -231,7 +231,7 @@ export default function Converter() {
     };
 
     return (
-        <div className="glass p-8 rounded-3xl max-w-xl mx-auto">
+        <div className="brutal-card bg-[#e8dff5] dark:bg-brutal-card p-8 rounded-3xl max-w-xl mx-auto">
             <h2 className="text-2xl font-bold mb-2 text-center text-indigo-400">Image Converter</h2>
             <p className="text-sm text-slate-500 text-center mb-6">Konversi gambar termasuk HEIC dari iPhone</p>
 
@@ -279,7 +279,7 @@ export default function Converter() {
             <button
                 onClick={handleConvert}
                 disabled={!file || loading}
-                className="w-full mt-6 py-4 bg-indigo-600 rounded-xl font-bold text-white hover:bg-indigo-700 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full mt-6 py-4 text-lg brutal-btn brutal-btn-primary disabled:opacity-50 flex items-center justify-center gap-2"
             >
                 {loading ? (
                     <>
@@ -337,7 +337,7 @@ export default function Converter() {
                     {convertedBlob && (
                         <button
                             onClick={handleDownload}
-                            className="mt-4 w-full py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                            className="mt-4 w-full py-4 brutal-btn bg-brutal-success text-brutal-text disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

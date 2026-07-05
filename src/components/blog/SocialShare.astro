@@ -9,15 +9,15 @@ const encodedUrl = encodeURIComponent(url);
 const encodedTitle = encodeURIComponent(title);
 ---
 
-<div class="flex items-center gap-4 py-8 border-t border-b border-slate-200 dark:border-slate-800 my-8">
-  <span class="text-sm font-bold text-slate-500 uppercase tracking-wider">Bagikan:</span>
+<div class="flex items-center gap-4 py-8 border-t-2 border-b-2 border-brutal-border my-8">
+  <span class="text-sm font-extrabold text-brutal-text-muted uppercase tracking-wider">Bagikan:</span>
   
   <!-- WhatsApp -->
   <a
     href={`https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`}
     target="_blank"
     rel="noopener noreferrer"
-    class="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors"
+    class="brutal-btn p-2 bg-brutal-success text-brutal-text"
     aria-label="Share on WhatsApp"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@ const encodedTitle = encodeURIComponent(title);
     href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
     target="_blank"
     rel="noopener noreferrer"
-    class="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+    class="brutal-btn p-2 bg-brutal-info text-brutal-text"
     aria-label="Share on Facebook"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -43,7 +43,7 @@ const encodedTitle = encodeURIComponent(title);
     href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
     target="_blank"
     rel="noopener noreferrer"
-    class="p-2 rounded-full bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+    class="brutal-btn p-2 bg-brutal-bg-alt text-brutal-text"
     aria-label="Share on X (Twitter)"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

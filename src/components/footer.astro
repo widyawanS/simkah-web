@@ -3,46 +3,46 @@ import { getSiteSettings } from "@lib/keystatic";
 import Container from "./container.astro";
 
 const settings = await getSiteSettings();
-const footer = settings?.footer || {};
+const footer: any = settings?.footer || {};
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-32 pb-12 border-t border-slate-200 dark:border-slate-800 pt-20">
+<footer class="mt-32 pb-12 border-t-3 border-brutal-border pt-20">
   <Container>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-16 mb-20">
       <!-- Left: Profile & Social -->
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold mb-4 dark:text-white">SIMKAH.WEB.ID</h3>
-          <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+          <h3 class="text-lg font-extrabold mb-4">SIMKAH.WEB.ID</h3>
+          <p class="text-brutal-text-muted text-sm leading-relaxed">
             {footer.profile || "Selamat datang di portal informasi SIMKAH dan alat bantu manajemen pernikahan."}
           </p>
         </div>
         <div>
-          <h4 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">Location</h4>
-          <p class="text-slate-500 dark:text-slate-400 text-sm whitespace-pre-line">
+          <h4 class="text-sm font-extrabold uppercase tracking-widest text-brutal-text-muted mb-4">Location</h4>
+          <p class="text-brutal-text-muted text-sm whitespace-pre-line">
             {footer.address || "Jl. Kebon Sirih No. 123,\nJakarta Pusat, Indonesia"}
           </p>
         </div>
         <div class="flex items-center gap-4">
           {footer.whatsapp && (
-            <a href={footer.whatsapp.startsWith('http') ? footer.whatsapp : `https://wa.me/${footer.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-500 hover:bg-green-500 hover:text-white transition-all">
-              <i class="inline-block">WA</i>
+            <a href={footer.whatsapp.startsWith('http') ? footer.whatsapp : `https://wa.me/${footer.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" class="brutal-btn w-10 h-10 bg-brutal-success text-brutal-text p-0 flex items-center justify-center text-xs font-extrabold">
+              WA
             </a>
           )}
           {footer.telegram && (
-            <a href={footer.telegram.startsWith('http') ? footer.telegram : `https://t.me/${footer.telegram.replace('@', '')}`} target="_blank" class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 hover:bg-blue-500 hover:text-white transition-all">
-              <i class="inline-block">TG</i>
+            <a href={footer.telegram.startsWith('http') ? footer.telegram : `https://t.me/${footer.telegram.replace('@', '')}`} target="_blank" class="brutal-btn w-10 h-10 bg-brutal-info text-brutal-text p-0 flex items-center justify-center text-xs font-extrabold">
+              TG
             </a>
           )}
           {footer.facebook && (
-            <a href={footer.facebook} target="_blank" class="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-500 hover:bg-indigo-500 hover:text-white transition-all">
-              <i class="inline-block">FB</i>
+            <a href={footer.facebook} target="_blank" class="brutal-btn w-10 h-10 bg-brutal-primary text-brutal-text p-0 flex items-center justify-center text-xs font-extrabold">
+              FB
             </a>
           )}
           {footer.instagram && (
-            <a href={footer.instagram} target="_blank" class="w-10 h-10 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-500 hover:bg-pink-500 hover:text-white transition-all">
-              <i class="inline-block">IG</i>
+            <a href={footer.instagram} target="_blank" class="brutal-btn w-10 h-10 bg-brutal-accent text-brutal-text p-0 flex items-center justify-center text-xs font-extrabold">
+              IG
             </a>
           )}
         </div>
@@ -51,40 +51,40 @@ const year = new Date().getFullYear();
       <!-- Middle: Pages -->
       <div class="flex flex-col items-start md:items-center">
         <div class="w-full max-w-[200px]">
-          <h3 class="text-xl font-bold mb-6 dark:text-white">Quick Links</h3>
+          <h3 class="text-lg font-extrabold mb-6">Quick Links</h3>
           <ul class="space-y-4">
-            <li><a href="/about" class="text-slate-500 hover:text-brand-primary transition-colors text-sm font-medium">About Me</a></li>
-            <li><a href="/disclaimer" class="text-slate-500 hover:text-brand-primary transition-colors text-sm font-medium">Disclaimer</a></li>
-            <li><a href="/privacy-policy" class="text-slate-500 hover:text-brand-primary transition-colors text-sm font-medium">Privacy Policy</a></li>
-            <li><a href="/contact" class="text-slate-500 hover:text-brand-primary transition-colors text-sm font-medium">Contact Support</a></li>
+            <li><a href="/about" class="text-brutal-text-muted hover:text-brand-primary transition-colors text-sm font-bold">About Me</a></li>
+            <li><a href="/disclaimer" class="text-brutal-text-muted hover:text-brand-primary transition-colors text-sm font-bold">Disclaimer</a></li>
+            <li><a href="/privacy-policy" class="text-brutal-text-muted hover:text-brand-primary transition-colors text-sm font-bold">Privacy Policy</a></li>
+            <li><a href="/contact" class="text-brutal-text-muted hover:text-brand-primary transition-colors text-sm font-bold">Contact Support</a></li>
           </ul>
         </div>
       </div>
 
       <!-- Right: Bookmark -->
       <div>
-        <div class="glass p-8 rounded-[2rem] border border-white/5 relative overflow-hidden group">
-          <div class="absolute -top-12 -right-12 w-32 h-32 bg-brand-primary/10 rounded-full blur-3xl group-hover:bg-brand-primary/20 transition-all"></div>
+        <div class="brutal-card p-8 relative overflow-hidden group">
+          <div class="absolute -top-12 -right-12 w-32 h-32 bg-brutal-primary/30 rounded-full blur-3xl group-hover:bg-brutal-primary/50 transition-all"></div>
           <div class="relative z-10">
-            <div class="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-4 group-hover:scale-110 transition-transform">
+            <div class="w-12 h-12 bg-brutal-primary border-[3px] border-brutal-border rounded-full flex items-center justify-center text-brutal-text mb-4 group-hover:rotate-6 transition-transform shadow-brutal-sm">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
               </svg>
             </div>
             
-            <p class="text-slate-500 text-sm mb-6 leading-relaxed">Jangan kehilangan akses ke kumpulan tools ini. Simpan ke bookmark browser Anda untuk akses cepat.</p>
+            <p class="text-brutal-text-muted text-sm mb-6 leading-relaxed">Jangan kehilangan akses ke kumpulan tools ini. Simpan ke bookmark browser Anda untuk akses cepat.</p>
             
             <button 
               id="bookmark-btn"
-              class="w-full py-4 bg-slate-900 dark:bg-brand-primary text-white rounded-2xl font-bold text-sm hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl shadow-brand-primary/20"
+              class="w-full brutal-btn brutal-btn-primary py-4 text-sm"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
               </svg>
               <span>Bookmark Sekarang</span>
             </button>
-            <p id="bookmark-tip" class="text-[10px] text-center mt-3 text-slate-400 font-medium opacity-0 transition-opacity">
-              Tekan <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 mx-0.5">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 mx-0.5">D</kbd> di keyboard Anda
+            <p id="bookmark-tip" class="text-[10px] text-center mt-3 text-brutal-text-muted font-bold opacity-0 transition-opacity">
+              Tekan <kbd class="px-1.5 py-0.5 bg-brutal-bg-alt rounded-md border-2 border-brutal-border mx-0.5 shadow-brutal-sm">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-brutal-bg-alt rounded-md border-2 border-brutal-border mx-0.5 shadow-brutal-sm">D</kbd> di keyboard Anda
             </p>
           </div>
         </div>
@@ -108,10 +108,6 @@ const year = new Date().getFullYear();
           tip.classList.add('opacity-100');
           
           btn.innerHTML = '<span>Gunakan Shortcut</span>';
-          btn.classList.add('bg-slate-800', 'dark:bg-slate-800');
-          
-          // One-time flash effect
-          btn.style.animation = 'pulse-btn 0.5s ease-in-out';
           
           if (window.sidebar && window.sidebar.addPanel) { // Firefox < 23
             window.sidebar.addPanel(title, url, "");
@@ -128,21 +124,13 @@ const year = new Date().getFullYear();
       document.addEventListener('astro:after-swap', setupBookmark);
     </script>
 
-    <style>
-      @keyframes pulse-btn {
-        0% { transform: scale(1); }
-        50% { transform: scale(0.95); opacity: 0.8; }
-        100% { transform: scale(1); }
-      }
-    </style>
-
-    <div class="pt-12 border-t border-slate-100 dark:border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6">
-      <p class="text-xs text-slate-500 text-center md:text-left">
+    <div class="pt-12 border-t-3 border-brutal-border flex flex-col md:flex-row justify-between items-center gap-6">
+      <p class="text-xs text-brutal-text-muted text-center md:text-left font-bold">
         © {year} SIMKAH.WEB.ID | All rights reserved. <br class="md:hidden" /> Bagian dari inisiatif digital keluarga Sakinah.
       </p>
-      <div class="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+      <div class="flex items-center gap-6 text-[10px] font-extrabold uppercase tracking-widest text-brutal-text-muted">
         <span>Build with Astro 5.0</span>
-        <span>by <a href="https://saicreative.biz.id" target="_blank">saicreative</a></span>
+        <span>by <a href="https://saicreative.biz.id" target="_blank" class="hover:text-brand-primary transition-colors">saicreative</a></span>
       </div>
     </div>
   </Container>

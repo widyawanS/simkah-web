@@ -9,10 +9,10 @@ const posts = await getPosts();
 <Layout title="Image Test Page">
   <Container>
     <main class="py-20">
-      <h1 class="text-4xl font-bold mb-8">🖼️ Image Test Page</h1>
+      <h1 class="text-3xl font-bold mb-8">🖼️ Image Test Page</h1>
       
       <div class="mb-12 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-        <h2 class="text-2xl font-bold mb-4">Test 1: Direct Image Access</h2>
+        <h2 class="text-xl font-bold mb-4">Test 1: Direct Image Access</h2>
         <div class="grid md:grid-cols-2 gap-6">
           <div>
             <h3 class="font-bold mb-2">Image 1: welcome.jpg</h3>
@@ -28,7 +28,7 @@ const posts = await getPosts();
       </div>
 
       <div class="mb-12 p-6 bg-green-50 dark:bg-green-900/20 rounded-lg">
-        <h2 class="text-2xl font-bold mb-4">Test 2: Images from getPosts()</h2>
+        <h2 class="text-xl font-bold mb-4">Test 2: Images from getPosts()</h2>
         <div class="grid md:grid-cols-2 gap-6">
           {posts.map(post => (
             <div class="border-2 border-purple-500 rounded-lg p-4">
@@ -48,7 +48,7 @@ const posts = await getPosts();
       </div>
 
       <div class="mb-12 p-6 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-        <h2 class="text-2xl font-bold mb-4">Test 3: With Error Handler (Fallback)</h2>
+        <h2 class="text-xl font-bold mb-4">Test 3: With Error Handler (Fallback)</h2>
         <div class="grid md:grid-cols-3 gap-6">
           <div>
             <h3 class="font-bold mb-2">✅ Valid Image</h3>
@@ -83,7 +83,7 @@ const posts = await getPosts();
       </div>
 
       <div class="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg">
-        <h2 class="text-2xl font-bold mb-4">📊 Diagnostic Info</h2>
+        <h2 class="text-xl font-bold mb-4">📊 Diagnostic Info</h2>
         <pre class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-xs">
 {JSON.stringify({
   totalPosts: posts.length,

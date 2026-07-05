@@ -14,6 +14,14 @@ const { category } = Astro.params;
 const posts = await getPostsByCategory(category as string);
 
 const capitalizedCategory = (category as string).charAt(0).toUpperCase() + (category as string).slice(1);
+
+const getCategoryColor = (cat: string) => {
+  const c = cat?.toLowerCase() || '';
+  if (c === 'berita') return '!bg-[#c0e6ff] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
+  if (c === 'catatan') return '!bg-[#fae870] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
+  if (c === 'inspirasi') return '!bg-pink-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
+  return '!bg-emerald-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
+};
 ---
 
 <Layout title={`${capitalizedCategory} | Archive`}>
@@ -21,7 +29,7 @@ const capitalizedCategory = (category as string).charAt(0).toUpperCase() + (cate
     <main class="py-20 animate-fade-in">
       <header class="text-center mb-20">
           <span class="text-brand-primary text-xs font-bold uppercase tracking-widest mb-4 block">Archive Category</span>
-          <h1 class="text-6xl font-bold mb-6 tracking-tighter">Kategori: <span class="text-gradient">{capitalizedCategory}</span></h1>
+          <h1 class="text-5xl font-bold mb-6 tracking-tighter">Kategori: <span class="text-gradient">{capitalizedCategory}</span></h1>
           <p class="text-slate-400 max-w-xl mx-auto text-lg">Menampilkan semua tulisan dalam kategori {capitalizedCategory}.</p>
       </header>
 
@@ -40,13 +48,13 @@ const capitalizedCategory = (category as string).charAt(0).toUpperCase() + (cate
                   )}
                   <div class="absolute inset-0 bg-transparent group-hover:bg-brand-primary/5 transition-colors"></div>
                   <div class="absolute top-4 left-4">
-                     <span class="px-4 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest text-brand-primary border border-white/5">
+                     <span class={`px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest border-2 border-brutal-border ${getCategoryColor(post.category)}`}>
                         {post.category}
                      </span>
                   </div>
                 </div>
                 
-                <h2 class="text-2xl font-bold mb-4 group-hover:text-brand-primary transition-colors leading-tight line-clamp-2">
+                <h2 class="text-xl font-bold mb-4 group-hover:text-brand-primary transition-colors leading-tight line-clamp-2">
                   {post.title}
                 </h2>
                 <p class="text-slate-500 line-clamp-2 text-sm leading-relaxed mb-6">

@@ -3,7 +3,8 @@ import CustomSEO from "@components/ui/SEO.astro";
 import Footer from "@components/footer.astro";
 import Navbar from "@components/navbar/navbar.astro";
 import BackToTop from "@components/ui/BackToTop.astro";
-import "@fontsource/outfit";
+import "@fontsource-variable/bricolage-grotesque";
+import "@fontsource-variable/inter";
 import "@fontsource/playfair-display";
 import "../styles/premium.css";
 
@@ -28,7 +29,7 @@ const { title, description, image, ogType } = Astro.props;
     />
     <slot name="head" />
   </head>
-  <body class="transition-colors duration-300">
+  <body class="bg-brutal-bg text-brutal-text">
     <Navbar />
     <main>
       <slot />

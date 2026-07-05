@@ -37,7 +37,7 @@ const postUrl = new URL(Astro.url.pathname, Astro.site).toString();
             <span class="text-brand-primary uppercase tracking-[0.2em] text-xs font-bold mb-4 block">
                 {post.category}
             </span>
-            <h1 class="text-4xl md:text-5xl font-bold mb-8 leading-tight dark:text-white">
+            <h1 class="text-3xl md:text-4xl font-bold mb-8 leading-tight dark:text-white">
                 {post.title}
             </h1>
             <div class="flex items-center justify-center gap-4 text-slate-500 dark:text-slate-400">
@@ -82,7 +82,7 @@ const postUrl = new URL(Astro.url.pathname, Astro.site).toString();
           <div>
             <SocialShare title={post.title} url={postUrl} />
             
-            <div class="prose dark:prose-invert prose-indigo prose-lg max-w-none prose-h2:text-3xl prose-h2:font-bold prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-loose prose-a:text-brand-primary">
+            <div class="prose dark:prose-invert prose-indigo prose-lg max-w-none prose-h2:text-2xl prose-h2:font-bold prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-loose prose-a:text-brand-primary">
                 <Fragment set:html={contentHtml} />
             </div>
 
@@ -90,33 +90,49 @@ const postUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
             <!-- Related Posts Section -->
             {relatedPosts.length > 0 && (
-              <div class="mt-20 pt-12 border-t border-slate-200 dark:border-slate-800">
-                <h3 class="text-2xl font-bold mb-8">Artikel Terkait</h3>
+              <div class="mt-24 pt-12 border-t-4 border-brutal-border">
+                <h3 class="text-2xl font-extrabold mb-8 text-brutal-text">Artikel Terkait</h3>
                 <div class="grid md:grid-cols-2 gap-8">
-                  {relatedPosts.map(p => (
-                    <a href={`/blog/${p.slug}`} class="group">
-                      <div class="aspect-video rounded-2xl overflow-hidden mb-4 bg-slate-100 dark:bg-slate-900">
-                        {typeof p.image === 'string' ? (
-                          <img 
-                            src={p.image} 
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                            alt={p.title}
-                            loading="lazy"
-                          />
-                        ) : (
-                          <Image 
-                            src={p.image} 
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                            alt={p.title}
-                            loading="lazy"
-                            width={400}
-                            height={225}
-                          />
-                        )}
-                      </div>
-                      <h4 class="font-bold text-lg group-hover:text-violet-500 transition-colors">{p.title}</h4>
-                    </a>
-                  ))}
+                  {relatedPosts.map((p, index) => {
+                    const cardStyles = [
+                      { card: '!bg-[#fae870]', icon: '!bg-[#fef08a]', tag: '!bg-white' },
+                      { card: '!bg-[#c0e6ff]', icon: '!bg-[#7dd3fc]', tag: '!bg-[#bae6fd]' },
+                      { card: '!bg-[#f8ddb2]', icon: '!bg-[#fdba74]', tag: '!bg-[#fcd34d]' }
+                    ];
+                    const style = cardStyles[index % cardStyles.length];
+
+                    return (
+                    <article class="h-full">
+                        <a href={`/blog/${p.slug}`} class={`block h-full brutal-card overflow-hidden flex flex-col group ${style.card} transition-colors`}>
+                            <div class="aspect-video relative p-0 border-b-3 border-brutal-border !bg-white overflow-hidden">
+                                {typeof p.image === 'string' ? (
+                                  <img src={p.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" />
+                                ) : (
+                                  <Image src={p.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" width={400} height={225} />
+                                )}
+                            </div>
+                            <div class="p-5 flex flex-col flex-grow">
+                                <div class="flex items-start gap-3 mb-2">
+                                    <div class={`w-8 h-8 rounded-lg border-2 border-brutal-border flex items-center justify-center shrink-0 shadow-[2px_2px_0_#0f172a] group-hover:rotate-6 transition-transform ${style.icon}`}>
+                                        <svg class="w-4 h-4 !text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-lg font-extrabold group-hover:text-blue-700 transition-colors line-clamp-2 leading-tight !text-slate-900">{p.title}</h4>
+                                </div>
+                                <p class="!text-slate-800 line-clamp-2 text-xs leading-relaxed mb-6 flex-grow font-bold">{p.description}</p>
+                                <div class="flex justify-between items-end mt-auto">
+                                    <span class={`px-2.5 py-1 border-2 border-brutal-border rounded-full text-[9px] font-extrabold uppercase tracking-widest !text-slate-900 shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#0f172a] ${style.tag}`}>
+                                        {p.category}
+                                    </span>
+                                    <span class="bg-[#131b2d] text-white px-4 py-2 rounded-full text-[11px] font-extrabold border-2 border-transparent group-hover:scale-105 transition-transform flex items-center gap-1.5">
+                                        BACA <span>&rarr;</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                  )})}
                 </div>
               </div>
             )}

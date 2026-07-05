@@ -123,7 +123,11 @@
     }
   }
 
-  setupSearch();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupSearch);
+  } else {
+    setupSearch();
+  }
   document.addEventListener('astro:after-swap', setupSearch);
 </script>
 
