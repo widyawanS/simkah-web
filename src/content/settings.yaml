@@ -4,9 +4,9 @@ metadata:
 ads:
   isActive: true
   adClient: ca-pub-4364585406937180
-  homeAd: ''
-  postAd: ''
-  toolsAd: ''
+  homeAd: '4299515269'
+  postAd: '8047188582'
+  toolsAd: '4156080424'
   customInjectedHeader: >-
     <meta name="profiton-domain-verification"
     content="50382d253cb280faf75095f4c840222162836e8c38822978e97020858016140c"
