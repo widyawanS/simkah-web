@@ -115,6 +115,23 @@ body.brutal-bg::before {
     color: var(--brutal-text);
 }
 
+/* Responsive Pill-to-Card overrides for stacked mobile elements */
+.brutal-pill-mobile-card {
+    border-radius: var(--brutal-radius) !important;
+}
+
+@media (min-width: 768px) {
+    .md\:brutal-pill-desktop {
+        border-radius: var(--brutal-radius-pill) !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lg\:brutal-pill-desktop {
+        border-radius: var(--brutal-radius-pill) !important;
+    }
+}
+
 /* Brutal Button */
 .brutal-btn {
     display: inline-flex;
