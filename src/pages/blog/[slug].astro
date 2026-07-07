@@ -41,11 +41,11 @@ const postUrl = new URL(Astro.url.pathname, Astro.site).toString();
                 {post.title}
             </h1>
             <div class="flex items-center justify-center gap-4 text-slate-500 dark:text-slate-400">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center text-xs font-bold text-white uppercase transition-colors">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg border-2 border-brutal-border bg-brutal-warning flex items-center justify-center text-lg font-black !text-slate-900 uppercase shadow-[2px_2px_0_#0f172a] -rotate-3 hover:rotate-3 transition-transform cursor-default">
                         {post.author[0]}
                     </div>
-                    <span class="text-slate-900 dark:text-slate-300 font-medium">{post.author}</span>
+                    <span class="text-slate-900 dark:text-white font-extrabold text-lg">{post.author}</span>
                 </div>
                 <span>•</span>
                 <time datetime={post.pubDate.toISOString()}>
