@@ -117,6 +117,23 @@ const year = new Date().getFullYear();
             document.head.appendChild(script);
           }
         }
+
+        // Fallback UI check: If widget doesn't load within 3 seconds, show a styled fallback button
+        setTimeout(() => {
+          const iframe = container.querySelector('iframe');
+          if (!iframe) {
+            container.innerHTML = `
+              <div class="flex flex-col items-center justify-center h-full text-center p-2">
+                <p class="text-xs text-brutal-text-muted mb-4 font-bold leading-relaxed">
+                  Timeline X tidak dapat dimuat otomatis (memerlukan login X di browser atau terhalang ad-blocker).
+                </p>
+                <a href="https://x.com/cakwied" target="_blank" class="w-full brutal-btn bg-brutal-secondary text-white py-3 text-xs font-extrabold uppercase tracking-wider">
+                  Kunjungi @cakwied di X
+                </a>
+              </div>
+            `;
+          }
+        }, 3000);
       }
 
       // Initial execution
