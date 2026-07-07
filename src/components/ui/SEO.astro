@@ -47,30 +47,9 @@ const seoImage = new URL(image || metadata.ogImage || "/images/og-default.jpg", 
 <meta name="title" content={seoTitle} />
 <meta name="description" content={seoDescription} />
 
-<!-- Adsense Global (Optimized Loading) -->
+<!-- Adsense Global -->
 {ads.isActive && ads.adClient && (
-  <script is:inline define:vars={{ adClient: ads.adClient }}>
-    function loadAdsense() {
-      if (window.adsenseLoaded) return;
-      const script = document.createElement('script');
-      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`;
-      script.async = true;
-      script.crossOrigin = "anonymous";
-      document.head.appendChild(script);
-      window.adsenseLoaded = true;
-    }
-
-    // Load after 3 seconds or on user interaction
-    const timer = setTimeout(loadAdsense, 3500);
-    const triggerEvents = ['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'];
-    
-    triggerEvents.forEach(event => {
-      window.addEventListener(event, () => {
-        clearTimeout(timer);
-        loadAdsense();
-      }, { once: true, passive: true });
-    });
-  </script>
+  <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ads.adClient}`} crossorigin="anonymous"></script>
 )}
 
 <!-- Custom Injected Header -->
