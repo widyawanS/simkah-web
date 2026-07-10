@@ -37,6 +37,7 @@
     "fs-extra": "^11.3.3",
     "gray-matter": "^4.0.3",
     "heic2any": "^0.0.4",
+    "https-proxy-agent": "^9.1.0",
     "js-yaml": "^4.1.1",
     "marked": "^17.0.1",
     "preact": "^10.28.2",
