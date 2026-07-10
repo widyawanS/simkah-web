@@ -118,20 +118,64 @@ try {
         </a>
       </div>
 
-      <!-- Blocked State -->
-      <div id="blockedState" class="hidden brutal-card bg-amber-100 dark:bg-amber-900/30 rounded-3xl p-8 text-center mb-8">
-        <div class="text-4xl mb-4">🔒</div>
-        <h3 class="text-lg font-bold text-amber-700 dark:text-amber-300 mb-2">Akses Dibatasi</h3>
-        <p class="text-sm text-amber-600 dark:text-amber-400 mb-4" id="blockedDetail">
-          Server pengadilan memblokir akses otomatis. Silakan kunjungi langsung untuk menelusuri perkara.
-        </p>
+      <!-- Blocked State / Bridge Page -->
+      <div id="blockedState" class="hidden brutal-card bg-amber-50 dark:bg-amber-900/20 rounded-3xl p-8 md:p-10 mb-8 border-2 border-amber-300 dark:border-amber-700">
+        <div class="text-center mb-6">
+          <div class="text-5xl mb-4">🔒</div>
+          <h3 class="text-xl font-bold text-amber-700 dark:text-amber-300 mb-2">Akses Dibatasi Sementara</h3>
+          <p class="text-sm text-amber-600 dark:text-amber-400" id="blockedDetail">
+            Server pengadilan memblokir akses otomatis dari server kami.
+          </p>
+        </div>
+
+        <!-- Case Number Copy Section -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 mb-6 border border-amber-200 dark:border-amber-700">
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nomor Perkara Anda</p>
+          <div class="flex items-center gap-2">
+            <div id="blockedCaseNumber" class="flex-1 px-4 py-3 bg-slate-100 dark:bg-slate-700 rounded-xl font-mono text-lg font-bold text-brutal-text dark:text-white break-all">
+            </div>
+            <button id="copyCaseBtn" type="button"
+              class="shrink-0 px-4 py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors flex items-center gap-2"
+              onclick="navigator.clipboard.writeText(document.getElementById('blockedCaseNumber').textContent).then(() => { this.innerHTML = '<svg xmlns=\\'http://www.w3.org/2000/svg\\' class=\\'h-4 w-4\\' fill=\\'none\\' viewBox=\\'0 0 24 24\\' stroke=\\'currentColor\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' stroke-width=\\'2\\' d=\\'M5 13l4 4L19 7\\'/></svg> Tersalin'; setTimeout(() => { this.innerHTML = '<svg xmlns=\\'http://www.w3.org/2000/svg\\' class=\\'h-4 w-4\\' fill=\\'none\\' viewBox=\\'0 0 24 24\\' stroke=\\'currentColor\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' stroke-width=\\'2\\' d=\\'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3\\'/></svg> Salin'; }, 2000); })">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+              </svg>
+              Salin
+            </button>
+          </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 mb-6 border border-amber-200 dark:border-amber-700">
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Langkah Selanjutnya</p>
+          <ol class="space-y-3 text-sm text-slate-700 dark:text-slate-300">
+            <li class="flex items-start gap-3">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">1</span>
+              <span>Klik tombol <strong>"Buka SIPP"</strong> di bawah</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">2</span>
+              <span>Paste nomor perkara di kolom pencarian SIPP</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="shrink-0 w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">3</span>
+              <span>Tekan Enter atau klik Cari</span>
+            </li>
+          </ol>
+        </div>
+
+        <!-- Direct Link -->
         <a id="blockedDirectLink" href="#" target="_blank" rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 text-white rounded-xl font-bold hover:bg-amber-700 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-          <span id="blockedLinkText">Buka SIPP Langsung</span>
+          class="block w-full text-center px-6 py-4 bg-amber-500 text-white rounded-xl font-bold hover:bg-amber-600 transition-colors text-lg">
+          <span id="blockedLinkText">Buka SIPP</span> →
         </a>
+
+        <!-- Retry Countdown -->
+        <div id="retryCountdown" class="hidden mt-4 text-center">
+          <p class="text-sm text-slate-500">
+            Coba lagi otomatis dalam <span id="retryTimer" class="font-bold text-amber-600 dark:text-amber-400">5:00</span>
+          </p>
+        </div>
       </div>
 
       <!-- Results -->
@@ -205,6 +249,9 @@ try {
   const blockedDetail = document.getElementById('blockedDetail');
   const blockedDirectLink = document.getElementById('blockedDirectLink');
   const blockedLinkText = document.getElementById('blockedLinkText');
+  const blockedCaseNumber = document.getElementById('blockedCaseNumber');
+  const retryCountdown = document.getElementById('retryCountdown');
+  const retryTimer = document.getElementById('retryTimer');
   const resultsSection = document.getElementById('resultsSection');
   const resultsBody = document.getElementById('resultsBody');
   const resultCount = document.getElementById('resultCount');
@@ -266,6 +313,29 @@ try {
     }
   });
 
+  // Countdown timer
+  function startCountdown(seconds) {
+    let remaining = seconds;
+    function update() {
+      const m = Math.floor(remaining / 60);
+      const s = remaining % 60;
+      retryTimer.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+      if (remaining <= 0) {
+        clearInterval(window._retryInterval);
+        retryCountdown.classList.add('hidden');
+        // Auto-retry if form is still filled
+        const url = courtUrl.value;
+        const kw = document.getElementById('caseNumber').value.trim();
+        if (url && kw) {
+          lookupForm.dispatchEvent(new Event('submit'));
+        }
+      }
+      remaining--;
+    }
+    update();
+    window._retryInterval = setInterval(update, 1000);
+  }
+
   // Form submit
   lookupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -286,16 +356,20 @@ try {
     loadingState.classList.remove('hidden');
     errorState.classList.add('hidden');
     blockedState.classList.add('hidden');
+    retryCountdown.classList.add('hidden');
     resultsSection.classList.add('hidden');
     emptyState.classList.add('hidden');
     submitBtn.disabled = true;
     submitBtn.textContent = 'Mencari...';
 
+    // Clear any existing countdown
+    if (window._retryInterval) clearInterval(window._retryInterval);
+
     try {
       const res = await fetch('/api/sipp-lookup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courtUrl: url, keyword }),
+        body: JSON.stringify({ courtUrl: url, keyword, courtName: courtName.value }),
       });
 
       const data = await res.json();
@@ -304,9 +378,15 @@ try {
         if (data.blocked) {
           blockedState.classList.remove('hidden');
           blockedDetail.textContent = data.error || 'Server pengadilan memblokir akses otomatis.';
+          blockedCaseNumber.textContent = keyword;
           if (data.courtUrl) {
             blockedDirectLink.href = data.courtUrl;
             blockedLinkText.textContent = 'Buka ' + (courtName.value || 'SIPP');
+          }
+          // Start countdown if retryAfter is provided
+          if (data.retryAfter && data.retryAfter > 0) {
+            retryCountdown.classList.remove('hidden');
+            startCountdown(data.retryAfter);
           }
         } else {
           errorState.classList.remove('hidden');

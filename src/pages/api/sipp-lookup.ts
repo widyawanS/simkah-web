@@ -1,9 +1,45 @@
 import type { APIRoute } from 'astro';
 
+// In-memory cache
+const resultCache = new Map<string, { data: any; expires: number }>();
+const blockCache = new Map<string, { blocked: boolean; expires: number }>();
+
+const RESULT_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+const BLOCK_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+function getCachedResult(key: string) {
+  const entry = resultCache.get(key);
+  if (entry && Date.now() < entry.expires) return entry.data;
+  resultCache.delete(key);
+  return null;
+}
+
+function setCachedResult(key: string, data: any) {
+  resultCache.set(key, { data, expires: Date.now() + RESULT_CACHE_TTL });
+}
+
+function isInstanceBlocked(baseUrl: string) {
+  const entry = blockCache.get(baseUrl);
+  if (entry && entry.blocked && Date.now() < entry.expires) return true;
+  if (entry && Date.now() >= entry.expires) blockCache.delete(baseUrl);
+  return false;
+}
+
+function markInstanceBlocked(baseUrl: string) {
+  blockCache.set(baseUrl, { blocked: true, expires: Date.now() + BLOCK_CACHE_TTL });
+}
+
+function getBlockRemaining(baseUrl: string): number {
+  const entry = blockCache.get(baseUrl);
+  if (!entry || !entry.blocked) return 0;
+  const remaining = Math.max(0, Math.ceil((entry.expires - Date.now()) / 1000));
+  return remaining;
+}
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { courtUrl, keyword } = body;
+    const { courtUrl, keyword, courtName } = body;
 
     if (!courtUrl || !keyword) {
       return new Response(JSON.stringify({
@@ -13,6 +49,26 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const baseUrl = courtUrl.replace(/\/+$/, '');
+    const cacheKey = `${baseUrl}::${keyword.toLowerCase().trim()}`;
+
+    // Check result cache first
+    const cached = getCachedResult(cacheKey);
+    if (cached) {
+      return new Response(JSON.stringify(cached), { status: 200 });
+    }
+
+    // Check if this SIPP instance is currently blocked
+    if (isInstanceBlocked(baseUrl)) {
+      return new Response(JSON.stringify({
+        success: false,
+        blocked: true,
+        courtUrl: baseUrl,
+        courtName: courtName || '',
+        retryAfter: getBlockRemaining(baseUrl),
+        error: 'Server pengadilan sedang memblokir akses. Silakan coba lagi atau kunjungi langsung.'
+      }), { status: 403 });
+    }
+
     const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 
     // Step 1: Fetch main page to get enc token
@@ -26,10 +82,13 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     if (!mainPageRes.ok) {
+      markInstanceBlocked(baseUrl);
       return new Response(JSON.stringify({
         success: false,
         blocked: false,
         courtUrl: baseUrl,
+        courtName: courtName || '',
+        retryAfter: Math.ceil(BLOCK_CACHE_TTL / 1000),
         error: 'Server pengadilan tidak dapat diakses'
       }), { status: 502 });
     }
@@ -38,10 +97,13 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Detect Cloudflare or other blocking
     if (isBlocked(html)) {
+      markInstanceBlocked(baseUrl);
       return new Response(JSON.stringify({
         success: false,
         blocked: true,
         courtUrl: baseUrl,
+        courtName: courtName || '',
+        retryAfter: Math.ceil(BLOCK_CACHE_TTL / 1000),
         error: 'Server pengadilan memblokir akses otomatis. Silakan kunjungi langsung untuk menelusuri perkara.'
       }), { status: 403 });
     }
@@ -53,6 +115,7 @@ export const POST: APIRoute = async ({ request }) => {
         success: false,
         blocked: false,
         courtUrl: baseUrl,
+        courtName: courtName || '',
         error: 'Gagal mengambil token dari SIPP. Struktur halaman mungkin berubah.'
       }), { status: 502 });
     }
@@ -80,10 +143,13 @@ export const POST: APIRoute = async ({ request }) => {
     if (!searchRes.ok) {
       const searchHtml = await searchRes.text();
       if (isBlocked(searchHtml)) {
+        markInstanceBlocked(baseUrl);
         return new Response(JSON.stringify({
           success: false,
           blocked: true,
           courtUrl: baseUrl,
+          courtName: courtName || '',
+          retryAfter: Math.ceil(BLOCK_CACHE_TTL / 1000),
           error: 'Server pengadilan memblokir akses otomatis. Silakan kunjungi langsung untuk menelusuri perkara.'
         }), { status: 403 });
       }
@@ -91,6 +157,7 @@ export const POST: APIRoute = async ({ request }) => {
         success: false,
         blocked: false,
         courtUrl: baseUrl,
+        courtName: courtName || '',
         error: 'Pencarian gagal. Server pengadilan mengembalikan error.'
       }), { status: 502 });
     }
@@ -100,25 +167,35 @@ export const POST: APIRoute = async ({ request }) => {
     // Step 3: Parse results table
     const results = parseSearchResults(searchHtml, baseUrl);
 
-    return new Response(JSON.stringify({
+    const response = {
       success: true,
       data: results,
       total: results.length,
-    }), { status: 200 });
+    };
+
+    // Cache successful results
+    setCachedResult(cacheKey, response);
+
+    return new Response(JSON.stringify(response), { status: 200 });
 
   } catch (err: any) {
+    const baseUrl = body?.courtUrl?.replace(/\/+$/, '') || '';
     if (err.name === 'TimeoutError') {
+      if (baseUrl) markInstanceBlocked(baseUrl);
       return new Response(JSON.stringify({
         success: false,
         blocked: false,
-        courtUrl: baseUrl || '',
+        courtUrl: baseUrl,
+        courtName: body?.courtName || '',
+        retryAfter: Math.ceil(BLOCK_CACHE_TTL / 1000),
         error: 'Permintaan timeout. Server pengadilan mungkin sedang sibuk.'
       }), { status: 504 });
     }
     return new Response(JSON.stringify({
       success: false,
       blocked: false,
-      courtUrl: baseUrl || '',
+      courtUrl: baseUrl,
+      courtName: body?.courtName || '',
       error: 'Terjadi kesalahan internal. Silakan coba lagi nanti.'
     }), { status: 500 });
   }
@@ -147,13 +224,10 @@ function parseSearchResults(html: string, baseUrl: string) {
     detailUrl: string;
   }> = [];
 
-  // Match table rows from tablePerkaraAll
   const tableMatch = html.match(/<table[^>]*id="tablePerkaraAll"[^>]*>([\s\S]*?)<\/table>/i);
   if (!tableMatch) return results;
 
   const tableHtml = tableMatch[1];
-
-  // Match each row
   const rowRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
   let rowMatch;
   let skipHeader = true;
@@ -161,13 +235,11 @@ function parseSearchResults(html: string, baseUrl: string) {
   while ((rowMatch = rowRegex.exec(tableHtml)) !== null) {
     const rowHtml = rowMatch[1];
 
-    // Skip header row
     if (skipHeader && (rowHtml.includes('<th') || rowHtml.includes('NOMOR') || rowHtml.includes('Nomor'))) {
       skipHeader = false;
       continue;
     }
 
-    // Extract cells
     const cellRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi;
     const cells: string[] = [];
     let cellMatch;
@@ -175,7 +247,6 @@ function parseSearchResults(html: string, baseUrl: string) {
       cells.push(cellMatch[1].replace(/<[^>]+>/g, '').trim());
     }
 
-    // Extract detail link
     const linkMatch = rowHtml.match(/href="([^"]*show_detil[^"]*)"/i);
     let detailUrl = '';
     if (linkMatch) {
@@ -185,19 +256,13 @@ function parseSearchResults(html: string, baseUrl: string) {
       }
     }
 
-    // Expected columns: No, Nomor, Tanggal, Klasifikasi, Para Pihak, Status, Lama Proses, Link
     if (cells.length >= 6) {
       const nomor = cells[1] || '';
       const klasifikasi = cells[3] || '';
       const status = cells[5] || '';
 
       if (nomor && nomor !== '-') {
-        results.push({
-          nomor,
-          klasifikasi,
-          status,
-          detailUrl,
-        });
+        results.push({ nomor, klasifikasi, status, detailUrl });
       }
     }
   }
