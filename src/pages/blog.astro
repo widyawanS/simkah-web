@@ -6,10 +6,6 @@ import { Image } from "astro:assets";
 
 const posts = await getPosts();
 
-// Server-side debug
-console.log('🔍 Blog page - Posts loaded:', posts.length);
-posts.forEach(p => console.log(`  - ${p.slug}: ${p.image}`));
-
 const getCategoryColor = (cat: string) => {
   const c = cat?.toLowerCase() || '';
   if (c === 'berita') return '!bg-[#c0e6ff] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
@@ -88,25 +84,4 @@ const getCategoryColor = (cat: string) => {
   </Container>
 </Layout>
 
-<script>
-// Client-side image load monitoring
-document.addEventListener('DOMContentLoaded', () => {
-  const images = document.querySelectorAll('article img');
-  console.log(`🖼️ Found ${images.length} images on page`);
-  
-  images.forEach((img, index) => {
-    const src = img.getAttribute('src');
-    console.log(`Image ${index + 1}: ${src}`);
-    
-    img.addEventListener('load', () => {
-      console.log(`✅ LOADED: ${src}`);
-    });
-    
-    img.addEventListener('error', () => {
-      console.error(`❌ FAILED: ${src}`);
-      console.error(`   Alt: ${img.alt}`);
-      console.error(`   Full URL: ${new URL(src, window.location.origin).href}`);
-    });
-  });
-});
-</script>
+

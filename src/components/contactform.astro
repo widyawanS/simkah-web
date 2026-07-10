@@ -108,13 +108,11 @@ import Button from "./ui/button.astro";
           result.classList.add("text-brutal-success");
           result.innerHTML = json.message;
         } else {
-          console.log(response);
           result.classList.add("text-brutal-destructive");
           result.innerHTML = json.message;
         }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         result.innerHTML = "Something went wrong!";
       })
       .then(function () {
