@@ -1,0 +1,338 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import AdSlot from "@components/ui/AdSlot.astro";
+
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRphPEFpPWt1xyQNyukVHMS9g8kCmq99CjcRx_YitDAtc_SKmBDIqambYVjwq2Lvr05GW3i-OuGotd_/pub?output=csv";
+
+let allCourts: any[] = [];
+try {
+  const response = await fetch(SHEET_URL);
+  const csvData = await response.text();
+  const rows = csvData.split('\n').filter(row => row.trim() !== '');
+  const headers = rows[0].split(',').map(h => h.trim());
+  allCourts = rows.slice(1).map(row => {
+    const values = row.split(',');
+    let obj: Record<string, string> = {};
+    headers.forEach((header, i) => {
+      obj[header] = values[i]?.trim() || '';
+    });
+    return obj;
+  }).filter((c: any) => c['Sipp PA'] && c['Sipp PA'] !== '');
+} catch (error) {
+  // silently fail, UI will show empty
+}
+---
+
+<Layout title="Penelusuran Perkara SIPP - Cari Info Perkara Pengadilan Agama">
+  <Container>
+    <div class="max-w-4xl mx-auto mb-20">
+      <!-- Header -->
+      <div class="text-center mb-16 mt-12 flex flex-col items-center">
+        <span class="inline-block px-4 py-2 brutal-badge bg-emerald-200 text-brutal-text text-sm font-bold mb-4 border-2 border-brutal-border">
+          ⚖️ Penelusuran Perkara
+        </span>
+        <h1 class="text-3xl md:text-5xl font-black text-brutal-text text-center mb-4 drop-shadow-md">
+          Penelusuran Perkara <span class="text-emerald-600">SIPP</span>
+        </h1>
+        <p class="text-center text-brutal-text-muted max-w-2xl mx-auto mb-8 text-lg font-medium">
+          Cari informasi perkara dari seluruh Pengadilan Agama dan Mahkamah Syar'iyah di Indonesia.
+        </p>
+        <AdSlot type="tools" />
+      </div>
+
+      <!-- Form Card -->
+      <div class="brutal-card bg-[#c0e6ff] dark:bg-brutal-card rounded-3xl p-8 md:p-10 mb-8">
+        <form id="lookupForm" class="space-y-6">
+          <!-- Court Selection -->
+          <div>
+            <label class="block text-sm font-bold text-brutal-text dark:text-white mb-2">
+              Pengadilan
+            </label>
+            <div class="relative" id="courtDropdown">
+              <input
+                type="text"
+                id="courtSearch"
+                placeholder="Ketik nama Pengadilan Agama atau MS..."
+                autocomplete="off"
+                class="brutal-input bg-white dark:bg-slate-800"
+              />
+              <input type="hidden" id="courtUrl" name="courtUrl" />
+              <input type="hidden" id="courtName" name="courtName" />
+              <div id="courtList" class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border-2 border-brutal-border rounded-xl shadow-lg max-h-60 overflow-y-auto hidden">
+              </div>
+            </div>
+            <p id="courtHint" class="text-xs text-slate-500 mt-1">
+              Contoh: PA Bandung, MS Banda Aceh
+            </p>
+          </div>
+
+          <!-- Case Number -->
+          <div>
+            <label class="block text-sm font-bold text-brutal-text dark:text-white mb-2">
+              Nomor Perkara
+            </label>
+            <input
+              type="text"
+              id="caseNumber"
+              placeholder="Contoh: 4176/Pdt.G/2026/PA.Badg"
+              class="brutal-input bg-white dark:bg-slate-800"
+            />
+            <p class="text-xs text-slate-500 mt-1">
+              Bisa sebagian atau lengkap. Semakin lengkap, semakin akurat.
+            </p>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            id="submitBtn"
+            class="brutal-btn brutal-btn-primary w-full py-4 text-lg font-bold flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Cari Perkara
+          </button>
+        </form>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="hidden text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-brutal-border border-t-emerald-500 mb-4"></div>
+        <p class="text-brutal-text dark:text-white font-bold">Mencari perkara...</p>
+        <p class="text-sm text-slate-500">Mengambil data dari SIPP pengadilan</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" class="hidden brutal-card bg-red-100 dark:bg-red-900/30 rounded-3xl p-8 text-center mb-8">
+        <div class="text-4xl mb-4">⚠️</div>
+        <h3 class="text-lg font-bold text-red-700 dark:text-red-300 mb-2" id="errorMessage">Terjadi kesalahan</h3>
+        <p class="text-sm text-red-600 dark:text-red-400" id="errorDetail"></p>
+      </div>
+
+      <!-- Results -->
+      <div id="resultsSection" class="hidden">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-brutal-text dark:text-white">
+            Hasil Pencarian
+          </h2>
+          <span id="resultCount" class="text-sm text-slate-500"></span>
+        </div>
+
+        <div class="brutal-card bg-[#fae870] dark:bg-brutal-card rounded-3xl overflow-hidden border-2 border-brutal-border">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-slate-800/80 text-brutal-text-muted dark:text-slate-300 text-xs uppercase tracking-widest">
+                <tr>
+                  <th class="p-4 font-semibold w-12">No</th>
+                  <th class="p-4 font-semibold">Nomor Perkara</th>
+                  <th class="p-4 font-semibold">Klasifikasi</th>
+                  <th class="p-4 font-semibold">Status</th>
+                  <th class="p-4 font-semibold w-20">Detail</th>
+                </tr>
+              </thead>
+              <tbody id="resultsBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden text-center py-12">
+        <div class="text-5xl mb-4">🔍</div>
+        <h3 class="text-xl font-bold text-brutal-text dark:text-white mb-2">Tidak ditemukan</h3>
+        <p class="text-slate-500">Tidak ada perkara yang cocok dengan pencarian Anda.</p>
+      </div>
+
+      <!-- Info Box -->
+      <div class="mt-8 brutal-card bg-slate-100 dark:bg-slate-800/50 rounded-2xl p-6">
+        <h3 class="font-bold text-brutal-text dark:text-white mb-3 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Informasi
+        </h3>
+        <ul class="text-sm text-slate-600 dark:text-slate-400 space-y-1">
+          <li>• Data diambil langsung dari Sistem Informasi Penelusuran Perkara (SIPP) pengadilan.</li>
+          <li>• Ketersediaan data tergantung pada server pengadilan yang bersangkutan.</li>
+          <li>• Proses pencarian membutuhkan beberapa detik.</li>
+          <li>• Nama pihak mungkin disamarkan oleh pengadilan untuk privasi.</li>
+        </ul>
+      </div>
+    </div>
+  </Container>
+</Layout>
+
+<script is:inline define:vars={{ courts: allCourts }}>
+  const courtSearch = document.getElementById('courtSearch');
+  const courtList = document.getElementById('courtList');
+  const courtUrl = document.getElementById('courtUrl');
+  const courtName = document.getElementById('courtName');
+  const courtHint = document.getElementById('courtHint');
+  const lookupForm = document.getElementById('lookupForm');
+  const loadingState = document.getElementById('loadingState');
+  const errorState = document.getElementById('errorState');
+  const errorMessage = document.getElementById('errorMessage');
+  const errorDetail = document.getElementById('errorDetail');
+  const resultsSection = document.getElementById('resultsSection');
+  const resultsBody = document.getElementById('resultsBody');
+  const resultCount = document.getElementById('resultCount');
+  const emptyState = document.getElementById('emptyState');
+  const submitBtn = document.getElementById('submitBtn');
+
+  let selectedCourt = null;
+
+  // Populate court list
+  function renderCourtList(filter = '') {
+    const lower = filter.toLowerCase();
+    const filtered = courts.filter(c => {
+      const name = (c['Nama PA'] || '').toLowerCase();
+      return name.includes(lower);
+    });
+
+    courtList.innerHTML = '';
+    if (filtered.length === 0) {
+      courtList.innerHTML = '<div class="px-4 py-3 text-sm text-slate-500">Tidak ditemukan</div>';
+    } else {
+      filtered.forEach(court => {
+        const div = document.createElement('div');
+        div.className = 'px-4 py-3 cursor-pointer hover:bg-emerald-100 dark:hover:bg-slate-700 text-sm transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0';
+        div.textContent = court['Nama PA'] || '';
+        div.addEventListener('click', () => {
+          courtSearch.value = court['Nama PA'] || '';
+          courtUrl.value = court['Sipp PA'] || '';
+          courtName.value = court['Nama PA'] || '';
+          selectedCourt = court;
+          courtList.classList.add('hidden');
+          courtHint.textContent = '✓ Pengadilan dipilih';
+          courtHint.classList.add('text-emerald-600');
+        });
+        courtList.appendChild(div);
+      });
+    }
+  }
+
+  // Show/hide dropdown
+  courtSearch.addEventListener('focus', () => {
+    renderCourtList(courtSearch.value);
+    courtList.classList.remove('hidden');
+  });
+
+  courtSearch.addEventListener('input', () => {
+    courtUrl.value = '';
+    courtName.value = '';
+    selectedCourt = null;
+    courtHint.textContent = 'Ketik nama Pengadilan Agama atau MS...';
+    courtHint.classList.remove('text-emerald-600');
+    renderCourtList(courtSearch.value);
+    courtList.classList.remove('hidden');
+  });
+
+  // Close dropdown on outside click
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('courtDropdown').contains(e.target)) {
+      courtList.classList.add('hidden');
+    }
+  });
+
+  // Form submit
+  lookupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const url = courtUrl.value;
+    const keyword = document.getElementById('caseNumber').value.trim();
+
+    if (!url) {
+      alert('Silakan pilih pengadilan terlebih dahulu.');
+      return;
+    }
+    if (!keyword) {
+      alert('Silakan masukkan nomor perkara.');
+      return;
+    }
+
+    // Reset states
+    loadingState.classList.remove('hidden');
+    errorState.classList.add('hidden');
+    resultsSection.classList.add('hidden');
+    emptyState.classList.add('hidden');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Mencari...';
+
+    try {
+      const res = await fetch('/api/sipp-lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ courtUrl: url, keyword }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        errorState.classList.remove('hidden');
+        errorMessage.textContent = 'Pencarian Gagal';
+        errorDetail.textContent = data.error || 'Terjadi kesalahan yang tidak diketahui.';
+        return;
+      }
+
+      if (!data.data || data.data.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      // Render results
+      resultsBody.innerHTML = '';
+      data.data.forEach((item, i) => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-slate-800/50 hover:bg-slate-700/30 transition-all';
+        tr.innerHTML = `
+          <td class="p-4 text-slate-500 font-mono text-sm">${i + 1}</td>
+          <td class="p-4">
+            <div class="text-brutal-text dark:text-white font-semibold text-sm">${item.nomor}</div>
+          </td>
+          <td class="p-4">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-200 text-emerald-800 border border-emerald-300">
+              ${item.klasifikasi}
+            </span>
+          </td>
+          <td class="p-4">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#fae870] text-slate-800 border border-yellow-300">
+              ${item.status}
+            </span>
+          </td>
+          <td class="p-4">
+            ${item.detailUrl ? `
+              <a href="${item.detailUrl}" target="_blank" rel="noopener noreferrer"
+                class="brutal-btn brutal-btn-primary py-1.5 px-3 text-xs inline-flex items-center gap-1">
+                Buka
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            ` : '<span class="text-slate-500 text-xs italic">-</span>'}
+          </td>
+        `;
+        resultsBody.appendChild(tr);
+      });
+
+      resultCount.textContent = `${data.total} data ditemukan`;
+      resultsSection.classList.remove('hidden');
+
+    } catch (err) {
+      errorState.classList.remove('hidden');
+      errorMessage.textContent = 'Koneksi Gagal';
+      errorDetail.textContent = 'Tidak dapat terhubung ke server. Silakan coba lagi.';
+    } finally {
+      loadingState.classList.add('hidden');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        Cari Perkara
+      `;
+    }
+  });
+</script>
