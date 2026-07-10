@@ -193,20 +193,26 @@ export const POST: APIRoute = async ({ request }) => {
     // 3. Try via proxy first, then direct
     const triedProxies = new Set<string>();
     let lastError = '';
+    const log: string[] = [];
 
     // Attempt via proxy
     const proxies = await getProxyList();
+    log.push(`[proxy] loaded ${proxies.length} proxies from env`);
     if (proxies.length > 0) {
       const proxyBatch = getRandomProxies(MAX_PROXY_ATTEMPTS, triedProxies);
+      log.push(`[proxy] trying ${proxyBatch.length} proxies`);
       for (const proxy of proxyBatch) {
         triedProxies.add(proxy);
         try {
           const result = await executeSearch(baseUrl, keyword, proxy);
           if (result) {
-            setCachedResult(cacheKey, result);
-            return new Response(JSON.stringify(result), { status: 200 });
+            log.push(`[proxy] SUCCESS via ${proxy}`);
+            setCachedResult(cacheKey, { ...result, debug: log });
+            return new Response(JSON.stringify({ ...result, debug: log }), { status: 200 });
           }
+          log.push(`[proxy] no enc token via ${proxy}`);
         } catch (e: any) {
+          log.push(`[proxy] FAIL ${proxy}: ${e.message}`);
           lastError = e.message || 'Proxy failed';
         }
       }
@@ -214,12 +220,16 @@ export const POST: APIRoute = async ({ request }) => {
 
     // 4. Fallback: direct request
     try {
+      log.push(`[direct] trying direct connection`);
       const result = await executeSearch(baseUrl, keyword, undefined);
       if (result) {
-        setCachedResult(cacheKey, result);
-        return new Response(JSON.stringify(result), { status: 200 });
+        log.push(`[direct] SUCCESS`);
+        setCachedResult(cacheKey, { ...result, debug: log });
+        return new Response(JSON.stringify({ ...result, debug: log }), { status: 200 });
       }
+      log.push(`[direct] no enc token found`);
     } catch (e: any) {
+      log.push(`[direct] FAIL: ${e.message}`);
       lastError = e.message || 'Direct request failed';
     }
 
@@ -228,7 +238,8 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({
       success: false, blocked: false, courtUrl: baseUrl, courtName: courtNameVal,
       retryAfter: Math.ceil(BLOCK_CACHE_TTL / 1000),
-      error: 'Semua percobaan gagal. Server pengadilan mungkin sedang tidak dapat diakses.'
+      error: 'Semua percobaan gagal. Server pengadilan mungkin sedang tidak dapat diakses.',
+      debug: log,
     }), { status: 502 });
 
   } catch (err: any) {
