@@ -37,30 +37,66 @@ function getBlockRemaining(baseUrl: string): number {
 }
 
 // ── Proxy Pool ─────────────────────────────────────────
+// Supports two modes:
+//   PROXY_LIST_URL  = Webshare API URL (fetches live list)
+//   PROXY_URLS      = newline-separated "host:port:user:pass" (manual paste)
 const PROXY_LIST_URL = import.meta.env.PROXY_LIST_URL || '';
+const PROXY_URLS = import.meta.env.PROXY_URLS || '';
 const proxyCache = { list: [] as string[], expires: 0 };
 const PROXY_CACHE_TTL = 5 * 60 * 1000;
 const MAX_PROXY_ATTEMPTS = 3;
 
+function parseProxyLine(line: string): string | null {
+  const l = line.trim();
+  if (!l || l.startsWith('#')) return null;
+
+  // Format: host:port:user:pass → http://user:pass@host:port
+  const parts = l.split(':');
+  if (parts.length === 4) {
+    const [host, port, user, pass] = parts;
+    return `http://${user}:${pass}@${host}:${port}`;
+  }
+
+  // Already a URL like http://user:pass@host:port
+  if (l.startsWith('http')) return l;
+
+  return null;
+}
+
 async function getProxyList(): Promise<string[]> {
-  if (!PROXY_LIST_URL) return [];
   if (proxyCache.list.length > 0 && Date.now() < proxyCache.expires) {
     return proxyCache.list;
   }
 
-  try {
-    const res = await fetch(PROXY_LIST_URL, { signal: AbortSignal.timeout(8000) });
-    if (!res.ok) return proxyCache.list.length > 0 ? proxyCache.list : [];
-
-    const text = await res.text();
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l && l.includes(':'));
-
-    proxyCache.list = lines;
-    proxyCache.expires = Date.now() + PROXY_CACHE_TTL;
-    return lines;
-  } catch {
-    return proxyCache.list.length > 0 ? proxyCache.list : [];
+  // Mode 1: From env PROXY_URLS (manual paste, no network fetch needed)
+  if (PROXY_URLS) {
+    const parsed = PROXY_URLS.split('\n').map(parseProxyLine).filter(Boolean) as string[];
+    if (parsed.length > 0) {
+      proxyCache.list = parsed;
+      proxyCache.expires = Date.now() + PROXY_CACHE_TTL;
+      return parsed;
+    }
   }
+
+  // Mode 2: From Webshare API (PROXY_LIST_URL)
+  if (PROXY_LIST_URL) {
+    try {
+      const res = await fetch(PROXY_LIST_URL, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) return proxyCache.list.length > 0 ? proxyCache.list : [];
+
+      const text = await res.text();
+      const parsed = text.split('\n').map(parseProxyLine).filter(Boolean) as string[];
+      if (parsed.length > 0) {
+        proxyCache.list = parsed;
+        proxyCache.expires = Date.now() + PROXY_CACHE_TTL;
+        return parsed;
+      }
+    } catch {
+      return proxyCache.list.length > 0 ? proxyCache.list : [];
+    }
+  }
+
+  return proxyCache.list.length > 0 ? proxyCache.list : [];
 }
 
 function getRandomProxies(count: number, exclude: Set<string>): string[] {
