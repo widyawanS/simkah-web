@@ -1,4 +1,6 @@
 import type { APIRoute } from 'astro';
+import http from 'node:http';
+import https from 'node:https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 const PROXY_LIST_URL = import.meta.env.PROXY_LIST_URL || '';
@@ -30,117 +32,113 @@ function getParsedProxies(): string[] {
   return [];
 }
 
+function httpGet(url: string, headers: Record<string, string>, timeout: number): Promise<{ status: number; body: string }> {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+    const proto = parsed.protocol === 'https:' ? https : http;
+    const req = proto.get(url, { headers, timeout }, (res) => {
+      const chunks: Buffer[] = [];
+      res.on('data', (c: Buffer) => chunks.push(c));
+      res.on('end', () => resolve({ status: res.statusCode || 0, body: Buffer.concat(chunks).toString('utf-8') }));
+    });
+    req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
+    req.on('error', reject);
+  });
+}
+
+function httpGetViaProxy(url: string, proxyUrl: string, headers: Record<string, string>, timeout: number): Promise<{ status: number; body: string }> {
+  return new Promise((resolve, reject) => {
+    const agent = new HttpsProxyAgent(proxyUrl);
+    const parsed = new URL(url);
+    const reqOpts = {
+      hostname: parsed.hostname,
+      port: parsed.port || (parsed.protocol === 'https:' ? 443 : 80),
+      path: parsed.pathname + parsed.search,
+      method: 'GET',
+      headers,
+      agent,
+      timeout,
+    };
+    const proto = parsed.protocol === 'https:' ? https : http;
+    const req = proto.request(reqOpts, (res) => {
+      const chunks: Buffer[] = [];
+      res.on('data', (c: Buffer) => chunks.push(c));
+      res.on('end', () => resolve({ status: res.statusCode || 0, body: Buffer.concat(chunks).toString('utf-8') }));
+    });
+    req.on('timeout', () => { req.destroy(); reject(new Error('Proxy timeout')); });
+    req.on('error', reject);
+    req.end();
+  });
+}
+
 export const GET: APIRoute = async ({ url }) => {
   const targetUrl = url.searchParams.get('url') || 'https://ipv4.webshare.io/';
   const rawProxies = getRawProxies();
   const parsedProxies = getParsedProxies();
+  const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 
   const results: any = {
-    envConfigured: {
-      PROXY_URLS: !!PROXY_URLS,
-      PROXY_LIST_URL: !!PROXY_LIST_URL,
-    },
+    envConfigured: { PROXY_URLS: !!PROXY_URLS, PROXY_LIST_URL: !!PROXY_LIST_URL },
     proxyCount: rawProxies.length,
     proxySample: rawProxies.slice(0, 3),
     parsedSample: parsedProxies.slice(0, 3),
     tests: [] as any[],
   };
 
-  // Test 1: Direct connection (no proxy)
+  // Test 1: Direct
   try {
     const start = Date.now();
-    const res = await fetch(targetUrl, { signal: AbortSignal.timeout(8000) });
-    const body = await res.text();
-    results.tests.push({
-      name: 'Direct (no proxy)',
-      ok: res.ok,
-      status: res.status,
-      latencyMs: Date.now() - start,
-      bodyPreview: body.substring(0, 200),
-    });
+    const r = await httpGet(targetUrl, { 'User-Agent': UA }, 8000);
+    results.tests.push({ name: 'Direct (no proxy)', ok: r.status >= 200 && r.status < 400, status: r.status, latencyMs: Date.now() - start, bodyPreview: r.body.substring(0, 200) });
   } catch (e: any) {
-    results.tests.push({
-      name: 'Direct (no proxy)',
-      ok: false,
-      error: e.message,
-    });
+    results.tests.push({ name: 'Direct (no proxy)', ok: false, error: e.message });
   }
 
-  // Test 2: Via first proxy
+  // Test 2: Via proxy
   if (parsedProxies.length > 0) {
-    const proxyUrl = parsedProxies[0];
+    const proxyRaw = rawProxies[0];
+    const proxyParsed = parsedProxies[0];
     try {
       const start = Date.now();
-      const agent = new HttpsProxyAgent(proxyUrl);
-      const res = await fetch(targetUrl, {
-        // @ts-ignore
-        agent,
-        signal: AbortSignal.timeout(10000),
-      });
-      const body = await res.text();
-      results.tests.push({
-        name: `Via proxy ${rawProxies[0]}`,
-        ok: res.ok,
-        status: res.status,
-        latencyMs: Date.now() - start,
-        bodyPreview: body.substring(0, 200),
-      });
+      const r = await httpGetViaProxy(targetUrl, proxyParsed, { 'User-Agent': UA }, 10000);
+      results.tests.push({ name: `Via proxy ${proxyRaw}`, ok: r.status >= 200 && r.status < 400, status: r.status, latencyMs: Date.now() - start, bodyPreview: r.body.substring(0, 200) });
     } catch (e: any) {
-      results.tests.push({
-        name: `Via proxy ${rawProxies[0]}`,
-        ok: false,
-        error: e.message,
-      });
+      results.tests.push({ name: `Via proxy ${proxyRaw}`, ok: false, error: e.message });
     }
   }
 
-  // Test 3: Try a real SIPP page if specified
+  // Test 3: SIPP
   const sippUrl = url.searchParams.get('sipp');
   if (sippUrl) {
+    const sippHeaders = { 'User-Agent': UA, 'Accept': 'text/html' };
     // Direct
     try {
       const start = Date.now();
-      const res = await fetch(sippUrl, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-        signal: AbortSignal.timeout(10000),
-      });
-      const body = await res.text();
+      const r = await httpGet(sippUrl, sippHeaders, 10000);
       results.tests.push({
-        name: `SIPP direct: ${sippUrl}`,
-        ok: res.ok,
-        status: res.status,
+        name: `SIPP direct: ${sippUrl}`, ok: r.status >= 200 && r.status < 400, status: r.status,
         latencyMs: Date.now() - start,
-        hasEnc: /name="enc"\s+value="([^"]+)"/.test(body),
-        isBlocked: body.toLowerCase().includes('cloudflare') || body.toLowerCase().includes('just a moment'),
-        bodyPreview: body.substring(0, 300),
+        hasEnc: /name="enc"\s+value="([^"]+)"/.test(r.body),
+        isBlocked: r.body.toLowerCase().includes('cloudflare') || r.body.toLowerCase().includes('just a moment'),
+        bodyPreview: r.body.substring(0, 300),
       });
     } catch (e: any) {
       results.tests.push({ name: `SIPP direct: ${sippUrl}`, ok: false, error: e.message });
     }
-
     // Via proxy
     if (parsedProxies.length > 0) {
       try {
         const start = Date.now();
-        const agent = new HttpsProxyAgent(parsedProxies[0]);
-        const res = await fetch(sippUrl, {
-          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-          // @ts-ignore
-          agent,
-          signal: AbortSignal.timeout(12000),
-        });
-        const body = await res.text();
+        const r = await httpGetViaProxy(sippUrl, parsedProxies[0], sippHeaders, 12000);
         results.tests.push({
-          name: `SIPP via proxy: ${sippUrl}`,
-          ok: res.ok,
-          status: res.status,
+          name: `SIPP via proxy: ${rawProxies[0]}`, ok: r.status >= 200 && r.status < 400, status: r.status,
           latencyMs: Date.now() - start,
-          hasEnc: /name="enc"\s+value="([^"]+)"/.test(body),
-          isBlocked: body.toLowerCase().includes('cloudflare') || body.toLowerCase().includes('just a moment'),
-          bodyPreview: body.substring(0, 300),
+          hasEnc: /name="enc"\s+value="([^"]+)"/.test(r.body),
+          isBlocked: r.body.toLowerCase().includes('cloudflare') || r.body.toLowerCase().includes('just a moment'),
+          bodyPreview: r.body.substring(0, 300),
         });
       } catch (e: any) {
-        results.tests.push({ name: `SIPP via proxy: ${sippUrl}`, ok: false, error: e.message });
+        results.tests.push({ name: `SIPP via proxy: ${rawProxies[0]}`, ok: false, error: e.message });
       }
     }
   }

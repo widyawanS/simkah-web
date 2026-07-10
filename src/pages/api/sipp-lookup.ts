@@ -1,4 +1,6 @@
 import type { APIRoute } from 'astro';
+import http from 'node:http';
+import https from 'node:https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // ── Cache ──────────────────────────────────────────────
@@ -108,23 +110,77 @@ function getRandomProxies(count: number, exclude: Set<string>): string[] {
 // ── SIPP Fetch Helpers ─────────────────────────────────
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 
-const FETCH_HEADERS = {
+const FETCH_HEADERS: Record<string, string> = {
   'User-Agent': UA,
   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   'Accept-Language': 'id-ID,id;q=0.9,en;q=0.8',
 };
 
-async function fetchWithProxy(url: string, options: RequestInit = {}, proxyUrl?: string): Promise<Response> {
-  if (!proxyUrl) {
-    return fetch(url, { ...options, signal: AbortSignal.timeout(10000) });
-  }
-  const agent = new HttpsProxyAgent(proxyUrl);
-  return fetch(url, {
-    ...options,
-    // @ts-ignore — https-proxy-agent dispatcher
-    agent,
-    signal: AbortSignal.timeout(12000),
+function requestViaProxy(url: string, proxyUrl: string, options: { method: string; headers: Record<string, string>; body?: string; timeout?: number }): Promise<{ statusCode: number; body: string }> {
+  return new Promise((resolve, reject) => {
+    const timeout = options.timeout || 12000;
+    const agent = new HttpsProxyAgent(proxyUrl);
+    const parsed = new URL(url);
+
+    const reqOpts = {
+      hostname: parsed.hostname,
+      port: parsed.port || (parsed.protocol === 'https:' ? 443 : 80),
+      path: parsed.pathname + parsed.search,
+      method: options.method,
+      headers: options.headers,
+      agent,
+      timeout,
+    };
+
+    const proto = parsed.protocol === 'https:' ? https : http;
+    const req = proto.request(reqOpts, (res) => {
+      const chunks: Buffer[] = [];
+      res.on('data', (chunk: Buffer) => chunks.push(chunk));
+      res.on('end', () => {
+        resolve({
+          statusCode: res.statusCode || 0,
+          body: Buffer.concat(chunks).toString('utf-8'),
+        });
+      });
+    });
+
+    req.on('timeout', () => { req.destroy(); reject(new Error('Proxy timeout')); });
+    req.on('error', (err) => reject(err));
+
+    if (options.body) req.write(options.body);
+    req.end();
   });
+}
+
+async function fetchWithProxy(url: string, options: { method?: string; headers?: Record<string, string>; body?: string } = {}, proxyUrl?: string): Promise<{ ok: boolean; status: number; text: () => Promise<string> }> {
+  if (!proxyUrl) {
+    // Direct: use native fetch
+    const res = await fetch(url, {
+      method: options.method || 'GET',
+      headers: options.headers,
+      body: options.body,
+      signal: AbortSignal.timeout(10000),
+    });
+    return {
+      ok: res.ok,
+      status: res.status,
+      text: () => res.text(),
+    };
+  }
+
+  // Via proxy: use http.request with agent
+  const result = await requestViaProxy(url, proxyUrl, {
+    method: options.method || 'GET',
+    headers: options.headers || {},
+    body: options.body,
+    timeout: 12000,
+  });
+
+  return {
+    ok: result.statusCode >= 200 && result.statusCode < 400,
+    status: result.statusCode,
+    text: () => Promise.resolve(result.body),
+  };
 }
 
 async function fetchSippPage(url: string, proxyUrl?: string): Promise<{ ok: boolean; blocked: boolean; html: string }> {
