@@ -108,7 +108,30 @@ try {
       <div id="errorState" class="hidden brutal-card bg-red-100 dark:bg-red-900/30 rounded-3xl p-8 text-center mb-8">
         <div class="text-4xl mb-4">⚠️</div>
         <h3 class="text-lg font-bold text-red-700 dark:text-red-300 mb-2" id="errorMessage">Terjadi kesalahan</h3>
-        <p class="text-sm text-red-600 dark:text-red-400" id="errorDetail"></p>
+        <p class="text-sm text-red-600 dark:text-red-400 mb-4" id="errorDetail"></p>
+        <a id="errorDirectLink" href="#" target="_blank" rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          <span id="errorLinkText">Kunjungi SIPP Langsung</span>
+        </a>
+      </div>
+
+      <!-- Blocked State -->
+      <div id="blockedState" class="hidden brutal-card bg-amber-100 dark:bg-amber-900/30 rounded-3xl p-8 text-center mb-8">
+        <div class="text-4xl mb-4">🔒</div>
+        <h3 class="text-lg font-bold text-amber-700 dark:text-amber-300 mb-2">Akses Dibatasi</h3>
+        <p class="text-sm text-amber-600 dark:text-amber-400 mb-4" id="blockedDetail">
+          Server pengadilan memblokir akses otomatis. Silakan kunjungi langsung untuk menelusuri perkara.
+        </p>
+        <a id="blockedDirectLink" href="#" target="_blank" rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 text-white rounded-xl font-bold hover:bg-amber-700 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          <span id="blockedLinkText">Buka SIPP Langsung</span>
+        </a>
       </div>
 
       <!-- Results -->
@@ -176,6 +199,12 @@ try {
   const errorState = document.getElementById('errorState');
   const errorMessage = document.getElementById('errorMessage');
   const errorDetail = document.getElementById('errorDetail');
+  const errorDirectLink = document.getElementById('errorDirectLink');
+  const errorLinkText = document.getElementById('errorLinkText');
+  const blockedState = document.getElementById('blockedState');
+  const blockedDetail = document.getElementById('blockedDetail');
+  const blockedDirectLink = document.getElementById('blockedDirectLink');
+  const blockedLinkText = document.getElementById('blockedLinkText');
   const resultsSection = document.getElementById('resultsSection');
   const resultsBody = document.getElementById('resultsBody');
   const resultCount = document.getElementById('resultCount');
@@ -256,6 +285,7 @@ try {
     // Reset states
     loadingState.classList.remove('hidden');
     errorState.classList.add('hidden');
+    blockedState.classList.add('hidden');
     resultsSection.classList.add('hidden');
     emptyState.classList.add('hidden');
     submitBtn.disabled = true;
@@ -271,9 +301,25 @@ try {
       const data = await res.json();
 
       if (!data.success) {
-        errorState.classList.remove('hidden');
-        errorMessage.textContent = 'Pencarian Gagal';
-        errorDetail.textContent = data.error || 'Terjadi kesalahan yang tidak diketahui.';
+        if (data.blocked) {
+          blockedState.classList.remove('hidden');
+          blockedDetail.textContent = data.error || 'Server pengadilan memblokir akses otomatis.';
+          if (data.courtUrl) {
+            blockedDirectLink.href = data.courtUrl;
+            blockedLinkText.textContent = 'Buka ' + (courtName.value || 'SIPP');
+          }
+        } else {
+          errorState.classList.remove('hidden');
+          errorMessage.textContent = 'Pencarian Gagal';
+          errorDetail.textContent = data.error || 'Terjadi kesalahan yang tidak diketahui.';
+          if (data.courtUrl) {
+            errorDirectLink.href = data.courtUrl;
+            errorLinkText.textContent = 'Kunjungi ' + (courtName.value || 'SIPP');
+            errorDirectLink.classList.remove('hidden');
+          } else {
+            errorDirectLink.classList.add('hidden');
+          }
+        }
         return;
       }
 
@@ -324,6 +370,13 @@ try {
       errorState.classList.remove('hidden');
       errorMessage.textContent = 'Koneksi Gagal';
       errorDetail.textContent = 'Tidak dapat terhubung ke server. Silakan coba lagi.';
+      if (url) {
+        errorDirectLink.href = url;
+        errorLinkText.textContent = 'Kunjungi ' + (courtName.value || 'SIPP');
+        errorDirectLink.classList.remove('hidden');
+      } else {
+        errorDirectLink.classList.add('hidden');
+      }
     } finally {
       loadingState.classList.add('hidden');
       submitBtn.disabled = false;

@@ -28,17 +28,31 @@ export const POST: APIRoute = async ({ request }) => {
     if (!mainPageRes.ok) {
       return new Response(JSON.stringify({
         success: false,
+        blocked: false,
+        courtUrl: baseUrl,
         error: 'Server pengadilan tidak dapat diakses'
       }), { status: 502 });
     }
 
     const html = await mainPageRes.text();
 
+    // Detect Cloudflare or other blocking
+    if (isBlocked(html)) {
+      return new Response(JSON.stringify({
+        success: false,
+        blocked: true,
+        courtUrl: baseUrl,
+        error: 'Server pengadilan memblokir akses otomatis. Silakan kunjungi langsung untuk menelusuri perkara.'
+      }), { status: 403 });
+    }
+
     // Extract enc token from hidden input
     const encMatch = html.match(/name="enc"\s+value="([^"]+)"/);
     if (!encMatch) {
       return new Response(JSON.stringify({
         success: false,
+        blocked: false,
+        courtUrl: baseUrl,
         error: 'Gagal mengambil token dari SIPP. Struktur halaman mungkin berubah.'
       }), { status: 502 });
     }
@@ -64,8 +78,19 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     if (!searchRes.ok) {
+      const searchHtml = await searchRes.text();
+      if (isBlocked(searchHtml)) {
+        return new Response(JSON.stringify({
+          success: false,
+          blocked: true,
+          courtUrl: baseUrl,
+          error: 'Server pengadilan memblokir akses otomatis. Silakan kunjungi langsung untuk menelusuri perkara.'
+        }), { status: 403 });
+      }
       return new Response(JSON.stringify({
         success: false,
+        blocked: false,
+        courtUrl: baseUrl,
         error: 'Pencarian gagal. Server pengadilan mengembalikan error.'
       }), { status: 502 });
     }
@@ -85,15 +110,34 @@ export const POST: APIRoute = async ({ request }) => {
     if (err.name === 'TimeoutError') {
       return new Response(JSON.stringify({
         success: false,
+        blocked: false,
+        courtUrl: baseUrl || '',
         error: 'Permintaan timeout. Server pengadilan mungkin sedang sibuk.'
       }), { status: 504 });
     }
     return new Response(JSON.stringify({
       success: false,
+      blocked: false,
+      courtUrl: baseUrl || '',
       error: 'Terjadi kesalahan internal. Silakan coba lagi nanti.'
     }), { status: 500 });
   }
 };
+
+function isBlocked(html: string): boolean {
+  const indicators = [
+    'cf-browser-verification',
+    'challenge-platform',
+    'Just a moment',
+    'Checking if the site connection is secure',
+    'cf-challenge',
+    'Enable JavaScript and cookies to continue',
+    'ray ID',
+    'cloudflare',
+  ];
+  const lower = html.toLowerCase();
+  return indicators.some(i => lower.includes(i.toLowerCase()));
+}
 
 function parseSearchResults(html: string, baseUrl: string) {
   const results: Array<{
