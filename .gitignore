@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # regulasi referensi lokal (PDF berat + hak cipta, jangan commit)
 docs/regulasi/
+
+# log scrape lokal
+enrich_nasional.log
