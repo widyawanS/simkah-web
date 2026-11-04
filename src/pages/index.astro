@@ -17,7 +17,7 @@ const heroButtonText = homepageData?.heroButtonText;
 const heroButtonLink = homepageData?.heroButtonLink;
 ---
 
-<Layout title="simkah.web.id">
+<Layout title="simkah.web.id" heroImage={featuredPost?.image}>
   <main class="py-12 relative">
     <!-- Hero Section (Xgrind Pro Style) -->
     <section class="mb-24 mt-10 text-center px-4 max-w-5xl mx-auto">
@@ -111,9 +111,12 @@ const heroButtonLink = homepageData?.heroButtonLink;
                    typeof featuredPost.image === 'string' ? (
                      <img 
                       src={featuredPost.image} 
+                      width={1200}
+                      height={675}
                       class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-40" 
                       alt={featuredPost.title}
                       loading="eager"
+                      fetchpriority="high"
                      />
                    ) : (
                      <Image 

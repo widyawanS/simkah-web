@@ -1,7 +1,7 @@
 /* ==========================================================================
    SIMKAH PREMIUM STYLE - XGRIND NEO-BRUTALISM EDITION
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700;800&display=swap');
+/* Font self-hosted via @fontsource (bricolage/inter/playfair) — tanpa @import Google Fonts */
 
 @tailwind base;
 @tailwind components;

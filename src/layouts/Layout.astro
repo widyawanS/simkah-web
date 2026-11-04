@@ -13,9 +13,10 @@ export interface Props {
   description?: string;
   image?: string;
   ogType?: string;
+  heroImage?: string;
 }
 
-const { title, description, image, ogType } = Astro.props;
+const { title, description, image, ogType, heroImage } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -27,6 +28,9 @@ const { title, description, image, ogType } = Astro.props;
       image={image} 
       ogType={ogType} 
     />
+    {heroImage && (
+      <link rel="preload" as="image" href={heroImage} fetchpriority="high" />
+    )}
     <slot name="head" />
   </head>
   <body class="bg-brutal-bg text-brutal-text">
