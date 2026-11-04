@@ -180,6 +180,11 @@ def main():
 
         kua[slug] = entry
         done += 1
+        # Simpan progres per-entry (atomic) supaya kendala jaringan/putus tidak
+        # menyebabkan seluruh hasil run hilang.
+        tmp = KUA.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(kua, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        tmp.replace(KUA)
 
     tmp = KUA.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(kua, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
