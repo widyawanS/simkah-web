@@ -12,6 +12,12 @@ export interface BlogPost {
     content: string;
 }
 
+/** Slug direktori dari entry id content-layer ("a/b/SLUG/index.mdx" -> "SLUG") */
+function dirSlug(id: string): string {
+    const parts = id.split('/');
+    return parts.length >= 2 ? parts[parts.length - 2] : id;
+}
+
 export async function getPosts(): Promise<BlogPost[]> {
     const posts = await getCollection('blog', ({ data }) => {
         return !data.draft;
@@ -20,7 +26,7 @@ export async function getPosts(): Promise<BlogPost[]> {
     return posts
         .sort((a, b) => (b.data.pubDate?.getTime() || 0) - (a.data.pubDate?.getTime() || 0))
         .map(post => ({
-            slug: post.slug,
+            slug: dirSlug(post.id),
             title: post.data.title,
             description: post.data.description || '',
             pubDate: post.data.pubDate || new Date(),
@@ -33,20 +39,8 @@ export async function getPosts(): Promise<BlogPost[]> {
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
-    const entry = await getEntry('blog', slug);
-    if (!entry) return null;
-
-    return {
-        slug: entry.slug,
-        title: entry.data.title,
-        description: entry.data.description || '',
-        pubDate: entry.data.pubDate || new Date(),
-        author: entry.data.author || 'Admin',
-        image: entry.data.image,
-        category: entry.data.category || 'General',
-        draft: !!entry.data.draft,
-        content: entry.body,
-    };
+    const posts = await getPosts();
+    return posts.find((p) => p.slug === slug) || null;
 }
 
 export async function getPostsByCategory(category: string): Promise<BlogPost[]> {
@@ -62,11 +56,12 @@ export interface LegalPage {
 }
 
 export async function getLegalPage(slug: string): Promise<LegalPage | null> {
-    const entry = await getEntry('legal', slug);
+    const pages = await getCollection('legal');
+    const entry = pages.find((e) => dirSlug(e.id) === slug);
     if (!entry) return null;
 
     return {
-        slug: entry.slug,
+        slug: dirSlug(entry.id),
         title: entry.data.title || slug,
         lastUpdated: entry.data.lastUpdated || new Date(),
         content: entry.body,
