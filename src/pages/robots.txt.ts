@@ -7,8 +7,8 @@ export const GET: APIRoute = ({ site }) => {
 User-agent: *
 Allow: /
 
-# Allow pSEO KUA pages explicitly
-Allow: /panduan-nikah-di-KUA/
+# TEMPORER AdSense: blokir crawl 7.285 halaman pSEO tipis sampai ada data unik per KUA
+Disallow: /panduan-nikah-di-KUA/
 
 # Disallow admin and API routes
 Disallow: /keystatic/
@@ -19,9 +19,8 @@ Disallow: /test-*
 Disallow: /*?*page=
 Disallow: /*?*filter=
 
-# Sitemaps
+# Sitemaps (sitemap-kua disembunyikan sementara selama pSEO di-noindex)
 Sitemap: ${siteUrl}sitemap.xml
-Sitemap: ${siteUrl}sitemap-kua
 
 # Crawl-delay for bots (in seconds)
 Crawl-delay: 1
@@ -29,12 +28,10 @@ Crawl-delay: 1
 # Specific bot configurations
 User-agent: Googlebot
 Allow: /
-Allow: /panduan-nikah-di-KUA/
 Crawl-delay: 0
 
 User-agent: Bingbot
 Allow: /
-Allow: /panduan-nikah-di-KUA/
 Crawl-delay: 0
 
 User-agent: Slurp

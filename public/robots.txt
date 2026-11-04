@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
 
-Sitemap: http://simkah.web.id/sitemap-index.xml
+# TEMPORER AdSense: blokir crawl 7.285 halaman pSEO tipis sampai ada data unik per KUA
+Disallow: /panduan-nikah-di-KUA/
+
+# Disallow admin and API routes
+Disallow: /keystatic/
+Disallow: /api/
+Disallow: /test-*
+
+Sitemap: https://simkah.web.id/sitemap-index.xml

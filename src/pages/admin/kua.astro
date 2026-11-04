@@ -1,0 +1,75 @@
+---
+import { readFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
+import { kuaStats, kuaRows } from "@lib/adminKua";
+
+if (!import.meta.env.DEV) {
+  return Astro.redirect("/404");
+}
+
+function loadJson(rel: string): any {
+  const candidates = [
+    join(process.cwd(), rel),
+    join(process.cwd(), "src", "data", String(rel.split("/").pop())),
+  ];
+  for (const p of candidates) {
+    if (existsSync(p)) return JSON.parse(readFileSync(p, "utf-8"));
+  }
+  throw new Error("File tidak ditemukan: " + rel);
+}
+
+const kua = loadJson("src/data/kua.json");
+const wilayah: Array<{ slug: string; kecamatan: string; kota: string }> = loadJson("src/data/wilayah.json");
+const bySlug = new Map(wilayah.map((w) => [w.slug, w]));
+
+const q = Astro.url.searchParams.get("q") || "";
+const status = Astro.url.searchParams.get("status") || "all";
+const saved = Astro.url.searchParams.get("saved");
+const back = Astro.url.pathname + Astro.url.search;
+
+const total = kuaStats(kua);
+const result = kuaRows(kua, bySlug, q, status, 60);
+const shown = result.rows;
+const count = result.count;
+---
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Admin KUA (DEV)</title>
+</head>
+<body style="font-family:system-ui;max-width:1100px;margin:2rem auto;padding:0 1rem;background:#0f172a;color:#e2e8f0">
+<h1>Editor KUA <small style="color:#f87171">(DEV ONLY)</small></h1>
+<p>Total: {total.all} - verified {total.verified} - progress {total.progress} - missing {total.missing}</p>
+{saved && <p style="background:#065f46;padding:8px;border-radius:8px">Tersimpan: {saved}</p>}
+<form method="get" style="background:#1e293b;padding:1rem;border-radius:12px">
+<input type="text" name="q" value={q} placeholder="Cari kecamatan/kota/slug..." />
+<select name="status">
+<option value="all" selected={status === "all"}>all</option>
+<option value="missing" selected={status === "missing"}>missing</option>
+<option value="progress" selected={status === "progress"}>progress</option>
+<option value="verified" selected={status === "verified"}>verified</option>
+</select>
+<button type="submit">Cari</button>
+</form>
+<p>Menampilkan {shown.length} dari {count} hasil.</p>
+{shown.map((r) => (
+<form method="post" action="/api/admin/kua" style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:1rem;margin-bottom:1rem">
+<input type="hidden" name="slug" value={r.slug} />
+<input type="hidden" name="back" value={back} />
+<h3>{r.kecamatan}, {r.kota} [{r.status}]</h3>
+<p><label>Alamat (hapus PROGRESS-OSM bila sudah benar)</label><br /><textarea name="alamat" rows="2" style="width:100%">{r.entry.alamat || ""}</textarea></p>
+<p><label>Telepon (opsional)</label><br /><input type="text" name="telepon" value={r.entry.telepon || ""} style="width:100%" /></p>
+<p><label>Jam layanan</label><br /><input type="text" name="jam_layanan" value={r.entry.jam_layanan || ""} placeholder="Senin-Kamis 07.30-16.00, Jumat 07.30-16.30" style="width:100%" /></p>
+<p><label>Kepala KUA</label><br /><input type="text" name="kepala_kua" value={r.entry.kepala_kua || ""} style="width:100%" /></p>
+<p><label>Puskesmas rujukan</label><br /><input type="text" name="puskesmas_rujukan" value={r.entry.puskesmas_rujukan || ""} style="width:100%" /></p>
+<p><label>Patokan</label><br /><input type="text" name="patokan" value={r.entry.patokan || ""} style="width:100%" /></p>
+<p style="font-size:12px;color:#94a3b8">Desa: {(r.entry.desa_dilayani || []).join(", ") || "-"} - Jarak: {r.entry.jarak_pusat_kota_km ?? "-"} km</p>
+<p><label><input type="checkbox" name="verified" value="true" checked={r.entry.verified === true} /> verified (tampilkan + buka index)</label></p>
+<p><button type="submit">Simpan {r.slug}</button>
+<a style="margin-left:12px;color:#6ee7b7" href={`/panduan-nikah-di-KUA/${r.slug}`} target="_blank">pratinjau</a></p>
+</form>
+))}
+</body>
+</html>

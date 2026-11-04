@@ -10,7 +10,7 @@ import { Image } from "astro:assets";
 const { slug } = Astro.params;
 const post = await getPostBySlug(slug as string);
 
-if (!post) {
+if (!post || post.draft) {
   return Astro.redirect("/404");
 }
 

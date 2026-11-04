@@ -15,6 +15,13 @@ export default defineConfig({
     mode: "standalone",
   }),
   site: "https://simkah.web.id",
+  // Artikel lama yang digabung → redirect permanen agar tidak jadi thin/duplicate
+  redirects: {
+    "/blog/rekomendasi-nikah-sudah-terkirim-tapi-belum-terbaca-di-kua-tujuan-ini-yang-harus-dicek":
+      "/blog/rekomendasi-nikah-belum-terbaca-solusi",
+    "/blog/viral-penghulu-ini-pimpin-akad-nikah-pakai-bahasa-inggris-ternyata-ada-alasannya":
+      "/blog/lagi-penghulu-viral-pimpin-akad-nikah-dengan-3-bahasa",
+  },
   prefetch: true,
   image: {
     service: {

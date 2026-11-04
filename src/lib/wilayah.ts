@@ -5,6 +5,7 @@
 
 // Import JSON secara langsung agar Astro mempaketkannya (bundle) saat build
 import wilayahDataRaw from '../data/wilayah.json';
+import kuaDataRaw from '../data/kua.json';
 
 export interface KecamatanData {
   id_provinsi: string;
@@ -60,4 +61,36 @@ export function getVariasiPembuka(kecamatan: string, kota: string): string {
 
 export function shortKota(kota: string): string {
   return kota.replace(/^(Kota|Kabupaten)\s+/i, '');
+}
+
+export interface KUAData {
+  id_kecamatan: string;
+  alamat: string;
+  telepon: string;
+  jam_layanan: string;
+  kepala_kua: string;
+  desa_dilayani: string[];
+  puskesmas_rujukan: string;
+  patokan: string;
+  foto_gedung: string;
+  sumber_data: string;
+  verified: boolean;
+  updated: string;
+  koordinat?: { lat: number; lon: number };
+  jarak_pusat_kota_km?: number;
+  deskripsi_wilayah?: string;
+}
+
+/** Ambil data mentah KUA apa adanya (termasuk progress/OSM). Untuk publikasi gate tetap getKUAData */
+export function getKUARaw(slug: string): KUAData | null {
+  const raw = (kuaDataRaw as Record<string, unknown>)[slug] as KUAData | undefined;
+  return raw ?? null;
+}
+/** Data unik KUA: verified:true + alamat asli + daftar desa (telepon opsional, KUA umumnya tanpa call center) */
+export function getKUAData(slug: string): KUAData | null {
+  const raw = (kuaDataRaw as Record<string, unknown>)[slug] as KUAData | undefined;
+  if (!raw || raw.verified !== true) return null;
+  if (!raw.alamat || raw.alamat.startsWith('CONTOH') || raw.alamat.startsWith('PROGRESS')) return null;
+  if (!raw.desa_dilayani || raw.desa_dilayani.length === 0 || raw.desa_dilayani[0].startsWith('CONTOH')) return null;
+  return raw;
 }
