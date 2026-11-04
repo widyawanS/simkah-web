@@ -3,6 +3,10 @@
    ========================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700;800&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
     /* === Neo-Brutalism Color Tokens (Xgrind Pro inspired) === */
     --brutal-primary: #e85d75;       /* Pink/Rose */
