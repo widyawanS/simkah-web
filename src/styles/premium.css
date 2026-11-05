@@ -46,11 +46,8 @@
     --brutal-ring: #0f172a;
 
     /* === Background Grid (mode terang: garis gelap) === */
-    --grid-size: 48px;
-    --grid-size-fine: 12px;
-    --grid-line: rgba(15, 23, 42, 0.075);
-    --grid-line-fine: rgba(15, 23, 42, 0.035);
-    --grid-dot: rgba(15, 23, 42, 0.18);
+    --grid-size: 88px;
+    --grid-line: rgba(15, 23, 42, 0.09);
     --grid-glow: rgba(232, 93, 117, 0.06);
 }
 
@@ -75,20 +72,13 @@
     --brutal-ring: #4f46e5;
 
     /* === Background Grid (mode gelap: garis terang) === */
-    --grid-line: rgba(248, 250, 252, 0.06);
-    --grid-line-fine: rgba(248, 250, 252, 0.03);
-    --grid-dot: rgba(248, 250, 252, 0.16);
+    --grid-line: rgba(248, 250, 252, 0.07);
     --grid-glow: rgba(251, 113, 133, 0.07);
 }
 
 /* ==========================================================================
    BACKGROUND GRID — neo-brutalism blueprint
-   Lapisan (dari atas ke bawah):
-     1. glow aksen lembut di area hero
-     2. fade ke warna latar di tepi & bawah (agar grid tidak mengganggu bacaan)
-     3. titik di persilangan grid utama
-     4. garis grid utama (48px)
-     5. garis grid halus (12px)
+   Satu grid kotak besar saja (88px), tanpa titik, tanpa grid halus.
    Warna mengikuti mode via --grid-* di :root / .dark.
    Ditempel langsung ke <body> (bukan ::before) agar tidak tertutup lapisan
    background body sendiri dan tidak bergantung pada stacking context.
@@ -98,53 +88,29 @@ body {
     color: var(--brutal-text);
     background-image:
         /* 1. glow aksen */
-
         radial-gradient(ellipse 60% 45% at 50% -5%, var(--grid-glow), transparent 70%),
         /* 2. fade tepi agar grid halus di pinggir */
-
         radial-gradient(ellipse 130% 90% at 50% 0%, transparent 30%, var(--brutal-bg) 100%),
-        /* 3. titik persilangan */
-
-        radial-gradient(var(--grid-dot) 1.5px, transparent 1.6px),
-        /* 4. grid utama */
-
+        /* 3. grid kotak besar */
         linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px),
-        /* 5. grid halus */
-
-        linear-gradient(to right, var(--grid-line-fine) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--grid-line-fine) 1px, transparent 1px);
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
     background-size:
         100% 100%,
         100% 100%,
         var(--grid-size) var(--grid-size),
-        var(--grid-size) var(--grid-size),
-        var(--grid-size) var(--grid-size),
-        var(--grid-size-fine) var(--grid-size-fine),
-        var(--grid-size-fine) var(--grid-size-fine);
-    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
-    background-repeat: no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat;
+        var(--grid-size) var(--grid-size);
+    background-position: 0 0, 0 0, 0 0, 0 0;
+    background-repeat: no-repeat, no-repeat, repeat, repeat;
     background-attachment: fixed;
 }
 
-/* Mobile: grid halus (12px) dibuang — terlalu rapat, jadi moiré & berat.
-   Garis & titik diperkuat agar tetap terbaca. */
+/* Mobile: garis diperkuat sedikit agar tetap terbaca */
 @media (max-width: 640px) {
     body {
-        --grid-line: rgba(15, 23, 42, 0.12);
-        --grid-dot: rgba(15, 23, 42, 0.3);
-        background-image:
-            radial-gradient(ellipse 60% 45% at 50% -5%, var(--grid-glow), transparent 70%),
-            radial-gradient(ellipse 130% 90% at 50% 0%, transparent 30%, var(--brutal-bg) 100%),
-            radial-gradient(var(--grid-dot) 1.5px, transparent 1.6px),
-            linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-        background-size: 100% 100%, 100% 100%, var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size);
-        background-repeat: no-repeat, no-repeat, repeat, repeat, repeat;
+        --grid-line: rgba(15, 23, 42, 0.13);
     }
     .dark body {
-        --grid-line: rgba(248, 250, 252, 0.09);
-        --grid-dot: rgba(248, 250, 252, 0.28);
+        --grid-line: rgba(248, 250, 252, 0.1);
     }
 }
 
