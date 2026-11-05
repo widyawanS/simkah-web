@@ -249,5 +249,17 @@
     "verified": true,
     "updated": "2026-11-05",
     "sumber_data": "Verifikasi manual penghulu (2026-11-05). Basis data: OpenStreetMap + Wikipedia ID + API Wilayah Kemendagri (progress, belum verifikasi lapangan)"
+  },
+  "banjar-margo": {
+    "alamat": "Jalan Lintas Rawajitu, Kamp. Sumber Makmur, Kec. Banjar Margo, Kab. Tulang Bawang, Prov. Lampung",
+    "kepala_kua": "H. Muhammad Anshori",
+    "koordinat": {
+      "lat": -4.238945488027648,
+      "lon": 105.2736185416088
+    },
+    "jarak_pusat_kota_km": 35.8,
+    "verified": true,
+    "updated": "2026-11-05",
+    "sumber_data": "Verifikasi manual penghulu (2026-11-05). Basis data: OpenStreetMap + Wikipedia ID + API Wilayah Kemendagri (progress, belum verifikasi lapangan)"
   }
 }
