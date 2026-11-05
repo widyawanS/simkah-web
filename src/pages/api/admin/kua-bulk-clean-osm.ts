@@ -45,9 +45,10 @@ export const POST: APIRoute = async ({ request }) => {
     saved++;
   }
 
-  return Response.json({
-    scanned,
-    cleaned: saved,
-    message: `Bersihkan awalan OSM pada ${saved} entri dari ${scanned} yang dipindai.`,
+  const msg = `Bersihkan awalan OSM pada ${saved} entri dari ${scanned} yang dipindai.`;
+  // Location relatif agar tidak dilempar ke localhost di balik reverse proxy
+  return new Response(null, {
+    status: 303,
+    headers: { Location: '/admin/kua?' + new URLSearchParams({ bulk: String(saved), scanned: String(scanned) }) },
   });
 };

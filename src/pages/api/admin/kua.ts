@@ -52,11 +52,20 @@ export const POST: APIRoute = async ({ request }) => {
   const slug = String(form.get('slug') || '');
   const back = String(form.get('back') || '/admin/kua');
   // Sanitasi back: harus relatif, dimulai /admin, tidak boleh mengandung host/protokol
-  // (mencegah redirect ke localhost atau host eksternal)
-  const safeBack = back.replace(/^[a-zA-Z]+:\/\//, ''); // buang protokol jika ada
+  const safeBack = back.replace(/^[a-zA-Z]+:\/\//, '');
   const safePath = safeBack.startsWith('/admin') ? safeBack : '/admin/kua';
+  // PENTING: kirim Location RELATIF, jangan dibungkus new URL(..., request.url).
+  // Di balik reverse proxy (Coolify/Traefik), request.url berisi alamat internal
+  // container (mis. http://localhost:4321), sehingga redirect absolut akan
+  // melempar browser ke localhost. Location relatif selalu diselesaikan browser
+  // terhadap origin yang sedang dibuka.
   const redirect = (extra: string) =>
-    Response.redirect(new URL(safePath + (safePath.includes('?') ? '&' : '?') + extra, request.url), 303);
+    new Response(null, {
+      status: 303,
+      headers: {
+        Location: safePath + (safePath.includes('?') ? '&' : '?') + extra,
+      },
+    });
 
   if (!slug || /[^a-z0-9-]/.test(slug)) {
     return new Response('slug tidak valid', { status: 400 });

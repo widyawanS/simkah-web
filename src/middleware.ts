@@ -35,5 +35,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     if (path.startsWith("/api/")) {
         return new Response("unauthorized", { status: 401 });
     }
-    return context.redirect("/admin/login?next=" + encodeURIComponent(path));
+    // Location relatif — context.redirect() akan membuat URL absolut dari request.url
+    // yang di balik reverse proxy berisi alamat internal (localhost:4321).
+    return new Response(null, {
+        status: 303,
+        headers: { Location: "/admin/login?next=" + encodeURIComponent(path) },
+    });
 });

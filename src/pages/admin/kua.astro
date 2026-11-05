@@ -26,6 +26,8 @@ const saved = Astro.url.searchParams.get("saved");
 const noop = Astro.url.searchParams.get("noop");
 const commit = Astro.url.searchParams.get("commit");
 const err = Astro.url.searchParams.get("error");
+const bulkSaved = Astro.url.searchParams.get("bulk");
+const bulkScanned = Astro.url.searchParams.get("scanned");
 // Pastikan back selalu relatif, bukan absolut (hindari redirect ke localhost/host lain)
 const rawBack = Astro.url.pathname + Astro.url.search;
 const back = rawBack.replace(/^[a-zA-Z]+:\/\//, '');
@@ -69,6 +71,11 @@ style="margin-bottom:1rem;display:inline-block">
 <p>Total: {total.all} - <strong style="color:#6ee7b7">verified {total.verified}</strong> - progress {total.progress} - missing {total.missing}</p>
 
 {err && <p style="background:#7f1d1d;padding:10px;border-radius:8px">Gagal menyimpan: {err}</p>}
+{bulkSaved !== null && (
+<p style="background:#065f46;padding:10px;border-radius:8px">
+Awalan OSM dibersihkan pada <strong>{bulkSaved}</strong> entri (dari {bulkScanned} yang dipindai).
+</p>
+)}
 {saved && (
 <p style={`padding:10px;border-radius:8px;background:${noop ? "#1e3a5f" : "#065f46"}`}>
 {noop
