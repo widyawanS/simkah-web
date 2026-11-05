@@ -60,6 +60,12 @@ Mode penyimpanan: <strong style="color:#6ee7b7">{mode}</strong>
   : " — setiap simpan langsung commit ke GitHub branch main, lalu Coolify auto-deploy."}
 </p>
 
+<form method="post" action="/api/admin/kua-bulk-clean-osm" onsubmit="return confirm('Bersihkan awalan PROGRESS-OSM: dari semua alamat KUA? Ini akan membuat satu commit per entri yang dibersihkan.')"
+style="margin-bottom:1rem;display:inline-block">
+<input type="hidden" name="confirm" value="yes" />
+<button type="submit" style="background:#b45309;color:#fff;border:0;border-radius:8px;padding:.5rem 1rem;font-weight:700;cursor:pointer">🧹 Bersihkan semua awalan OSM di alamat</button>
+</form>
+
 <p>Total: {total.all} - <strong style="color:#6ee7b7">verified {total.verified}</strong> - progress {total.progress} - missing {total.missing}</p>
 
 {err && <p style="background:#7f1d1d;padding:10px;border-radius:8px">Gagal menyimpan: {err}</p>}
