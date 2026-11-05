@@ -46,9 +46,14 @@
     --brutal-ring: #0f172a;
 
     /* === Background Grid (mode terang: garis gelap) === */
-    --grid-size: 88px;
+    --grid-size: 80px;
     --grid-line: rgba(15, 23, 42, 0.09);
     --grid-glow: rgba(232, 93, 117, 0.06);
+    /* Kotak terisi: pola acak di super-tile 400x400 (5x5 sel 80px), warnanya
+       senada latar (bg-alt). Komposisi: pasangan horizontal (1,2)-(2,2),
+       satu sel tunggal (3,1), pasangan vertikal di tepi kiri (0,1)-(0,2).
+       5 dari 25 sel = 20%, cukup jadi aksen tanpa jadi rame. */
+    --grid-tile: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><g fill='%23F0EBE1' fill-opacity='0.5'><rect x='80' y='160' width='80' height='80'/><rect x='160' y='160' width='80' height='80'/><rect x='240' y='80' width='80' height='80'/><rect x='0' y='80' width='80' height='80'/><rect x='0' y='160' width='80' height='80'/></g></svg>");
 }
 
 .dark {
@@ -74,11 +79,16 @@
     /* === Background Grid (mode gelap: garis terang) === */
     --grid-line: rgba(248, 250, 252, 0.07);
     --grid-glow: rgba(251, 113, 133, 0.07);
+    /* Kotak terisi versi gelap: bg-alt gelap, komposisi sama dengan mode terang.
+       Opacity lebih tinggi karena kontras gelap-ke-gelap sangat rendah. */
+    --grid-tile: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><g fill='%2318181B' fill-opacity='0.8'><rect x='80' y='160' width='80' height='80'/><rect x='160' y='160' width='80' height='80'/><rect x='240' y='80' width='80' height='80'/><rect x='0' y='80' width='80' height='80'/><rect x='0' y='160' width='80' height='80'/></g></svg>");
 }
 
 /* ==========================================================================
    BACKGROUND GRID — neo-brutalism blueprint
-   Satu grid kotak besar saja (88px), tanpa titik, tanpa grid halus.
+   Grid kotak besar (80px) + sebagian sel terisi warna senada latar
+   (pola acak dalam super-tile 400px = 5x5 sel, lihat --grid-tile),
+   plus glow aksen tipis di hero.
    Warna mengikuti mode via --grid-* di :root / .dark.
    Ditempel langsung ke <body> (bukan ::before) agar tidak tertutup lapisan
    background body sendiri dan tidak bergantung pada stacking context.
@@ -91,16 +101,19 @@ body {
         radial-gradient(ellipse 60% 45% at 50% -5%, var(--grid-glow), transparent 70%),
         /* 2. fade tepi agar grid halus di pinggir */
         radial-gradient(ellipse 130% 90% at 50% 0%, transparent 30%, var(--brutal-bg) 100%),
-        /* 3. grid kotak besar */
+        /* 3. garis grid kotak besar */
         linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px),
+        /* 4. sel terisi (paling bawah, garis tetap terlihat di atasnya) */
+        var(--grid-tile);
     background-size:
         100% 100%,
         100% 100%,
         var(--grid-size) var(--grid-size),
-        var(--grid-size) var(--grid-size);
-    background-position: 0 0, 0 0, 0 0, 0 0;
-    background-repeat: no-repeat, no-repeat, repeat, repeat;
+        var(--grid-size) var(--grid-size),
+        400px 400px; /* 5 x --grid-size; ubah bila --grid-size berubah */
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+    background-repeat: no-repeat, no-repeat, repeat, repeat, repeat;
     background-attachment: fixed;
 }
 
