@@ -65,7 +65,13 @@ const count = result.count;
 <p><label>Kepala KUA</label><br /><input type="text" name="kepala_kua" value={r.entry.kepala_kua || ""} style="width:100%" /></p>
 <p><label>Puskesmas rujukan</label><br /><input type="text" name="puskesmas_rujukan" value={r.entry.puskesmas_rujukan || ""} style="width:100%" /></p>
 <p><label>Patokan</label><br /><input type="text" name="patokan" value={r.entry.patokan || ""} style="width:100%" /></p>
-<p style="font-size:12px;color:#94a3b8">Desa: {(r.entry.desa_dilayani || []).join(", ") || "-"} - Jarak: {r.entry.jarak_pusat_kota_km ?? "-"} km</p>
+<p><label>Koordinat (lat / lon) — jarak ke pusat kota dihitung ulang otomatis</label><br />
+<input type="text" name="lat" value={r.entry.koordinat?.lat ?? ""} placeholder="-6.20000" style="width:48%" />
+<input type="text" name="lon" value={r.entry.koordinat?.lon ?? ""} placeholder="106.81667" style="width:48%" /></p>
+<p><label>Desa/kelurahan dilayani (satu per baris)</label><br /><textarea name="desa_dilayani" rows="5" style="width:100%">{(r.entry.desa_dilayani || []).join("\n")}</textarea></p>
+<p><label>Deskripsi wilayah</label><br /><textarea name="deskripsi_wilayah" rows="3" style="width:100%">{r.entry.deskripsi_wilayah || ""}</textarea></p>
+<p><label>Foto gedung (URL)</label><br /><input type="text" name="foto_gedung" value={r.entry.foto_gedung || ""} placeholder="https://..." style="width:100%" /></p>
+<p style="font-size:12px;color:#94a3b8">Jumlah desa: {(r.entry.desa_dilayani || []).length} - Jarak: {r.entry.jarak_pusat_kota_km ?? "-"} km - Updated: {r.entry.updated || "-"}</p>
 <p><label><input type="checkbox" name="verified" value="true" checked={r.entry.verified === true} /> verified (tampilkan + buka index)</label></p>
 <p><button type="submit">Simpan {r.slug}</button>
 <a style="margin-left:12px;color:#6ee7b7" href={`/panduan-nikah-di-KUA/${r.slug}`} target="_blank">pratinjau</a></p>
