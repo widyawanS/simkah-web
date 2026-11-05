@@ -99,23 +99,52 @@ export default config({
         }),
         posts: collection({
             label: 'Posts',
+            singularLabel: 'Post',
             slugField: 'title',
             path: 'src/content/blog/*/',
             format: { contentField: 'content' },
+            // Urutan default di daftar admin: terbaru dulu
+            defaultSort: { field: 'pubDate', direction: 'descending' },
             schema: {
-                title: fields.slug({ name: { label: 'Title' } }),
-                description: fields.text({ label: 'Description', multiline: true }),
-                pubDate: fields.date({ label: 'Publication Date', defaultValue: { kind: 'today' } }),
-                author: fields.text({ label: 'Author', defaultValue: 'Admin' }),
+                // --- Konten Utama ---
+                title: fields.slug({
+                    name: {
+                        label: 'Judul Artikel',
+                        description: 'Judul yang juga menjadi URL slug (mis. cara-menikah-di-kua)',
+                    },
+                }),
+                category: fields.text({
+                    label: 'Kategori',
+                    description: 'Contoh: berita, catatan, inspirasi, tutorial',
+                }),
+                pubDate: fields.date({
+                    label: 'Tanggal Publikasi',
+                    defaultValue: { kind: 'today' },
+                }),
+                author: fields.text({
+                    label: 'Penulis',
+                    defaultValue: 'Admin',
+                }),
+                draft: fields.checkbox({
+                    label: 'Draft (tidak tampil di situs)',
+                    description: 'Centang jika artikel masih dikerjakan / belum siap dipublikasikan',
+                    defaultValue: false,
+                }),
+                // --- Media ---
                 image: fields.image({
-                    label: 'Thumbnail',
+                    label: 'Gambar Thumbnail',
                     directory: 'public/images/blog',
                     publicPath: '/images/blog/',
+                    description: 'Gambar sampul artikel yang muncul di daftar posting',
                 }),
-                category: fields.text({ label: 'Category' }),
-                draft: fields.checkbox({ label: 'Draft', defaultValue: false }),
+                // --- Konten ---
+                description: fields.text({
+                    label: 'Deskripsi Ringan (Excerpt)',
+                    multiline: true,
+                    description: 'Ringkasan 1-2 kalimat yang ditampilkan di daftar artikel',
+                }),
                 content: fields.mdx({
-                    label: 'Content',
+                    label: 'Isi Artikel',
                     options: {
                         image: {
                             directory: 'public/images/blog',
