@@ -1,0 +1,33 @@
+---
+import { authConfigured } from "@lib/auth";
+
+const error = Astro.url.searchParams.get("error");
+const next = Astro.url.searchParams.get("next") || "/admin/kua";
+const configured = authConfigured();
+---
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Masuk - Admin SIMKAH</title>
+</head>
+<body style="font-family:system-ui;min-height:100vh;margin:0;display:grid;place-items:center;background:#0f172a;color:#e2e8f0">
+<form method="post" action="/api/admin/login" style="background:#1e293b;border:1px solid #334155;border-radius:16px;padding:2rem;width:min(360px,90vw)">
+<h1 style="margin:0 0 .25rem;font-size:1.25rem">Admin SIMKAH</h1>
+<p style="margin:0 0 1.25rem;color:#94a3b8;font-size:.875rem">Editor data KUA</p>
+{error && <p style="background:#7f1d1d;padding:8px 10px;border-radius:8px;font-size:.875rem;margin:0 0 1rem">Password salah.</p>}
+{!configured && !import.meta.env.DEV && (
+<p style="background:#78350f;padding:8px 10px;border-radius:8px;font-size:.875rem;margin:0 0 1rem">
+Server belum diset: <code>ADMIN_PASSWORD</code> dan <code>ADMIN_SESSION_SECRET</code>.
+</p>
+)}
+<input type="hidden" name="next" value={next} />
+<label style="display:block;font-size:.875rem;color:#94a3b8;margin-bottom:.35rem">Password</label>
+<input type="password" name="password" required autofocus
+style="width:100%;box-sizing:border-box;padding:.6rem .75rem;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#e2e8f0" />
+<button type="submit" style="width:100%;margin-top:1.25rem;padding:.7rem;border:0;border-radius:8px;background:#059669;color:#fff;font-weight:700;cursor:pointer">Masuk</button>
+</form>
+</body>
+</html>

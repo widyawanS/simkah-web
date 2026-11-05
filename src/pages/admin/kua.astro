@@ -1,79 +1,109 @@
 ---
-import { readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
 import { kuaStats, kuaRows } from "@lib/adminKua";
+import { loadManual, isDev, storageMode } from "@lib/kuaStore";
+import kuaBaseline from "../../data/kua.json";
+import wilayahData from "../../data/wilayah.json";
 
-if (!import.meta.env.DEV) {
-  return Astro.redirect("/404");
+// Baseline (kua.json, hasil scrape) diambil dari bundle saat build — cepat, tanpa network.
+// Override manual diambil runtime (dev: file lokal, prod: GitHub API) supaya selalu terbaru.
+const manual = await loadManual();
+
+const kua: Record<string, any> = {};
+for (const [slug, base] of Object.entries(kuaBaseline as Record<string, any>)) {
+  kua[slug] = base;
+}
+for (const [slug, ov] of Object.entries(manual)) {
+  if (slug.startsWith("_") || !ov || typeof ov !== "object") continue;
+  kua[slug] = { ...(kua[slug] || {}), ...(ov as Record<string, any>) };
 }
 
-function loadJson(rel: string): any {
-  const candidates = [
-    join(process.cwd(), rel),
-    join(process.cwd(), "src", "data", String(rel.split("/").pop())),
-  ];
-  for (const p of candidates) {
-    if (existsSync(p)) return JSON.parse(readFileSync(p, "utf-8"));
-  }
-  throw new Error("File tidak ditemukan: " + rel);
-}
-
-const kua = loadJson("src/data/kua.json");
-const wilayah: Array<{ slug: string; kecamatan: string; kota: string }> = loadJson("src/data/wilayah.json");
+const wilayah = wilayahData as Array<{ slug: string; kecamatan: string; kota: string }>;
 const bySlug = new Map(wilayah.map((w) => [w.slug, w]));
 
 const q = Astro.url.searchParams.get("q") || "";
 const status = Astro.url.searchParams.get("status") || "all";
 const saved = Astro.url.searchParams.get("saved");
+const noop = Astro.url.searchParams.get("noop");
+const commit = Astro.url.searchParams.get("commit");
+const err = Astro.url.searchParams.get("error");
 const back = Astro.url.pathname + Astro.url.search;
 
 const total = kuaStats(kua);
 const result = kuaRows(kua, bySlug, q, status, 60);
 const shown = result.rows;
 const count = result.count;
+const mode = storageMode();
+const dev = isDev();
 ---
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Admin KUA (DEV)</title>
+<meta name="robots" content="noindex,nofollow" />
+<title>Admin KUA - SIMKAH</title>
 </head>
 <body style="font-family:system-ui;max-width:1100px;margin:2rem auto;padding:0 1rem;background:#0f172a;color:#e2e8f0">
-<h1>Editor KUA <small style="color:#f87171">(DEV ONLY)</small></h1>
-<p>Total: {total.all} - verified {total.verified} - progress {total.progress} - missing {total.missing}</p>
-{saved && <p style="background:#065f46;padding:8px;border-radius:8px">Tersimpan: {saved}</p>}
-<form method="get" style="background:#1e293b;padding:1rem;border-radius:12px">
-<input type="text" name="q" value={q} placeholder="Cari kecamatan/kota/slug..." />
-<select name="status">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+<h1 style="margin:0">Editor KUA</h1>
+<form method="post" action="/api/admin/logout" style="margin:0">
+<button type="submit" style="background:#334155;color:#e2e8f0;border:1px solid #475569;border-radius:8px;padding:.4rem .8rem;cursor:pointer">Keluar</button>
+</form>
+</div>
+
+<p style="color:#94a3b8;font-size:.875rem;margin:.5rem 0 1rem">
+Mode penyimpanan: <strong style="color:#6ee7b7">{mode}</strong>
+{dev
+  ? " — simpan menulis file lokal src/data/kua-manual.json. Commit & push sendiri (bisa banyak entri sekaligus = 1 deploy)."
+  : " — setiap simpan langsung commit ke GitHub branch main, lalu Coolify auto-deploy."}
+</p>
+
+<p>Total: {total.all} - <strong style="color:#6ee7b7">verified {total.verified}</strong> - progress {total.progress} - missing {total.missing}</p>
+
+{err && <p style="background:#7f1d1d;padding:10px;border-radius:8px">Gagal menyimpan: {err}</p>}
+{saved && (
+<p style={`padding:10px;border-radius:8px;background:${noop ? "#1e3a5f" : "#065f46"}`}>
+{noop
+  ? <>Tidak ada perubahan pada <strong>{saved}</strong> — nilainya sudah sama dengan baseline.</>
+  : <>Tersimpan: <strong>{saved}</strong></>}
+{commit && <> - commit <code>{commit.slice(0, 7)}</code></>}
+{!noop && !dev && <> - deploy otomatis sedang berjalan, cek <a style="color:#a7f3d0" href={`/panduan-nikah-di-KUA/${saved}`} target="_blank">halaman publik</a> setelah ±1-3 menit.</>}
+</p>
+)}
+
+<form method="get" style="background:#1e293b;padding:1rem;border-radius:12px;display:flex;gap:.5rem;flex-wrap:wrap">
+<input type="text" name="q" value={q} placeholder="Cari kecamatan/kota/slug..." style="flex:1;min-width:200px;padding:.5rem;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#e2e8f0" />
+<select name="status" style="padding:.5rem;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#e2e8f0">
 <option value="all" selected={status === "all"}>all</option>
 <option value="missing" selected={status === "missing"}>missing</option>
 <option value="progress" selected={status === "progress"}>progress</option>
 <option value="verified" selected={status === "verified"}>verified</option>
 </select>
-<button type="submit">Cari</button>
+<button type="submit" style="padding:.5rem 1rem;border-radius:8px;border:0;background:#059669;color:#fff;font-weight:700;cursor:pointer">Cari</button>
 </form>
-<p>Menampilkan {shown.length} dari {count} hasil.</p>
+
+<p style="color:#94a3b8;font-size:.875rem">Menampilkan {shown.length} dari {count} hasil.</p>
+
 {shown.map((r) => (
 <form method="post" action="/api/admin/kua" style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:1rem;margin-bottom:1rem">
 <input type="hidden" name="slug" value={r.slug} />
 <input type="hidden" name="back" value={back} />
-<h3>{r.kecamatan}, {r.kota} [{r.status}]</h3>
-<p><label>Alamat (hapus PROGRESS-OSM bila sudah benar)</label><br /><textarea name="alamat" rows="2" style="width:100%">{r.entry.alamat || ""}</textarea></p>
-<p><label>Telepon (opsional)</label><br /><input type="text" name="telepon" value={r.entry.telepon || ""} style="width:100%" /></p>
-<p><label>Jam layanan</label><br /><input type="text" name="jam_layanan" value={r.entry.jam_layanan || ""} placeholder="Senin-Kamis 07.30-16.00, Jumat 07.30-16.30" style="width:100%" /></p>
-<p><label>Kepala KUA</label><br /><input type="text" name="kepala_kua" value={r.entry.kepala_kua || ""} style="width:100%" /></p>
-<p><label>Puskesmas rujukan</label><br /><input type="text" name="puskesmas_rujukan" value={r.entry.puskesmas_rujukan || ""} style="width:100%" /></p>
-<p><label>Patokan</label><br /><input type="text" name="patokan" value={r.entry.patokan || ""} style="width:100%" /></p>
+<h3 style="margin-top:0">{r.kecamatan}, {r.kota} <span style="font-size:.75rem;color:#94a3b8">[{r.status}]</span></h3>
+<p><label>Alamat (hapus awalan PROGRESS-OSM bila sudah dikoreksi)</label><br /><textarea name="alamat" rows="2" style="width:100%;box-sizing:border-box">{r.entry.alamat || ""}</textarea></p>
+<p><label>Telepon (opsional)</label><br /><input type="text" name="telepon" value={r.entry.telepon || ""} style="width:100%;box-sizing:border-box" /></p>
+<p><label>Jam layanan</label><br /><input type="text" name="jam_layanan" value={r.entry.jam_layanan || ""} placeholder="Senin-Kamis 07.30-16.00, Jumat 07.30-16.30" style="width:100%;box-sizing:border-box" /></p>
+<p><label>Kepala KUA</label><br /><input type="text" name="kepala_kua" value={r.entry.kepala_kua || ""} style="width:100%;box-sizing:border-box" /></p>
+<p><label>Puskesmas rujukan</label><br /><input type="text" name="puskesmas_rujukan" value={r.entry.puskesmas_rujukan || ""} style="width:100%;box-sizing:border-box" /></p>
+<p><label>Patokan</label><br /><input type="text" name="patokan" value={r.entry.patokan || ""} style="width:100%;box-sizing:border-box" /></p>
 <p><label>Koordinat (lat / lon) — jarak ke pusat kota dihitung ulang otomatis</label><br />
-<input type="text" name="lat" value={r.entry.koordinat?.lat ?? ""} placeholder="-6.20000" style="width:48%" />
-<input type="text" name="lon" value={r.entry.koordinat?.lon ?? ""} placeholder="106.81667" style="width:48%" /></p>
-<p><label>Desa/kelurahan dilayani (satu per baris)</label><br /><textarea name="desa_dilayani" rows="5" style="width:100%">{(r.entry.desa_dilayani || []).join("\n")}</textarea></p>
-<p><label>Deskripsi wilayah</label><br /><textarea name="deskripsi_wilayah" rows="3" style="width:100%">{r.entry.deskripsi_wilayah || ""}</textarea></p>
-<p><label>Foto gedung (URL)</label><br /><input type="text" name="foto_gedung" value={r.entry.foto_gedung || ""} placeholder="https://..." style="width:100%" /></p>
+<input type="text" name="lat" value={r.entry.koordinat?.lat ?? ""} placeholder="-6.20000" style="width:48%;box-sizing:border-box" />
+<input type="text" name="lon" value={r.entry.koordinat?.lon ?? ""} placeholder="106.81667" style="width:48%;box-sizing:border-box" /></p>
+<p><label>Desa/kelurahan dilayani (satu per baris)</label><br /><textarea name="desa_dilayani" rows="5" style="width:100%;box-sizing:border-box">{(r.entry.desa_dilayani || []).join("\n")}</textarea></p>
+<p><label>Deskripsi wilayah</label><br /><textarea name="deskripsi_wilayah" rows="3" style="width:100%;box-sizing:border-box">{r.entry.deskripsi_wilayah || ""}</textarea></p>
+<p><label>Foto gedung (URL)</label><br /><input type="text" name="foto_gedung" value={r.entry.foto_gedung || ""} placeholder="https://..." style="width:100%;box-sizing:border-box" /></p>
 <p style="font-size:12px;color:#94a3b8">Jumlah desa: {(r.entry.desa_dilayani || []).length} - Jarak: {r.entry.jarak_pusat_kota_km ?? "-"} km - Updated: {r.entry.updated || "-"}</p>
-<p><label><input type="checkbox" name="verified" value="true" checked={r.entry.verified === true} /> verified (tampilkan + buka index)</label></p>
-<p><button type="submit">Simpan {r.slug}</button>
+<p><label><input type="checkbox" name="verified" value="true" checked={r.entry.verified === true} /> verified (tampilkan profil + buka index)</label></p>
+<p><button type="submit" style="padding:.5rem 1rem;border-radius:8px;border:0;background:#059669;color:#fff;font-weight:700;cursor:pointer">Simpan {r.slug}</button>
 <a style="margin-left:12px;color:#6ee7b7" href={`/panduan-nikah-di-KUA/${r.slug}`} target="_blank">pratinjau</a></p>
 </form>
 ))}

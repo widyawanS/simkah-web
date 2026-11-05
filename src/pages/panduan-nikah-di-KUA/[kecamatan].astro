@@ -95,8 +95,9 @@ const jsonLd = JSON.stringify({
 ---
 
 <Layout title={pageTitle} description={pageDesc}>
-  <!-- TEMPORER AdSense: noindex 7.285 halaman pSEO sampai ada data unik per KUA -->
-  <meta name="robots" content="noindex, follow" slot="head" />
+  <!-- Halaman yang belum punya data unik terverifikasi tetap noindex (thin content).
+       Begitu admin menandai verified:true, halaman otomatis boleh diindex. -->
+  {!kua && <meta name="robots" content="noindex, follow" slot="head" />}
   <!-- JSON-LD Schema -->
   <script type="application/ld+json" set:html={jsonLd} slot="head" />
 

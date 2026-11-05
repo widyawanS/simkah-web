@@ -1,27 +1,30 @@
 import type { APIRoute } from 'astro';
-import { readFile, writeFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { getKUABaseline } from '@lib/wilayah';
+import { saveManual } from '@lib/kuaStore';
+import { jarakKePusatKota } from '@lib/geo';
 
-const ROOT = process.cwd();
+/**
+ * Simpan edit manual satu entri KUA.
+ *
+ * Auth ditangani src/middleware.ts (cookie sesi). Penyimpanan ditangani
+ * src/lib/kuaStore.ts: dev menulis file lokal, production commit ke GitHub.
+ *
+ * Yang disimpan HANYA field yang berbeda dari baseline kua.json, supaya
+ * kua-manual.json tetap kecil dan riwayat git tidak membengkak.
+ */
 
-function dataPath(rel: string): string {
-  const p = join(ROOT, rel);
-  if (existsSync(p)) return p;
-  throw new Error(`${rel} tidak ditemukan`);
-}
+const TEXT_FIELDS = [
+  'alamat',
+  'telepon',
+  'jam_layanan',
+  'kepala_kua',
+  'puskesmas_rujukan',
+  'patokan',
+  'deskripsi_wilayah',
+  'foto_gedung',
+];
 
-/** Jarak dua titik (km), bulatkan 1 desimal — konsisten dengan scripts/enrich_kua.py */
-function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const r = 6371.0;
-  const p1 = (lat1 * Math.PI) / 180;
-  const p2 = (lat2 * Math.PI) / 180;
-  const d = Math.sin((p2 - p1) / 2) ** 2
-    + Math.cos(p1) * Math.cos(p2) * Math.sin((((lon2 - lon1) * Math.PI) / 180) / 2) ** 2;
-  return Math.round(2 * r * Math.asin(Math.sqrt(d)) * 10) / 10;
-}
-
-/** Terima "−6,2" maupun "-6.2" */
+/** Terima "-6,2" (format Indonesia) maupun "-6.2" */
 function parseNum(v: unknown): number | null {
   const s = String(v ?? '').trim().replace(',', '.');
   if (!s) return null;
@@ -29,75 +32,94 @@ function parseNum(v: unknown): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-const TEXT_FIELDS = [
-  'alamat', 'telepon', 'jam_layanan', 'kepala_kua',
-  'puskesmas_rujukan', 'patokan', 'deskripsi_wilayah', 'foto_gedung',
-];
+function sameValue(a: unknown, b: unknown): boolean {
+  return JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+}
+
+/** Bandingkan koordinat secara numerik agar urutan key/format tidak bikin diff palsu */
+function sameKoordinat(a: any, b: any): boolean {
+  const ao = a && typeof a === 'object' ? a : null;
+  const bo = b && typeof b === 'object' ? b : null;
+  if (!ao || !bo) {
+    if (ao || bo) return false;
+    return String(a ?? '') === String(b ?? '');
+  }
+  return Number(ao.lat) === Number(bo.lat) && Number(ao.lon) === Number(bo.lon);
+}
 
 export const POST: APIRoute = async ({ request }) => {
-  // DEV ONLY — penyimpanan production belum diputuskan (menunggu pilihan
-  // Decap CMS / git write-back / persistent volume). Jangan dibuka ke
-  // production sebelum arsitektur + auth ditentukan.
-  if (!import.meta.env.DEV) {
-    return new Response('Not found', { status: 404 });
-  }
   const form = await request.formData();
   const slug = String(form.get('slug') || '');
   const back = String(form.get('back') || '/admin/kua');
+  const redirect = (extra: string) =>
+    Response.redirect(new URL(back + (back.includes('?') ? '&' : '?') + extra, request.url), 303);
+
   if (!slug || /[^a-z0-9-]/.test(slug)) {
     return new Response('slug tidak valid', { status: 400 });
   }
 
-  const KUA_PATH = dataPath('src/data/kua.json');
-  const kua = JSON.parse(await readFile(KUA_PATH, 'utf-8'));
-  const e = kua[slug] && typeof kua[slug] === 'object' ? kua[slug] : {};
+  const base = (getKUABaseline(slug) ?? {}) as Record<string, any>;
+  const candidate: Record<string, any> = {};
 
   // 1) Field teks
   for (const f of TEXT_FIELDS) {
-    e[f] = String(form.get(f) ?? '').trim();
+    candidate[f] = String(form.get(f) ?? '').trim();
   }
 
-  // 2) Desa/kelurahan dilayani — satu nama per baris
+  // 2) Desa/kelurahan — satu nama per baris
   const desa = String(form.get('desa_dilayani') ?? '')
     .split(/\r?\n/)
     .map((s) => s.trim())
     .filter(Boolean);
-  if (desa.length) e.desa_dilayani = desa;
+  if (desa.length) candidate.desa_dilayani = desa;
 
-  // 3) Koordinat + hitung ulang jarak ke pusat kota/kabupaten
+  // 3) Koordinat; jarak dihitung ulang hanya bila koordinatnya benar-benar berubah
   const lat = parseNum(form.get('lat'));
   const lon = parseNum(form.get('lon'));
   if (lat !== null && lon !== null && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
-    e.koordinat = { lat, lon };
-    try {
-      const wilayah = JSON.parse(await readFile(dataPath('src/data/wilayah.json'), 'utf-8'));
-      const capsPath = join(ROOT, 'scripts', '.capitals.json');
-      const caps = existsSync(capsPath) ? JSON.parse(await readFile(capsPath, 'utf-8')) : {};
-      const w = wilayah.find((x: any) => x.slug === slug);
-      const cap = w ? caps[w.id_kota] : null;
-      if (cap) e.jarak_pusat_kota_km = haversineKm(lat, lon, cap.lat, cap.lon);
-    } catch {
-      // jarak bersifat opsional; jangan gagalkan penyimpanan
-    }
+    candidate.koordinat = { lat, lon };
   } else {
-    e.koordinat = '';
-    e.jarak_pusat_kota_km = '';
+    candidate.koordinat = '';
+  }
+  if (!sameKoordinat(candidate.koordinat, base.koordinat)) {
+    const jarak =
+      candidate.koordinat && typeof candidate.koordinat === 'object'
+        ? jarakKePusatKota(slug, candidate.koordinat.lat, candidate.koordinat.lon)
+        : null;
+    candidate.jarak_pusat_kota_km = jarak ?? '';
   }
 
-  // 4) Status verifikasi + provenance
-  e.verified = form.get('verified') === 'true';
+  // 4) Status verifikasi + provenance (provenance scrape tetap dicantumkan)
+  const verified = form.get('verified') === 'true';
+  candidate.verified = verified;
   const today = new Date().toISOString().slice(0, 10);
-  if (e.verified) {
-    e.updated = today;
-    const basis = String(e.sumber_data || '')
-      .replace(/^Verifikasi manual penghulu \([\d-]+\)\.\s*Basis data:\s*/, '');
-    e.sumber_data = `Verifikasi manual penghulu (${today}). Basis data: ${basis || '-'}`;
+  if (verified) {
+    candidate.updated = today;
+    const basis = String(base.sumber_data || '').replace(
+      /^Verifikasi manual penghulu \([\d-]+\)\.\s*Basis data:\s*/,
+      ''
+    );
+    candidate.sumber_data = `Verifikasi manual penghulu (${today}). Basis data: ${basis || '-'}`;
   }
 
-  kua[slug] = e;
-  await writeFile(KUA_PATH, JSON.stringify(kua, null, 2) + '\n', 'utf-8');
-  return Response.redirect(
-    new URL(back + (back.includes('?') ? '&' : '?') + 'saved=' + slug, request.url),
-    303
-  );
+  // 5) Ambil selisihnya saja terhadap baseline
+  const patch: Record<string, any> = {};
+  for (const [k, v] of Object.entries(candidate)) {
+    const equal = k === 'koordinat' ? sameKoordinat(v, base[k]) : sameValue(v, base[k]);
+    if (!equal) patch[k] = v;
+  }
+
+  if (!Object.keys(patch).length) {
+    return redirect('saved=' + encodeURIComponent(slug) + '&noop=1');
+  }
+
+  try {
+    const res = await saveManual(slug, patch, `Admin: verifikasi KUA ${slug}`);
+    return redirect(
+      'saved=' + encodeURIComponent(slug) + (res.commit ? '&commit=' + res.commit : '')
+    );
+  } catch (err: any) {
+    const msg = String(err?.message || err).slice(0, 200);
+    return redirect('error=' + encodeURIComponent(msg));
+  }
 };

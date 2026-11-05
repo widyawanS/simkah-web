@@ -6,6 +6,8 @@
 // Import JSON secara langsung agar Astro mempaketkannya (bundle) saat build
 import wilayahDataRaw from '../data/wilayah.json';
 import kuaDataRaw from '../data/kua.json';
+// Override hasil verifikasi manual penghulu (file kecil, menimpa baseline per field)
+import kuaManualRaw from '../data/kua-manual.json';
 
 export interface KecamatanData {
   id_provinsi: string;
@@ -81,14 +83,30 @@ export interface KUAData {
   deskripsi_wilayah?: string;
 }
 
-/** Ambil data mentah KUA apa adanya (termasuk progress/OSM). Untuk publikasi gate tetap getKUAData */
+const _kuaBase = kuaDataRaw as Record<string, unknown>;
+const _kuaManual = kuaManualRaw as Record<string, unknown>;
+
+/** Baseline hasil scrape (kua.json) apa adanya, tanpa override manual. Dipakai admin untuk menghitung diff. */
+export function getKUABaseline(slug: string): KUAData | null {
+  return (_kuaBase[slug] as KUAData | undefined) ?? null;
+}
+
+/** Gabungkan baseline + override manual; field di kua-manual.json menang. */
+function resolveKua(slug: string): KUAData | null {
+  const base = _kuaBase[slug] as KUAData | undefined;
+  const ov = _kuaManual[slug];
+  if (!base && !ov) return null;
+  if (!ov || typeof ov !== 'object') return base ?? null;
+  return { ...(base ?? {}), ...(ov as Partial<KUAData>) } as KUAData;
+}
+
+/** Ambil data KUA (baseline + override manual, termasuk progress/OSM). Untuk publikasi gate tetap getKUAData */
 export function getKUARaw(slug: string): KUAData | null {
-  const raw = (kuaDataRaw as Record<string, unknown>)[slug] as KUAData | undefined;
-  return raw ?? null;
+  return resolveKua(slug);
 }
 /** Data unik KUA: verified:true + alamat asli + daftar desa (telepon opsional, KUA umumnya tanpa call center) */
 export function getKUAData(slug: string): KUAData | null {
-  const raw = (kuaDataRaw as Record<string, unknown>)[slug] as KUAData | undefined;
+  const raw = resolveKua(slug);
   if (!raw || raw.verified !== true) return null;
   if (!raw.alamat || raw.alamat.startsWith('CONTOH') || raw.alamat.startsWith('PROGRESS')) return null;
   if (!raw.desa_dilayani || raw.desa_dilayani.length === 0 || raw.desa_dilayani[0].startsWith('CONTOH')) return null;

@@ -1,0 +1,3 @@
+{
+  "_schema": "Override manual hasil verifikasi penghulu. Kunci = slug kecamatan, nilai = HANYA field yang berbeda dari baseline kua.json. File ini sengaja dipisah dari kua.json (5,5 MB) agar setiap commit admin berukuran kecil dan riwayat git tidak membengkak. Saat dibaca, field di sini menimpa baseline."
+}
