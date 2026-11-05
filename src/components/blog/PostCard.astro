@@ -1,0 +1,69 @@
+---
+import { Image } from "astro:assets";
+import type { BlogPost } from "@lib/content";
+
+interface Props {
+    post: BlogPost;
+    index?: number;
+}
+
+const { post, index = 0 } = Astro.props;
+
+const getCategoryColor = (cat: string) => {
+    const c = cat?.toLowerCase() || '';
+    if (c === 'berita') return '!bg-[#c0e6ff] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
+    if (c === 'catatan') return '!bg-[#fae870] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
+    if (c === 'inspirasi') return '!bg-pink-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
+    return '!bg-emerald-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
+};
+
+const isString = typeof post.image === 'string';
+const hasImage = Boolean(post.image);
+---
+<article class="group relative flex flex-col h-full brutal-card border-brutal-border shadow-brutal-sm hover:shadow-brutal transition-all duration-300 bg-brutal-card dark:bg-brutal-card border-brutal-border">
+    <a href={`/blog/${post.slug}`} class="flex-1 block">
+        <!-- Thumbnail -->
+        <div class="aspect-[16/10] rounded-[1.5rem] overflow-hidden relative bg-brutal-bg-alt mb-4">
+            {hasImage ? (
+                isString ? (
+                    <img
+                        src={post.image}
+                        alt={post.title}
+                        loading={index < 2 ? "eager" : "lazy"}
+                        onerror="this.onerror=null; this.src='/opengraph.jpg';"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                ) : (
+                    <Image
+                        src={post.image}
+                        alt={post.title}
+                        loading={index < 2 ? "eager" : "lazy"}
+                        width={600}
+                        height={338}
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                )
+            ) : (
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-3xl font-bold shadow-[2px_2px_0_#0f172a]">
+                    {post.title.trim()[0].toUpperCase()}
+                </div>
+            )}
+            <div class="absolute inset-0 bg-transparent group-hover:bg-brand-primary/10 transition-colors"></div>
+            <div class="absolute top-4 left-4 z-10">
+                <span class={`px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest border-2 border-brutal-border ${getCategoryColor(post.category)} shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#0f172a]`}>
+                    {post.category || 'Umum'}
+                </span>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <h2 class="text-xl font-bold mb-2 leading-tight line-clamp-2 group-hover:text-brand-primary transition-colors dark:text-white">
+            {post.title}
+        </h2>
+
+        <!-- Description -->
+        <p class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 leading-relaxed mb-auto">
+            {post.description || ''}
+        </p>
+    </a>
+</article>

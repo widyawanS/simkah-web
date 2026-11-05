@@ -1,18 +1,31 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
+import PostCard from "@components/blog/PostCard.astro";
 import { getPosts } from "@lib/content.ts";
-import { Image } from "astro:assets";
 
-const posts = await getPosts();
+const allPosts = await getPosts();
 
-const getCategoryColor = (cat: string) => {
-  const c = cat?.toLowerCase() || '';
-  if (c === 'berita') return '!bg-[#c0e6ff] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
-  if (c === 'catatan') return '!bg-[#fae870] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
-  if (c === 'inspirasi') return '!bg-pink-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
-  return '!bg-emerald-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
-};
+// --- Pagination ---
+const pageSize = 9;
+const page = Math.max(1, Number(Astro.url.searchParams.get('page')) || 1);
+const start = (page - 1) * pageSize;
+const posts = allPosts.slice(start, start + pageSize);
+const totalPages = Math.ceil(allPosts.length / pageSize);
+
+// Halaman yang akan ditampilkan di navigasi (1, ..., 4, 5, 6, ..., 12)
+const visiblePages: (number | null)[] = [];
+let lastShown: number | null = null;
+for (let p = 1; p <= totalPages; p++) {
+    const show = p === 1 || p === totalPages || Math.abs(p - page) <= 2;
+    if (show) {
+        if (lastShown !== null && p > lastShown + 1) visiblePages.push(null); // ellipsis …
+        visiblePages.push(p);
+        lastShown = p;
+    }
+}
+
+const pageUrl = (p: number) => (p === 1 ? '/blog' : `/blog?page=${p}`);
 ---
 
 <Layout title="Berita | Insights & Stories">
@@ -23,65 +36,57 @@ const getCategoryColor = (cat: string) => {
           <p class="text-slate-400 max-w-xl mx-auto text-lg">Eksplorasi mendalam tentang teknologi, kreativitas, dan alat produktivitas masa depan.</p>
       </header>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {
           posts.map((post, index) => (
-            <article class="group relative flex flex-col">
-              <a href={`/blog/${post.slug}`} class="flex-1">
-                <div class="aspect-[16/10] rounded-[2rem] overflow-hidden mb-6 glass relative bg-slate-900">
-                  {post.image ? (
-                    typeof post.image === 'string' ? (
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        loading={index < 2 ? "eager" : "lazy"}
-                        onerror="this.onerror=null; this.src='/opengraph.jpg';"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    ) : (
-                      <Image
-                        src={post.image}
-                        alt={post.title}
-                        loading={index < 2 ? "eager" : "lazy"}
-                        width={600}
-                        height={338}
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    )
-                  ) : (
-                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-3xl font-bold">
-                      {post.title[0]}
-                    </div>
-                  )}
-                  <div class="absolute inset-0 bg-transparent group-hover:bg-brand-primary/10 transition-colors"></div>
-                  <div class="absolute top-4 left-4">
-                     <span class={`px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest border-2 border-brutal-border ${getCategoryColor(post.category)}`}>
-                        {post.category}
-                     </span>
-                  </div>
-                </div>
-                
-                <h2 class="text-xl font-bold mb-4 group-hover:text-brand-primary transition-colors leading-tight">
-                  {post.title}
-                </h2>
-                <p class="text-slate-400 line-clamp-2 text-sm leading-relaxed mb-6">
-                  {post.description}
-                </p>
-                
-              </a>
-            </article>
+            <PostCard post={post} index={index} />
           ))
         }
       </div>
-      
+
       {posts.length === 0 && (
          <div class="text-center py-20 glass rounded-[3rem]">
             <p class="text-slate-500 italic">Belum ada artikel yang dipublikasikan.</p>
             <a href="/keystatic" class="mt-4 inline-block text-brand-primary font-bold">Mulai nulis di Admin →</a>
          </div>
       )}
+
+      <!-- Pagination -->
+      {totalPages > 1 && (
+        <nav class="mt-16 flex flex-wrap justify-center items-center gap-2">
+          {page > 1 && (
+            <a href={pageUrl(page - 1)} class="brutal-pill px-6 py-2.5 text-sm font-extrabold uppercase tracking-wider text-brutal-text hover:bg-brand-primary hover:text-white transition-colors shadow-brutal-sm hover:shadow-brutal active:translate-y-[1px]">
+              ← Sebelumnya
+            </a>
+          )}
+
+          {visiblePages.map((p, i) => {
+            if (p === null) {
+              return (
+                <span key="ellipsis" class="px-3 py-2.5 text-slate-400 dark:text-slate-600 text-sm font-bold">…</span>
+              );
+            }
+            const isCurrent = p === page;
+            return (
+              <a
+                key={p}
+                href={pageUrl(p)}
+                class={`brutal-pill px-5 py-2.5 text-sm font-extrabold uppercase tracking-wider transition-colors shadow-brutal-sm active:translate-y-[1px] ${isCurrent
+                  ? 'bg-brutal-border text-white shadow-brutal'
+                  : 'text-brutal-text hover:bg-brand-primary hover:text-white'}`}
+              >
+                {p}
+              </a>
+            );
+          })}
+
+          {page < totalPages && (
+            <a href={pageUrl(page + 1)} class="brutal-pill px-6 py-2.5 text-sm font-extrabold uppercase tracking-wider text-brutal-text hover:bg-brand-primary hover:text-white transition-colors shadow-brutal-sm hover:shadow-brutal active:translate-y-[1px]">
+              Selanjutnya →
+            </a>
+          )}
+        </nav>
+      )}
     </main>
   </Container>
 </Layout>
-
-
