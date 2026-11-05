@@ -31,6 +31,19 @@ FIELDS = ["alamat", "telepon", "jam_layanan", "kepala_kua", "desa_dilayani",
           "deskripsi_wilayah"]
 
 
+def safe_replace(tmp, target, attempts=6):
+    """os.replace bisa gagal sementara di Windows (file dikunci antivirus/
+    indexer sesaat). Coba ulang beberapa kali sebelum menyerah."""
+    for i in range(attempts):
+        try:
+            tmp.replace(target)
+            return
+        except PermissionError:
+            if i == attempts - 1:
+                raise
+            time.sleep(2 * (i + 1))
+
+
 def haversine(lat1, lon1, lat2, lon2):
     r = 6371.0
     p1, p2 = math.radians(lat1), math.radians(lat2)
@@ -184,11 +197,11 @@ def main():
         # menyebabkan seluruh hasil run hilang.
         tmp = KUA.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(kua, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        tmp.replace(KUA)
+        safe_replace(tmp, KUA)
 
     tmp = KUA.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(kua, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    tmp.replace(KUA)
+    safe_replace(tmp, KUA)
     print(f"selesai: {done} entri diproses")
 
 
