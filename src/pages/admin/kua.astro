@@ -26,7 +26,9 @@ const saved = Astro.url.searchParams.get("saved");
 const noop = Astro.url.searchParams.get("noop");
 const commit = Astro.url.searchParams.get("commit");
 const err = Astro.url.searchParams.get("error");
-const back = Astro.url.pathname + Astro.url.search;
+// Pastikan back selalu relatif, bukan absolut (hindari redirect ke localhost/host lain)
+const rawBack = Astro.url.pathname + Astro.url.search;
+const back = rawBack.replace(/^[a-zA-Z]+:\/\//, '');
 
 const total = kuaStats(kua);
 const result = kuaRows(kua, bySlug, q, status, 60);

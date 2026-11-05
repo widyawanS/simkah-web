@@ -51,8 +51,12 @@ export const POST: APIRoute = async ({ request }) => {
   const form = await request.formData();
   const slug = String(form.get('slug') || '');
   const back = String(form.get('back') || '/admin/kua');
+  // Sanitasi back: harus relatif, dimulai /admin, tidak boleh mengandung host/protokol
+  // (mencegah redirect ke localhost atau host eksternal)
+  const safeBack = back.replace(/^[a-zA-Z]+:\/\//, ''); // buang protokol jika ada
+  const safePath = safeBack.startsWith('/admin') ? safeBack : '/admin/kua';
   const redirect = (extra: string) =>
-    Response.redirect(new URL(back + (back.includes('?') ? '&' : '?') + extra, request.url), 303);
+    Response.redirect(new URL(safePath + (safePath.includes('?') ? '&' : '?') + extra, request.url), 303);
 
   if (!slug || /[^a-z0-9-]/.test(slug)) {
     return new Response('slug tidak valid', { status: 400 });
