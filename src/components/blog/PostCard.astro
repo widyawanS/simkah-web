@@ -20,10 +20,10 @@ const getCategoryColor = (cat: string) => {
 const isString = typeof post.image === 'string';
 const hasImage = Boolean(post.image);
 ---
-<article class="group relative flex flex-col h-full brutal-card border-brutal-border shadow-brutal-sm hover:shadow-brutal transition-all duration-300 bg-brutal-card dark:bg-brutal-card border-brutal-border">
-    <a href={`/blog/${post.slug}`} class="flex-1 block">
-        <!-- Thumbnail -->
-        <div class="aspect-[16/10] rounded-[1.5rem] overflow-hidden relative bg-brutal-bg-alt mb-4">
+<article class="group relative flex flex-col h-full brutal-card overflow-hidden border-brutal-border shadow-brutal-sm hover:shadow-brutal transition-all duration-300 bg-brutal-card dark:bg-brutal-card border-brutal-border">
+    <a href={`/blog/${post.slug}`} class="flex-1 flex flex-col">
+        <!-- Thumbnail (full-bleed, mengikuti batas card) -->
+        <div class="aspect-[16/10] overflow-hidden relative bg-brutal-bg-alt border-b-3 border-brutal-border">
             {hasImage ? (
                 isString ? (
                     <img
@@ -56,14 +56,17 @@ const hasImage = Boolean(post.image);
             </div>
         </div>
 
-        <!-- Title -->
-        <h2 class="text-xl font-bold mb-2 leading-tight line-clamp-2 group-hover:text-brand-primary transition-colors dark:text-white">
-            {post.title}
-        </h2>
+        <!-- Konten (judul & ringkasan) -->
+        <div class="p-4 flex flex-col flex-grow">
+            <!-- Title -->
+            <h2 class="text-xl font-bold mb-2 leading-tight line-clamp-2 group-hover:text-brand-primary transition-colors dark:text-white">
+                {post.title}
+            </h2>
 
-        <!-- Description -->
-        <p class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 leading-relaxed mb-auto">
-            {post.description || ''}
-        </p>
+            <!-- Description -->
+            <p class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 leading-relaxed mb-auto">
+                {post.description || ''}
+            </p>
+        </div>
     </a>
 </article>
