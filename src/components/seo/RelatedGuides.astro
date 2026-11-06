@@ -1,0 +1,26 @@
+---
+interface Props {
+  title?: string;
+  links: { href: string; label: string }[];
+}
+
+const { title = "Panduan terkait", links = [] } = Astro.props;
+---
+
+<div class="max-w-4xl mx-auto mt-16 px-4">
+  <div class="p-6 rounded-2xl border-2 border-brutal-border bg-brutal-card shadow-brutal-sm">
+    <h2 class="font-extrabold text-lg mb-3 text-brutal-text">{title}</h2>
+    <ul class="flex flex-wrap gap-2 text-sm font-bold">
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class="brutal-pill px-4 py-2 hover:bg-brand-primary hover:text-white transition-colors"
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>

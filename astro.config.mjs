@@ -14,12 +14,21 @@ export default defineConfig({
     mode: "standalone",
   }),
   site: "https://simkah.web.id",
+  // Satu URL kanonik per halaman (tanpa trailing slash) agar tidak duplicate content
+  trailingSlash: "never",
   // Artikel lama yang digabung → redirect permanen agar tidak jadi thin/duplicate
   redirects: {
     "/blog/rekomendasi-nikah-sudah-terkirim-tapi-belum-terbaca-di-kua-tujuan-ini-yang-harus-dicek":
       "/blog/rekomendasi-nikah-belum-terbaca-solusi",
     "/blog/viral-penghulu-ini-pimpin-akad-nikah-pakai-bahasa-inggris-ternyata-ada-alasannya":
       "/blog/lagi-penghulu-viral-pimpin-akad-nikah-dengan-3-bahasa",
+    // Halaman uji lama yang masih terindeks → arahkan ke /blog
+    "/blog/test-image-resolution": "/blog",
+    "/blog/test-post-1": "/blog",
+    "/blog/hello-world": "/blog",
+    "/test-images": "/",
+    // Konsolidasi URL tool duplikat
+    "/tools/calculator": "/tools/calculators",
   },
   prefetch: true,
   image: {
@@ -29,10 +38,16 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) =>
-        !page.includes('/keystatic/') &&
-        !page.includes('/api/') &&
-        !page.includes('/test-'),
+      filter: (page) => {
+        const path = new URL(page).pathname;
+        // Buang route internal, halaman uji, dan konten afiliasi
+        if (["/keystatic/", "/api/", "/admin/", "/test-", "/redbubble"].some((p) => path.startsWith(p) || path.includes(p))) {
+          return false;
+        }
+        // Buang varian trailing slash agar tidak dobel (kecuali root)
+        if (path !== "/" && path.endsWith("/")) return false;
+        return true;
+      },
       changefreq: 'weekly',
       priority: 0.7,
       lastmod: new Date(),

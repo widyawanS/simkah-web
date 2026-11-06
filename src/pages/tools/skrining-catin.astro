@@ -2,9 +2,29 @@
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import AdSlot from "@components/ui/AdSlot.astro";
+import RelatedGuides from "@components/seo/RelatedGuides.astro";
+import { SITE, WEBSITE_ID, toJsonLd } from "@lib/site";
+
+const toolJsonLd = toJsonLd({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Skrining Kesiapan Calon Pengantin",
+  description:
+    "Skrining mandiri faktor risiko stunting pada calon pengantin berdasarkan antropometri dan gaya hidup, mengacu standar el-SIMIL Kemenag RI.",
+  url: `${SITE.url}/tools/skrining-catin`,
+  applicationCategory: "HealthApplication",
+  operatingSystem: "Web",
+  inLanguage: "id-ID",
+  isPartOf: { "@id": WEBSITE_ID },
+  offers: { "@type": "Offer", price: "0", priceCurrency: "IDR" },
+});
 ---
 
-<Layout title="Skrining Kesiapan Catin - Deteksi Risiko Stunting">
+<Layout
+  title="Skrining Kesiapan Catin - Deteksi Risiko Stunting"
+  description="Skrining mandiri faktor risiko stunting pada calon pengantin: IMT, lingkar lengan atas, anemia, dan gaya hidup."
+>
+  <script type="application/ld+json" slot="head" set:html={toolJsonLd} />
   <Container>
     <div class="max-w-4xl mx-auto mb-20">
       <!-- Header -->
@@ -286,6 +306,13 @@ import AdSlot from "@components/ui/AdSlot.astro";
       </div>
     </div>
   </Container>
+  <RelatedGuides
+    links={[
+      { href: "/blog/skrining-kesehatan-catin-syarat", label: "Syarat Skrining Catin" },
+      { href: "/blog/bimbingan-perkawinan-bimwin-kua", label: "Bimbingan Perkawinan" },
+      { href: "/blog/checklist-nikah-h-30-kua", label: "Checklist H-30" },
+    ]}
+  />
 </Layout>
 
 <style>

@@ -18,6 +18,8 @@ const page = Math.max(1, Number(Astro.url.searchParams.get('page')) || 1);
 const start = (page - 1) * pageSize;
 const posts = allPosts.slice(start, start + pageSize);
 const totalPages = Math.ceil(allPosts.length / pageSize);
+// Halaman arsip >1 jangan diindeks agar tidak jadi duplikat konten tipis.
+const isPaged = page > 1;
 
 const visiblePages: (number | null)[] = [];
 let lastShown: number | null = null;
@@ -43,7 +45,7 @@ const getCategoryColor = (c: string) => {
 };
 ---
 
-<Layout title={`${capitalizedCategory} | Archive`}>
+<Layout title={`${capitalizedCategory} | Archive`} noindex={isPaged}>
   <Container>
     <main class="py-20 animate-fade-in">
       <header class="text-center mb-20">

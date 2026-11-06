@@ -14,9 +14,25 @@ export interface Props {
   image?: string;
   ogType?: string;
   heroImage?: string;
+  author?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  section?: string;
+  noindex?: boolean;
 }
 
-const { title, description, image, ogType, heroImage } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  ogType,
+  heroImage,
+  author,
+  publishedTime,
+  modifiedTime,
+  section,
+  noindex,
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -27,6 +43,11 @@ const { title, description, image, ogType, heroImage } = Astro.props;
       description={description} 
       image={image} 
       ogType={ogType} 
+      author={author}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      section={section}
+      noindex={noindex}
     />
     {heroImage && (
       <link rel="preload" as="image" href={heroImage} fetchpriority="high" />

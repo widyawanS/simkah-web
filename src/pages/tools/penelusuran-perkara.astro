@@ -2,6 +2,22 @@
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import AdSlot from "@components/ui/AdSlot.astro";
+import RelatedGuides from "@components/seo/RelatedGuides.astro";
+import { SITE, WEBSITE_ID, toJsonLd } from "@lib/site";
+
+const toolJsonLd = toJsonLd({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Penelusuran Perkara Pengadilan Agama",
+  description:
+    "Cari informasi perkara dari Pengadilan Agama dan Mahkamah Syar'iyah di Indonesia melalui SIPP.",
+  url: `${SITE.url}/tools/penelusuran-perkara`,
+  applicationCategory: "SearchApplication",
+  operatingSystem: "Web",
+  inLanguage: "id-ID",
+  isPartOf: { "@id": WEBSITE_ID },
+  offers: { "@type": "Offer", price: "0", priceCurrency: "IDR" },
+});
 
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRphPEFpPWt1xyQNyukVHMS9g8kCmq99CjcRx_YitDAtc_SKmBDIqambYVjwq2Lvr05GW3i-OuGotd_/pub?output=csv";
 
@@ -24,7 +40,11 @@ try {
 }
 ---
 
-<Layout title="Penelusuran Perkara SIPP - Cari Info Perkara Pengadilan Agama">
+<Layout
+  title="Penelusuran Perkara SIPP - Cari Info Perkara Pengadilan Agama"
+  description="Cari informasi perkara dari Pengadilan Agama dan Mahkamah Syar'iyah di Indonesia melalui SIPP. Gratis."
+>
+  <script type="application/ld+json" slot="head" set:html={toolJsonLd} />
   <Container>
     <div class="max-w-6xl mx-auto mb-20">
       <!-- Header -->
@@ -171,6 +191,13 @@ try {
       </div>
     </div>
   </Container>
+  <RelatedGuides
+    links={[
+      { href: "/blog/isbat-nikah-legalkan-nikah-siri", label: "Isbat Nikah" },
+      { href: "/blog/dispensasi-nikah-di-bawah-umur", label: "Dispensasi Nikah" },
+      { href: "/blog/wali-hakim-syarat-dan-prosedur", label: "Wali Hakim" },
+    ]}
+  />
 </Layout>
 
 <script is:inline define:vars={{ courts: allCourts }}>

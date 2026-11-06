@@ -5,6 +5,7 @@ export interface BlogPost {
     title: string;
     description: string;
     pubDate: Date;
+    updatedDate: Date | null;
     author: string;
     image: any; // Astro Image metadata
     category: string;
@@ -30,6 +31,7 @@ export async function getPosts(): Promise<BlogPost[]> {
             title: post.data.title,
             description: post.data.description || '',
             pubDate: post.data.pubDate || new Date(),
+            updatedDate: post.data.updatedDate ?? null,
             author: post.data.author || 'Admin',
             image: post.data.image,
             category: post.data.category || 'General',

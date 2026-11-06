@@ -6,6 +6,14 @@ import SocialShare from "@components/blog/SocialShare.astro";
 import { getPostBySlug, getPosts } from "@lib/content";
 import { marked } from "marked";
 import { Image } from "astro:assets";
+import {
+  SITE,
+  AUTHOR,
+  ORG_ID,
+  PERSON_ID,
+  absoluteUrl,
+  toJsonLd,
+} from "@lib/site";
 
 const { slug } = Astro.params;
 const post = await getPostBySlug(slug as string);
@@ -22,7 +30,82 @@ const relatedPosts = allPosts
   .filter(p => p.slug !== slug && p.category === post.category)
   .slice(0, 3);
 
-const postUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const postUrl = new URL(`/blog/${post.slug}`, SITE.url).toString();
+const publishedIso = post.pubDate.toISOString();
+const modifiedDate =
+  post.updatedDate && post.updatedDate.getTime() > post.pubDate.getTime()
+    ? post.updatedDate
+    : post.pubDate;
+const modifiedIso = modifiedDate.toISOString();
+const isUpdated = modifiedIso !== publishedIso;
+
+/** Ambil FAQ dari section "## Pertanyaan umum" dengan format **Tanya** + jawaban. */
+function extractFaq(md: string): { q: string; a: string }[] {
+  const section = md.match(/##\s*Pertanyaan umum\s*([\s\S]*?)(?=\n##\s|\n#\s|$)/i);
+  if (!section) return [];
+
+  const items: { q: string; a: string }[] = [];
+  const re = /\*\*(.+?)\*\*\s*\n([\s\S]*?)(?=\n\*\*|\n#{2,}\s|$)/g;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(section[1])) !== null) {
+    const q = match[1].replace(/\s+/g, " ").trim();
+    const a = match[2].replace(/\s+/g, " ").trim();
+    if (q && a) items.push({ q, a });
+  }
+  return items;
+}
+
+const faqItems = extractFaq(post.content);
+
+const graph: Record<string, unknown>[] = [
+  {
+    "@type": "BlogPosting",
+    "@id": `${postUrl}#article`,
+    headline: post.title,
+    description: post.description,
+    image: [absoluteUrl(post.image)],
+    datePublished: publishedIso,
+    dateModified: modifiedIso,
+    inLanguage: SITE.language,
+    articleSection: post.category,
+    isAccessibleForFree: true,
+    author: { "@id": PERSON_ID },
+    publisher: { "@id": ORG_ID },
+    mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+  },
+  {
+    "@type": "BreadcrumbList",
+    "@id": `${postUrl}#breadcrumb`,
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Beranda", item: `${SITE.url}/` },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE.url}/blog` },
+      { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
+    ],
+  },
+  {
+    "@type": "Person",
+    "@id": PERSON_ID,
+    name: AUTHOR.name,
+    alternateName: AUTHOR.alternateName,
+    jobTitle: AUTHOR.jobTitle,
+    url: AUTHOR.url,
+    image: AUTHOR.image,
+  },
+];
+
+if (faqItems.length > 0) {
+  graph.push({
+    "@type": "FAQPage",
+    "@id": `${postUrl}#faq`,
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  });
+}
+
+const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph });
 ---
 
 <Layout 
@@ -30,7 +113,12 @@ const postUrl = new URL(Astro.url.pathname, Astro.site).toString();
   description={post.description} 
   image={post.image}
   ogType="article"
+  author={AUTHOR.name}
+  publishedTime={publishedIso}
+  modifiedTime={modifiedIso}
+  section={post.category}
 >
+  <script type="application/ld+json" slot="head" set:html={postJsonLd} />
   <Container>
     <article class="mx-auto max-w-4xl mt-20 animate-fade-in">
         <header class="text-center mb-12 max-w-2xl mx-auto">
@@ -51,6 +139,14 @@ const postUrl = new URL(Astro.url.pathname, Astro.site).toString();
                 <time datetime={post.pubDate.toISOString()}>
                     {post.pubDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </time>
+                {isUpdated && (
+                    <>
+                        <span>•</span>
+                        <span>
+                            Diperbarui {modifiedDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        </span>
+                    </>
+                )}
             </div>
         </header>
 
@@ -65,14 +161,14 @@ const postUrl = new URL(Astro.url.pathname, Astro.site).toString();
                     
                     // Skenario 1: Path lama (dimulai dengan /)
                     if (typeof imageSrc === 'string' && (imageSrc.startsWith('/') || imageSrc.startsWith('http'))) {
-                        return <img src={imageSrc} class="w-full h-full object-cover" alt={post.title} loading="eager" />;
+                        return <img src={imageSrc} class="w-full h-full object-cover" alt={post.title} loading="eager" fetchpriority="high" decoding="async" />;
                     }
                     
                     // Skenario 2: Path baru (relatif ke folder berita di src/content)
                     // Karena kita simpan di src, tapi kita ingin tampil di public, 
                     // Keystatic punya setting untuk memindahkan ini.
                     
-                    return <img src={imageSrc} class="w-full h-full object-cover" alt={post.title} loading="eager" />;
+                    return <img src={imageSrc} class="w-full h-full object-cover" alt={post.title} loading="eager" fetchpriority="high" decoding="async" />;
                 })()}
             </div>
         )}
@@ -87,6 +183,31 @@ const postUrl = new URL(Astro.url.pathname, Astro.site).toString();
             </div>
 
             <SocialShare title={post.title} url={postUrl} />
+
+            <!-- Author Bio (E-E-A-T) -->
+            <div class="mt-12 grid sm:grid-cols-[auto,1fr] gap-5 p-6 rounded-2xl border-2 border-brutal-border bg-brutal-card shadow-brutal-sm">
+              <div class="w-14 h-14 rounded-xl border-2 border-brutal-border bg-brutal-warning flex items-center justify-center text-xl font-black !text-slate-900 -rotate-3">
+                W
+              </div>
+              <div>
+                <p class="font-extrabold text-brutal-text">
+                  Ditulis oleh <a href="/about" class="underline decoration-2 underline-offset-2 hover:text-brand-primary">Widyawan Sigitmanto</a>
+                </p>
+                <p class="text-sm text-brutal-text-muted mt-1 leading-relaxed">
+                  Penghulu dan penulis simkah.web.id. Artikel disusun dari pengalaman verifikasi berkas di KUA serta merujuk Permenag No. 30/2024 dan Kepdirjen No. 888/2026.
+                </p>
+              </div>
+            </div>
+
+            <!-- Internal links ke tools -->
+            <div class="mt-8 p-6 rounded-2xl border-2 border-brutal-border bg-[#c0b3ff]/40">
+              <h3 class="font-extrabold mb-3 text-brutal-text">Alat bantu gratis</h3>
+              <div class="flex flex-wrap gap-2 text-sm font-bold">
+                <a href="/tools/kalkulator-wedding" class="brutal-pill px-4 py-2 hover:bg-white transition-colors">Kalkulator Wedding</a>
+                <a href="/tools/skrining-catin" class="brutal-pill px-4 py-2 hover:bg-white transition-colors">Skrining Catin</a>
+                <a href="/tools/kalkulator-keluarga" class="brutal-pill px-4 py-2 hover:bg-white transition-colors">Kalkulator Keluarga</a>
+              </div>
+            </div>
 
             <!-- Related Posts Section -->
             {relatedPosts.length > 0 && (

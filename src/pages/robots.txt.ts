@@ -20,7 +20,8 @@ Disallow: /*?*page=
 Disallow: /*?*filter=
 
 # Sitemaps (sitemap-kua disembunyikan sementara selama pSEO di-noindex)
-Sitemap: ${siteUrl}sitemap.xml
+Sitemap: ${siteUrl}sitemap-index.xml
+Sitemap: ${siteUrl}sitemap-blog.xml
 
 # Crawl-delay for bots (in seconds)
 Crawl-delay: 1

@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import PostCard from "@components/blog/PostCard.astro";
 import { getPosts } from "@lib/content.ts";
+import { SITE, WEBSITE_ID, toJsonLd } from "@lib/site";
 
 const allPosts = await getPosts();
 
@@ -12,6 +13,7 @@ const page = Math.max(1, Number(Astro.url.searchParams.get('page')) || 1);
 const start = (page - 1) * pageSize;
 const posts = allPosts.slice(start, start + pageSize);
 const totalPages = Math.ceil(allPosts.length / pageSize);
+const isPaged = page > 1;
 
 // Halaman yang akan ditampilkan di navigasi (1, ..., 4, 5, 6, ..., 12)
 const visiblePages: (number | null)[] = [];
@@ -26,14 +28,43 @@ for (let p = 1; p <= totalPages; p++) {
 }
 
 const pageUrl = (p: number) => (p === 1 ? '/blog' : `/blog?page=${p}`);
+
+const blogJsonLd = toJsonLd({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": `${SITE.url}/blog#webpage`,
+      url: `${SITE.url}/blog`,
+      name: "Panduan & Artikel Nikah KUA - SIMKAH Tools",
+      description:
+        "Panduan praktis pendaftaran nikah SIMKAH, syarat N1-N4, biaya nikah, dan regulasi KUA.",
+      isPartOf: { "@id": WEBSITE_ID },
+      inLanguage: "id-ID",
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${SITE.url}/blog#breadcrumb`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Beranda", item: SITE.url },
+        { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE.url}/blog` },
+      ],
+    },
+  ],
+});
 ---
 
-<Layout title="Berita | Insights & Stories">
+<Layout
+  title="Panduan & Berita Nikah KUA"
+  description="Artikel dan panduan praktis pendaftaran nikah SIMKAH, syarat N1-N4, biaya, dan regulasi KUA — ditulis oleh penghulu."
+  noindex={isPaged}
+>
+  <script type="application/ld+json" slot="head" set:html={blogJsonLd} />
   <Container>
     <main class="py-20 animate-fade-in">
       <header class="text-center mb-20">
           <h1 class="text-5xl font-bold mb-6 tracking-tighter">Berita & <span class="text-gradient">Informasi</span></h1>
-          <p class="text-slate-400 max-w-xl mx-auto text-lg">Eksplorasi mendalam tentang teknologi, kreativitas, dan alat produktivitas masa depan.</p>
+          <p class="text-slate-400 max-w-xl mx-auto text-lg">Panduan praktis pendaftaran nikah SIMKAH, syarat N1-N4, biaya nikah, dan regulasi KUA dari pengalaman penghulu.</p>
       </header>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

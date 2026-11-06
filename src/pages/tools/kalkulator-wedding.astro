@@ -3,9 +3,29 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import Sectionhead from "@components/sectionhead.astro";
 import AdSlot from "@components/ui/AdSlot.astro";
+import RelatedGuides from "@components/seo/RelatedGuides.astro";
+import { SITE, WEBSITE_ID, toJsonLd } from "@lib/site";
+
+const toolJsonLd = toJsonLd({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Kalkulator Wedding Party",
+  description:
+    "Kalkulator gratis untuk estimasi biaya pernikahan: venue, katering, dekorasi, busana, dan biaya lainnya.",
+  url: `${SITE.url}/tools/kalkulator-wedding`,
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  inLanguage: "id-ID",
+  isPartOf: { "@id": WEBSITE_ID },
+  offers: { "@type": "Offer", price: "0", priceCurrency: "IDR" },
+});
 ---
 
-<Layout title="Kalkulator Wedding Party - Estimasi Biaya Pernikahan">
+<Layout
+  title="Kalkulator Wedding Party - Estimasi Biaya Pernikahan"
+  description="Hitung estimasi biaya pernikahan: venue, katering, dekorasi, dan lainnya. Gratis, tanpa daftar."
+>
+  <script type="application/ld+json" slot="head" set:html={toolJsonLd} />
   <Container>
           <div class="text-center mb-16 mt-12 flex flex-col items-center">
         <span class="inline-block px-4 py-2 brutal-badge bg-[#fae870] text-brutal-text text-sm font-bold mb-4 border-2 border-brutal-border">
@@ -224,6 +244,13 @@ import AdSlot from "@components/ui/AdSlot.astro";
       </div>
     </div>
   </Container>
+  <RelatedGuides
+    links={[
+      { href: "/blog/biaya-nikah-luar-kua-600rb", label: "Biaya Nikah di Luar KUA" },
+      { href: "/blog/panduan-mahar-nikah", label: "Panduan Mahar" },
+      { href: "/blog/checklist-nikah-h-30-kua", label: "Checklist H-30" },
+    ]}
+  />
 </Layout>
 
 <script>

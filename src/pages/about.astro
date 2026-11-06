@@ -6,6 +6,7 @@ import Container from "@components/container.astro";
 import Sectionhead from "@components/sectionhead.astro";
 import { getAboutPage, getAllTeamMembers } from "@lib/keystatic";
 import { DocumentRenderer } from "@keystatic/core/renderer";
+import { AUTHOR, ORG_ID, PERSON_ID, toJsonLd } from "@lib/site";
 
 // Get about page data from Keystatic
 const aboutData = await getAboutPage();
@@ -23,9 +24,30 @@ const publishedTeamMembers = allMembers
   .map(member => ({
     data: member // Map to match existing structure used below
   }));
+
+const personJsonLd = toJsonLd({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": PERSON_ID,
+  name: AUTHOR.name,
+  alternateName: AUTHOR.alternateName,
+  jobTitle: AUTHOR.jobTitle,
+  description:
+    "Penghulu yang menulis panduan daftar nikah, syarat N1-N4, dan alur SIMKAH di simkah.web.id.",
+  url: AUTHOR.url,
+  image: AUTHOR.image,
+  worksFor: { "@id": ORG_ID },
+  knowsAbout: [
+    "Pencatatan pernikahan",
+    "SIMKAH",
+    "Kantor Urusan Agama",
+    "Permenag No. 30 Tahun 2024",
+  ],
+});
 ---
 
 <Layout title={title}>
+  <script type="application/ld+json" slot="head" set:html={personJsonLd} />
   <Container>
     <main class="py-24 animate-fade-in">
       <header class="text-center mb-20">

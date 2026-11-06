@@ -1,5 +1,6 @@
 ---
 import { getSiteSettings } from "@lib/keystatic";
+import { SITE, ORG_ID, WEBSITE_ID, toJsonLd } from "@lib/site";
 
 export interface Props {
   title?: string;
@@ -7,15 +8,31 @@ export interface Props {
   image?: string;
   canonicalURL?: URL;
   ogType?: string;
+  author?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  section?: string;
+  noindex?: boolean;
 }
 
 const {
   title,
   description,
   image,
-  canonicalURL = new URL(Astro.url.pathname, Astro.site),
+  canonicalURL,
   ogType = "website",
+  author,
+  publishedTime,
+  modifiedTime,
+  section,
+  noindex = false,
 } = Astro.props;
+
+// Normalisasi canonical: buang trailing slash (kecuali root) supaya
+// /about dan /about/ tidak menjadi dua URL yang saling self-canonical.
+const rawPath = Astro.url.pathname;
+const normalizedPath = rawPath.length > 1 ? rawPath.replace(/\/+$/, "") : rawPath;
+const canonical = canonicalURL ?? new URL(normalizedPath, Astro.site);
 
 const settings = await getSiteSettings();
 
@@ -31,6 +48,36 @@ const analytics = settings?.analytics || {};
 const seoTitle = title ? `${title} | ${metadata.siteName}` : metadata.siteName;
 const seoDescription = description || metadata.description;
 const seoImage = new URL(image || metadata.ogImage || "/images/og-default.jpg", Astro.site).toString();
+
+const sameAs = [settings?.footer?.telegram, settings?.footer?.facebook].filter(
+  (url): url is string => typeof url === "string" && url.startsWith("http")
+);
+
+const globalJsonLd = toJsonLd({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": WEBSITE_ID,
+      url: `${SITE.url}/`,
+      name: metadata.siteName || SITE.name,
+      description: seoDescription,
+      inLanguage: SITE.language,
+      publisher: { "@id": ORG_ID },
+    },
+    {
+      "@type": "Organization",
+      "@id": ORG_ID,
+      name: metadata.siteName || SITE.name,
+      url: `${SITE.url}/`,
+      logo: {
+        "@type": "ImageObject",
+        url: SITE.logo,
+      },
+      ...(sameAs.length > 0 ? { sameAs } : {}),
+    },
+  ],
+});
 ---
 
 <!-- Global Metadata -->
@@ -40,12 +87,42 @@ const seoImage = new URL(image || metadata.ogImage || "/images/og-default.jpg", 
 <meta name="generator" content={Astro.generator} />
 <meta name="profiton-domain-verification" content="50382d253cb280faf75095f4c840222162836e8c38822978e97020858016140c" />
 <!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
+<link rel="canonical" href={canonical} />
+
+<!-- Resource hints untuk iklan/analytics -->
+{ads?.isActive && (
+  <>
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+  </>
+)}
+{analytics.googleAnalyticsId && (
+  <>
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  </>
+)}
 
 <!-- Primary Meta Tags -->
 <title>{seoTitle}</title>
 <meta name="title" content={seoTitle} />
 <meta name="description" content={seoDescription} />
+<meta
+  name="robots"
+  content={noindex
+    ? "noindex, follow"
+    : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}
+/>
+{author && <meta name="author" content={author} />}
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+{section && <meta property="article:section" content={section} />}
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${metadata.siteName || SITE.name} RSS`}
+  href={new URL("/rss.xml", Astro.site)}
+/>
 
 <!-- Adsense Global -->
 {ads.isActive && ads.adClient && (
@@ -104,17 +181,20 @@ const seoImage = new URL(image || metadata.ogImage || "/images/og-default.jpg", 
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={ogType} />
-<meta property="og:url" content={Astro.url} />
+<meta property="og:url" content={canonical} />
 <meta property="og:title" content={seoTitle} />
 <meta property="og:description" content={seoDescription} />
 <meta property="og:image" content={seoImage} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:url" content={canonical} />
 <meta property="twitter:title" content={seoTitle} />
 <meta property="twitter:description" content={seoDescription} />
 <meta property="twitter:image" content={seoImage} />
+
+<!-- Structured Data: WebSite + Organization -->
+<script type="application/ld+json" set:html={globalJsonLd} />
 
 <!-- Theme Script (Prevent Flash) -->
 <script is:inline>
