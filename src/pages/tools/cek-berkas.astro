@@ -1,0 +1,439 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import AdSlot from "@components/ui/AdSlot.astro";
+import RelatedGuides from "@components/seo/RelatedGuides.astro";
+import { SITE, WEBSITE_ID, toJsonLd } from "@lib/site";
+
+const toolJsonLd = toJsonLd({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Cek Berkas Catin KUA",
+  description:
+    "Alat cek kelengkapan berkas layanan KUA berdasarkan Kepdirjen 888/2026: pilih layanan, centang dokumen, lihat yang kurang beserta dasar rujukannya.",
+  url: `${SITE.url}/tools/cek-berkas`,
+  applicationCategory: "UtilitiesApplication",
+  operatingSystem: "Web",
+  inLanguage: "id-ID",
+  isPartOf: { "@id": WEBSITE_ID },
+  offers: { "@type": "Offer", price: "0", priceCurrency: "IDR" },
+});
+
+const LAYANAN = [
+  {
+    id: "kehendak-nikah",
+    nomor: "Standar 1",
+    nama: "Kehendak Nikah",
+    waktu: "Daftar 15 mnt; pemeriksaan 30 mnt; bimwin 2 hari kerja; pencatatan 30 mnt",
+    biaya: "Rp0 di KUA jam kerja; Rp600rb di luar KUA/luar jam kerja",
+    produk: "Buku Nikah + Kartu Nikah Digital",
+    artikel: "/blog/checklist-operator-kehendak-nikah-888",
+    items: [
+      "Fotokopi KTP-el catin, orang tua/wali, dan 2 saksi (masing-masing 1 lembar)",
+      "Fotokopi KK dan Akta Kelahiran catin (1 lembar)",
+      "Pas foto latar biru 2x3 (4 lembar) + 4x6 (2 lembar)",
+      "Surat keterangan sehat dari fasilitas pelayanan kesehatan",
+      "Surat Pengantar Nikah dari kepala desa/lurah (Model N1)",
+      "Permohonan kehendak nikah (Model N2)",
+      "Persetujuan kedua calon pengantin (Model N4)",
+      "Rekomendasi nikah dari KUA domisili (Model N10) — bila nikah di luar domisili",
+      "Surat izin orang tua bagi catin <21 tahun (Model N5)",
+      "Izin wali pengampu — bila orang tua/wali wafat atau tidak mampu",
+      "Izin dari pengadilan — bila orang tua, wali, dan pengampu tidak ada",
+      "Fotokopi Akta Kematian — bagi duda/janda cerai mati",
+      "Akta Cerai ASLI — bagi duda/janda cerai hidup",
+      "Izin atasan/kesatuan — bagi catin TNI/POLRI/ASN",
+      "Izin poligami dari Pengadilan Agama — bila suami hendak beristri lebih dari satu",
+      "Dispensasi Pengadilan Agama — bagi catin <19 tahun",
+      "Dispensasi camat / SPTJM — bila kurang dari 10 hari kerja sebelum akad",
+    ],
+  },
+  {
+    id: "taukil-wali",
+    nomor: "Standar 2",
+    nama: "Taukil Wali",
+    waktu: "30 menit",
+    biaya: "Gratis",
+    produk: "Surat Berwakil Wali/Taukil Wali",
+    artikel: "/blog/checklist-operator-taukil-wali-888",
+    items: [
+      "Fotokopi KTP-el dan KK wali nasab (pemberi kuasa)",
+      "Fotokopi KTP-el penerima kuasa (wakil wali)",
+      "Fotokopi KTP-el 2 orang saksi",
+      "Fotokopi KTP-el pasangan calon pengantin",
+    ],
+  },
+  {
+    id: "rekomendasi-nikah",
+    nomor: "Standar 3",
+    nama: "Rekomendasi Nikah (Model N10)",
+    waktu: "30 menit",
+    biaya: "Gratis",
+    produk: "Surat Rekomendasi Nikah",
+    artikel: "/blog/checklist-operator-rekomendasi-nikah-n10",
+    items: [
+      "Surat pengantar nikah dari kelurahan/desa (Model N1)",
+      "Fotokopi akta kelahiran, KTP-el, dan KK calon pengantin",
+      "Surat keterangan sehat dari fasilitas pelayanan kesehatan",
+      "Surat kuasa asli bermeterai Rp10.000 (apabila dikuasakan)",
+      "Izin tertulis orang tua/wali bagi catin <21 tahun (Model N5)",
+      "Izin wali pengampu — bila orang tua/wali wafat atau tidak mampu",
+      "Izin dari pengadilan — bila tidak ada orang tua, wali, dan pengampu",
+      "Dispensasi pengadilan bagi calon suami yang belum mencapai usia menikah",
+      "Surat izin atasan/kesatuan bagi catin TNI/Polri",
+      "Penetapan izin poligami dari Pengadilan Agama",
+      "Akta cerai/kutipan buku talak — untuk cerai sebelum UU 7/1989",
+      "Akta kematian — bagi janda/duda ditinggal mati",
+    ],
+  },
+  {
+    id: "perbaikan-data",
+    nomor: "Standar 4",
+    nama: "Perbaikan/Perubahan Data Nikah",
+    waktu: "30 menit",
+    biaya: "Gratis",
+    produk: "Buku nikah dengan catatan perbaikan",
+    artikel: "/blog/checklist-operator-perbaikan-data-nikah",
+    items: [
+      "Kutipan akta nikah/buku nikah ASLI",
+      "Akta Kelahiran",
+      "Surat permohonan perbaikan data nikah",
+      "Surat kuasa asli bermeterai Rp10.000 (apabila dikuasakan)",
+      "Penetapan Pengadilan Negeri — bila identitas kependudukan resmi berganti (perubahan data)",
+    ],
+  },
+  {
+    id: "buku-nikah-pengganti",
+    nomor: "Standar 5",
+    nama: "Buku Nikah Pengganti",
+    waktu: "2 hari kerja",
+    biaya: "Gratis",
+    produk: "Kutipan Akta/Buku Nikah Pengganti",
+    artikel: "/blog/checklist-operator-buku-nikah-pengganti",
+    items: [
+      "Formulir permohonan kutipan akta/buku nikah pengganti",
+      "Surat keterangan kehilangan dari kepolisian (jika hilang)",
+      "Bukti fisik buku nikah yang rusak (jika rusak)",
+      "Fotokopi buku nikah (jika ada), KTP-el, dan KK (masing-masing 1 lembar)",
+      "Pas foto 2x3 latar biru (3 lembar)",
+      "Surat kuasa asli bermeterai Rp10.000 (apabila dikuasakan)",
+      "Fotokopi KTP-el penerima kuasa dan pemberi kuasa",
+    ],
+  },
+  {
+    id: "legalisasi",
+    nomor: "Standar 6",
+    nama: "Legalisasi Kutipan Akta/Buku Nikah",
+    waktu: "2 hari kerja",
+    biaya: "Gratis",
+    produk: "Fotokopi buku nikah (5 lembar) dilegalisasi",
+    artikel: "/blog/checklist-operator-legalisasi-buku-nikah",
+    items: [
+      "Buku nikah/kutipan akta nikah ASLI (ditunjukkan untuk dicocokkan)",
+      "Fotokopi buku nikah 5 lembar",
+      "Fotokopi KTP-el dan KK pemohon (masing-masing 1 lembar)",
+      "Formulir permohonan legalisasi",
+      "Surat kuasa asli bermeterai Rp10.000 (apabila dikuasakan)",
+    ],
+  },
+  {
+    id: "model-ln",
+    nomor: "Standar 7-8",
+    nama: "Pendaftaran Bukti Nikah Luar Negeri (Model LN)",
+    waktu: "Naskah: 60 mnt (tabel alur LN); estimasi aman 1-2 hari kerja",
+    biaya: "Gratis",
+    produk: "Surat Keterangan Pendaftaran Bukti Pernikahan Luar Negeri (Model LN)",
+    artikel: "/blog/checklist-operator-bukti-nikah-luar-negeri-model-ln",
+    items: [
+      "Buku/sertifikat nikah negara tempat akad + terjemahan tersumpah",
+      "Surat keterangan nikah dari Kantor Perwakilan RI di luar negeri",
+      "Salinan akta lahir suami/istri",
+      "Fotokopi KTP-el suami/istri (1 lembar)",
+      "Fotokopi Kartu Keluarga (1 lembar)",
+      "Fotokopi paspor suami/istri (1 lembar)",
+      "Foto 3x4 latar biru (3 lembar)",
+      "Surat pernyataan kebenaran dokumen + alasan keterlambatan (bila >1 tahun sejak kembali)",
+      "Surat kuasa asli bermeterai Rp10.000 (apabila dikuasakan)",
+    ],
+  },
+  {
+    id: "status-pernikahan",
+    nomor: "Standar 8",
+    nama: "Surat Keterangan Status Pernikahan",
+    waktu: "60 menit (pada tabel alur naskah)",
+    biaya: "Gratis",
+    produk: "Surat Keterangan Status Pernikahan",
+    artikel: "/blog/checklist-operator-surat-keterangan-status-pernikahan",
+    items: [
+      "Buku nikah/kutipan akta nikah ASLI",
+      "Fotokopi KTP-el (1 lembar)",
+      "Fotokopi KK (1 lembar)",
+      "Surat permohonan (menyebut tujuan penggunaan)",
+      "Surat kuasa asli bermeterai Rp10.000 (apabila dikuasakan)",
+    ],
+  },
+  {
+    id: "isbat-nikah",
+    nomor: "Standar 9",
+    nama: "Pencatatan Isbat Nikah",
+    waktu: "1 hari kerja",
+    biaya: "Gratis",
+    produk: "Buku Nikah + Kartu Nikah Digital",
+    artikel: "/blog/checklist-operator-isbat-nikah",
+    items: [
+      "Penetapan Pengadilan Agama",
+      "Surat permohonan pencatatan isbat (bila PA tidak menunjuk KUA pencatat)",
+      "Surat pernyataan bermaterai Rp10.000 belum dicatat di KUA lain",
+      "Fotokopi KTP-el suami, istri, dan orang tua (masing-masing 1 lembar)",
+      "Fotokopi KK suami, istri, dan orang tua (masing-masing 1 lembar)",
+      "Fotokopi KTP-el wali nikah / akta kematian bagi yang wafat",
+      "Fotokopi KTP-el 2 orang saksi isbat/nikah",
+      "Pas foto 2x3 latar biru (3 lembar, masing-masing)",
+      "Pas foto 4x6 latar biru (1 lembar, masing-masing)",
+      "Surat kuasa asli bermeterai Rp10.000 (apabila dikuasakan)",
+    ],
+  },
+  {
+    id: "perjanjian-perkawinan",
+    nomor: "Standar 10",
+    nama: "Pencatatan Perjanjian Perkawinan",
+    waktu: "120 menit",
+    biaya: "Gratis",
+    produk: "Bukti pencatatan pada Kutipan Akta/Buku Nikah",
+    artikel: "/blog/checklist-operator-perjanjian-perkawinan",
+    items: [
+      "Salinan akta perjanjian perkawinan dari notaris",
+      "Salinan akta perubahan/pencabutan perjanjian dari notaris (bila ada)",
+      "Fotokopi akta perjanjian yang dilegalisir notaris",
+      "Fotokopi KTP-el calon suami dan calon istri (masing-masing 1 lembar)",
+      "Fotokopi KK suami dan istri (bila dalam masa pernikahan)",
+      "Fotokopi KTP-el suami dan istri (bila dalam masa pernikahan)",
+      "Kutipan akta nikah/bukti perkawinan di luar negeri (bila relevan)",
+      "Surat kuasa asli bermeterai Rp10.000 (apabila dikuasakan)",
+    ],
+  },
+  {
+    id: "rujuk",
+    nomor: "Standar 11",
+    nama: "Pencatatan Rujuk",
+    waktu: "120 menit di KUA; maks 3 hari kerja di luar KUA",
+    biaya: "Rp0 di KUA jam kerja; Rp600rb di luar KUA/luar jam kerja",
+    produk: "Kutipan Akta Rujuk",
+    artikel: "/blog/checklist-operator-pencatatan-rujuk",
+    items: [
+      "Fotokopi KTP-el suami dan istri (masing-masing 1 lembar)",
+      "Fotokopi KTP-el 2 orang saksi (masing-masing 1 lembar)",
+      "Surat permohonan kehendak rujuk",
+      "Surat pengantar kehendak rujuk dari kelurahan/desa",
+      "Akta Cerai (cerai talak) ASLI suami dan istri + salinan putusan PA",
+      "Bukti bayar PNBP NR (bila ikrar rujuk di luar KUA)",
+    ],
+  },
+];
+---
+
+<Layout
+  title="Cek Berkas Catin KUA - Kelengkapan Dokumen Kepdirjen 888/2026"
+  description="Pilih layanan KUA, centang dokumen yang sudah ada, dan lihat yang kurang beserta dasar rujukannya. Berdasarkan Kepdirjen Bimas Islam No. 888/2026. Gratis."
+>
+  <script type="application/ld+json" slot="head" set:html={toolJsonLd} />
+  <Container>
+    <div class="text-center mb-12 mt-12 flex flex-col items-center">
+      <span class="inline-block px-4 py-2 brutal-badge bg-[#e8dff5] text-brutal-text text-sm font-bold mb-4 border-2 border-brutal-border">
+        ✅ Cek Berkas
+      </span>
+      <h1 class="text-3xl md:text-5xl font-black text-brutal-text text-center mb-4 drop-shadow-md">
+        Cek Berkas <span class="text-purple-500">Catin KUA</span>
+      </h1>
+      <p class="text-center text-brutal-text-muted max-w-2xl mx-auto mb-8 text-lg font-medium">
+        Pilih layanan, centang dokumen yang sudah ada — yang kurang langsung kelihatan, beserta dasar rujukannya dari Kepdirjen 888/2026.
+      </p>
+      <AdSlot type="tools" />
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      <div class="brutal-card bg-[#e8dff5] dark:bg-brutal-card rounded-3xl p-6 md:p-10">
+        <label for="layananSelect" class="block text-sm font-extrabold uppercase tracking-widest text-brutal-text-muted mb-2">Pilih Layanan</label>
+        <select
+          id="layananSelect"
+          class="w-full rounded-2xl border-2 border-brutal-border bg-white dark:bg-slate-800 px-4 py-3 text-base font-bold text-brutal-text focus:outline-none focus:ring-4 focus:ring-purple-300"
+        >
+          {LAYANAN.map((l) => (
+            <option value={l.id}>{l.nomor} — {l.nama}</option>
+          ))}
+        </select>
+
+        <div class="mt-6 grid sm:grid-cols-3 gap-3">
+          <div class="rounded-2xl border-2 border-brutal-border bg-white dark:bg-slate-800 p-4">
+            <p class="text-[10px] font-extrabold uppercase tracking-widest text-brutal-text-muted mb-1">Waktu Standar</p>
+            <p id="infoWaktu" class="text-sm font-bold text-brutal-text"></p>
+          </div>
+          <div class="rounded-2xl border-2 border-brutal-border bg-white dark:bg-slate-800 p-4">
+            <p class="text-[10px] font-extrabold uppercase tracking-widest text-brutal-text-muted mb-1">Biaya</p>
+            <p id="infoBiaya" class="text-sm font-bold text-brutal-text"></p>
+          </div>
+          <div class="rounded-2xl border-2 border-brutal-border bg-white dark:bg-slate-800 p-4">
+            <p class="text-[10px] font-extrabold uppercase tracking-widest text-brutal-text-muted mb-1">Produk Pelayanan</p>
+            <p id="infoProduk" class="text-sm font-bold text-brutal-text"></p>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="mt-6">
+          <div class="flex justify-between items-end mb-2">
+            <p class="text-sm font-extrabold uppercase tracking-widest text-brutal-text-muted">Berkas lengkap</p>
+            <p id="progressText" class="text-sm font-black text-brutal-text">0 / 0</p>
+          </div>
+          <div class="h-4 rounded-full border-2 border-brutal-border bg-white dark:bg-slate-800 overflow-hidden">
+            <div id="progressBar" class="h-full bg-emerald-400 transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Checklist -->
+        <div id="checklistBox" class="mt-6 space-y-2"></div>
+
+        <!-- Hasil -->
+        <div id="resultBox" class="mt-6 rounded-2xl border-2 border-brutal-border bg-white dark:bg-slate-800 p-5 hidden">
+          <p id="resultTitle" class="font-black text-lg mb-1"></p>
+          <p id="resultDesc" class="text-sm text-brutal-text-muted leading-relaxed"></p>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <button
+            type="button"
+            id="btnReset"
+            class="brutal-pill px-5 py-3 text-sm font-bold text-brutal-text hover:bg-white transition-colors shadow-brutal-sm active:translate-y-[1px]"
+          >
+            Reset Centangan
+          </button>
+          <a
+            id="btnArtikel"
+            href="/blog/panduan-operator-kepdirjen-888-2026"
+            class="brutal-pill px-5 py-3 text-sm font-bold text-brutal-text bg-white dark:bg-slate-800 border-2 border-brutal-border hover:bg-brand-primary hover:text-white transition-colors shadow-brutal-sm"
+          >
+            Baca panduan lengkap →
+          </a>
+        </div>
+
+        <p class="mt-6 text-xs text-brutal-text-muted leading-relaxed">
+          Dasar data: Kepdirjen Bimas Islam No. 888 Tahun 2026 tentang Standar Pelayanan KUA. Alat ini membantu pengecekan awal — verifikasi resmi tetap dilakukan petugas KUA atas dokumen fisik/asli.
+        </p>
+      </div>
+    </div>
+  </Container>
+  <RelatedGuides
+    title="Panduan operator terkait"
+    links={[
+      { href: "/blog/panduan-operator-kepdirjen-888-2026", label: "Ringkasan Kepdirjen 888/2026" },
+      { href: "/blog/checklist-operator-kehendak-nikah-888", label: "Checklist Kehendak Nikah" },
+      { href: "/blog/peta-regulasi-permenag-30-2024-kepdirjen-888", label: "Peta Regulasi" },
+    ]}
+  />
+  <script type="application/json" id="layananData" set:html={toJsonLd(LAYANAN)} />
+</Layout>
+
+<script>
+  const LAYANAN = JSON.parse(document.getElementById("layananData").textContent);
+
+  const els = {
+    select: document.getElementById("layananSelect"),
+    waktu: document.getElementById("infoWaktu"),
+    biaya: document.getElementById("infoBiaya"),
+    produk: document.getElementById("infoProduk"),
+    bar: document.getElementById("progressBar"),
+    text: document.getElementById("progressText"),
+    checklist: document.getElementById("checklistBox"),
+    result: document.getElementById("resultBox"),
+    resultTitle: document.getElementById("resultTitle"),
+    resultDesc: document.getElementById("resultDesc"),
+    reset: document.getElementById("btnReset"),
+    artikel: document.getElementById("btnArtikel"),
+  };
+
+  const esc = (s = "") =>
+    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+  const current = () => LAYANAN.find((l) => l.id === els.select.value) || LAYANAN[0];
+
+  function render() {
+    const l = current();
+
+    els.waktu.textContent = l.waktu;
+    els.biaya.textContent = l.biaya;
+    els.produk.textContent = l.produk;
+    els.artikel.href = l.artikel;
+
+    els.checklist.innerHTML = l.items
+      .map(
+        (item, i) => `
+      <label class="flex items-start gap-3 rounded-2xl border-2 border-brutal-border bg-white dark:bg-slate-800 px-4 py-3 cursor-pointer transition-colors hover:bg-brand-primary/10">
+        <input
+          type="checkbox"
+          data-idx="${i}"
+          class="mt-0.5 w-5 h-5 shrink-0 accent-emerald-500 cursor-pointer"
+        />
+        <span class="text-sm font-bold text-brutal-text leading-relaxed">${esc(item)}</span>
+      </label>`
+      )
+      .join("");
+
+    update();
+  }
+
+  function update() {
+    const l = current();
+    const boxes = [...els.checklist.querySelectorAll("input[type='checkbox']")];
+    const checked = boxes.filter((b) => b.checked).length;
+    const total = boxes.length;
+
+    boxes.forEach((b) => {
+      const label = b.closest("label");
+      if (b.checked) {
+        label.classList.add("opacity-60");
+        label.classList.add("line-through");
+      } else {
+        label.classList.remove("opacity-60");
+        label.classList.remove("line-through");
+      }
+    });
+
+    const pct = total ? Math.round((checked / total) * 100) : 0;
+    els.bar.style.width = pct + "%";
+    els.text.textContent = `${checked} / ${total}`;
+
+    if (checked === 0) {
+      els.result.classList.add("hidden");
+      return;
+    }
+
+    els.result.classList.remove("hidden");
+    if (checked === total) {
+      els.resultTitle.textContent = "✅ Berkas lengkap!";
+      els.resultTitle.className = "font-black text-lg mb-1 text-emerald-600";
+      els.resultDesc.textContent =
+        "Semua dokumen sesuai daftar persyaratan " +
+        l.nomor +
+        ". Verifikasi resmi tetap dilakukan petugas KUA atas dokumen asli — siapkan aslinya untuk dicocokkan.";
+    } else {
+      const kurang = l.items.filter((_, i) => !boxes[i].checked);
+      els.resultTitle.textContent = `⏳ Kurang ${kurang.length} dokumen`;
+      els.resultTitle.className = "font-black text-lg mb-1 text-orange-500";
+      els.resultDesc.innerHTML =
+        "Yang belum tercentang: " + kurang.map((k) => `• ${esc(k)}`).join(" — ");
+    }
+  }
+
+  els.select.addEventListener("change", render);
+  els.checklist.addEventListener("change", (e) => {
+    if (e.target.matches("input[type='checkbox']")) update();
+  });
+  els.reset.addEventListener("click", () => {
+    els.checklist
+      .querySelectorAll("input[type='checkbox']")
+      .forEach((b) => (b.checked = false));
+    update();
+  });
+
+  render();
+</script>
+

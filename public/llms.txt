@@ -39,6 +39,15 @@ Penulis: Widyawan Sigitmanto, penghulu dan penulis. Profil: https://simkah.web.i
 - [Skrining catin](https://simkah.web.id/tools/skrining-catin)
 - [Penelusuran perkara](https://simkah.web.id/tools/penelusuran-perkara)
 
+## Panduan untuk operator KUA
+
+Ringkasan Standar Pelayanan KUA Kepdirjen Bimas Islam No. 888 Tahun 2026 untuk operator SIMKAH, penghulu, dan staf KUA:
+
+- [Ringkasan 11 standar pelayanan Kepdirjen 888/2026](https://simkah.web.id/blog/panduan-operator-kepdirjen-888-2026): peta layanan, waktu, biaya, produk.
+- [Checklist kehendak nikah](https://simkah.web.id/blog/checklist-operator-kehendak-nikah-888): 17 persyaratan + syarat WNA.
+- [Peta regulasi](https://simkah.web.id/blog/peta-regulasi-permenag-30-2024-kepdirjen-888): hubungan Permenag 30/2024, Kepdirjen 888/2026, dan Kepdirjen 1221/2025.
+- [Cek Berkas Catin](https://simkah.web.id/tools/cek-berkas): alat interaktif pengecekan kelengkapan berkas per layanan.
+
 ## Indeks dan umpan
 
 - [Semua artikel](https://simkah.web.id/blog)

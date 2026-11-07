@@ -39,9 +39,9 @@ const modifiedDate =
 const modifiedIso = modifiedDate.toISOString();
 const isUpdated = modifiedIso !== publishedIso;
 
-/** Ambil FAQ dari section "## Pertanyaan umum" dengan format **Tanya** + jawaban. */
+/** Ambil FAQ dari section "## Pertanyaan umum" / "## FAQ" dengan format **Tanya** + jawaban. */
 function extractFaq(md: string): { q: string; a: string }[] {
-  const section = md.match(/##\s*Pertanyaan umum\s*([\s\S]*?)(?=\n##\s|\n#\s|$)/i);
+  const section = md.match(/##\s*(?:Pertanyaan umum|FAQ)\s*([\s\S]*?)(?=\n##\s|\n#\s|$)/i);
   if (!section) return [];
 
   const items: { q: string; a: string }[] = [];
@@ -226,10 +226,16 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
                     <article class="h-full">
                         <a href={`/blog/${p.slug}`} class={`block h-full brutal-card overflow-hidden flex flex-col group ${style.card} transition-colors`}>
                             <div class="aspect-video relative p-0 border-b-3 border-brutal-border !bg-white overflow-hidden">
-                                {typeof p.image === 'string' ? (
-                                  <img src={p.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" />
+                                {p.image ? (
+                                  typeof p.image === 'string' ? (
+                                    <img src={p.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" />
+                                  ) : (
+                                    <Image src={p.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" width={400} height={225} />
+                                  )
                                 ) : (
-                                  <Image src={p.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" width={400} height={225} />
+                                  <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl font-bold">
+                                    {p.title.trim()[0].toUpperCase()}
+                                  </div>
                                 )}
                             </div>
                             <div class="p-5 flex flex-col flex-grow">

@@ -13,6 +13,7 @@ const getCategoryColor = (cat: string) => {
     const c = cat?.toLowerCase() || '';
     if (c === 'berita') return '!bg-[#c0e6ff] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
     if (c === 'catatan') return '!bg-[#fae870] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
+    if (c === 'panduan operator') return '!bg-[#e8dff5] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
     if (c === 'inspirasi') return '!bg-pink-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
     return '!bg-emerald-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
 };
