@@ -105,6 +105,8 @@ export default config({
             format: { contentField: 'content' },
             // Urutan default di daftar admin: terbaru dulu
             defaultSort: { field: 'pubDate', direction: 'descending' },
+            // Kolom yang tampil di daftar admin (termasuk status draft)
+            columns: ['category', 'pubDate', 'draft'],
             schema: {
                 // --- Konten Utama ---
                 title: fields.slug({
