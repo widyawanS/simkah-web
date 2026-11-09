@@ -119,10 +119,10 @@ export default config({
                     label: 'Kategori',
                     description: 'Contoh: berita, catatan, inspirasi, tutorial',
                 }),
-                pubDate: fields.date({
-                    label: 'Tanggal Publikasi',
-                    description: 'Artikel otomatis tayang pukul 00:00 WIB saat tanggal ini tiba (selama Draft tidak dicentang). Tanggal di masa depan = terjadwal.',
-                    defaultValue: { kind: 'today' },
+                pubDate: fields.datetime({
+                    label: 'Tanggal & Jam Publikasi (WIB)',
+                    description: 'Artikel otomatis tayang sesuai tanggal & jam WIB ini (selama Draft tidak dicentang). Tanggal/jam di masa depan = terjadwal.',
+                    defaultValue: { kind: 'now' },
                 }),
                 author: fields.text({
                     label: 'Penulis',

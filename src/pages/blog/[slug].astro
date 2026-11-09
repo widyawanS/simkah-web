@@ -137,13 +137,13 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
                 </div>
                 <span>•</span>
                 <time datetime={post.pubDate.toISOString()}>
-                    {post.pubDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    {post.pubDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
                 </time>
                 {isUpdated && (
                     <>
                         <span>•</span>
                         <span>
-                            Diperbarui {modifiedDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                            Diperbarui {modifiedDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
                         </span>
                     </>
                 )}

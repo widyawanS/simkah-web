@@ -23,17 +23,16 @@ function dirSlug(id: string): string {
 const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
 
 /**
- * Artikel boleh tayang bila bukan draft DAN tanggal publikasinya (menurut WIB)
- * sudah tiba. Artikel bertanggal WIB besok akan tayang tepat pukul 00:00 WIB.
+ * Artikel boleh tayang bila bukan draft DAN waktu publikasinya (menurut WIB)
+ * sudah tiba. Komponen tanggal & jam di `pubDate` (UTC fields) diperlakukan
+ * sebagai waktu WIB (Asia/Jakarta, UTC+7):
+ * - Tanggal saja ("2026-11-09") -> tayang pukul 00:00 WIB pada tanggal tersebut.
+ * - Tanggal + jam ("2026-11-09T12:00") -> tayang sesuai jam WIB tersebut.
  */
 export function isPublished(data: { draft?: boolean; pubDate?: Date }): boolean {
     if (data.draft) return false;
     if (data.pubDate) {
-        // Komponen tanggal kalender menurut WIB.
-        const wib = new Date(data.pubDate.getTime() + WIB_OFFSET_MS);
-        // Awal hari tersebut (00:00 WIB) dinyatakan dalam UTC.
-        const publishAt =
-            Date.UTC(wib.getUTCFullYear(), wib.getUTCMonth(), wib.getUTCDate()) - WIB_OFFSET_MS;
+        const publishAt = data.pubDate.getTime() - WIB_OFFSET_MS;
         if (Date.now() < publishAt) return false;
     }
     return true;
