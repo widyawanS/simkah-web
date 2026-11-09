@@ -19,6 +19,10 @@ const menuitems = [
     path: "/category/berita",
   },
   {
+    title: "Panduan Operator",
+    path: "/category/panduan-operator",
+  },
+  {
     title: "Catatan",
     path: "/category/catatan",
   },
@@ -27,13 +31,11 @@ const menuitems = [
     path: "/tools",
     children: [
       { title: "Cek Berkas Catin", path: "/tools/cek-berkas" },
+      { title: "Skrining Catin", path: "/tools/skrining-catin" },
+      { title: "Kalkulator Wedding", path: "/tools/kalkulator-wedding" },
+      { title: "Kalkulator Keluarga", path: "/tools/kalkulator-keluarga" },
       { title: "Penelusuran Perkara", path: "/tools/penelusuran-perkara" },
       { title: "Prompt Penghulu", path: "/tools/prompt-penghulu" },
-      { title: "Konten Medsos", path: "/tools/konten-medsos" },
-      ...(menuTools as any[]).map(tool => ({
-        title: tool?.title || tool?.slug || 'Tool',
-        path: tool?.link || '#',
-      })),
       { title: "Semua Tools", path: "/tools" },
     ],
   },

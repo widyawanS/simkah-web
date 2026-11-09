@@ -33,11 +33,13 @@ Penulis: Widyawan Sigitmanto, penghulu dan penulis. Profil: https://simkah.web.i
 
 ## Alat bantu gratis
 
-- [Daftar kalkulator](https://simkah.web.id/tools/calculators)
+- [Cek berkas catin](https://simkah.web.id/tools/cek-berkas)
+- [Skrining catin](https://simkah.web.id/tools/skrining-catin)
 - [Kalkulator wedding](https://simkah.web.id/tools/kalkulator-wedding)
 - [Kalkulator keluarga](https://simkah.web.id/tools/kalkulator-keluarga)
-- [Skrining catin](https://simkah.web.id/tools/skrining-catin)
 - [Penelusuran perkara](https://simkah.web.id/tools/penelusuran-perkara)
+- [Prompt AI penghulu](https://simkah.web.id/tools/prompt-penghulu)
+- [Daftar kalkulator](https://simkah.web.id/tools/calculators)
 
 ## Panduan untuk operator KUA
 

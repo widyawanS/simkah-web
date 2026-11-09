@@ -19,6 +19,14 @@ function dirSlug(id: string): string {
     return parts.length >= 2 ? parts[parts.length - 2] : id;
 }
 
+/** Normalisasi kategori ke format slug URL ("Panduan Operator" -> "panduan-operator") */
+export function slugifyCategory(category: string): string {
+    return (category || '')
+        .toLowerCase()
+        .trim()
+        .replace(/[\s_]+/g, '-');
+}
+
 /** Offset WIB (Asia/Jakarta, UTC+7) dalam milidetik. */
 const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
 
@@ -63,8 +71,9 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 }
 
 export async function getPostsByCategory(category: string): Promise<BlogPost[]> {
+    const target = slugifyCategory(category);
     const allPosts = await getPosts();
-    return allPosts.filter(p => p.category.toLowerCase() === category.toLowerCase());
+    return allPosts.filter(p => slugifyCategory(p.category) === target);
 }
 
 export interface LegalPage {

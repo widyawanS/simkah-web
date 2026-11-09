@@ -2,11 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import PostCard from "@components/blog/PostCard.astro";
-import { getPostsByCategory } from "@lib/content.ts";
-
-export async function getStaticPaths() {
-  // Output mode "server" (SSR): tidak perlu getStaticPaths untuk halaman kategori.
-}
+import { getPostsByCategory, slugifyCategory } from "@lib/content.ts";
 
 const { category } = Astro.params;
 const cat = category as string;
@@ -34,25 +30,30 @@ for (let p = 1; p <= totalPages; p++) {
 
 const pageUrl = (p: number) => (p === 1 ? `/category/${cat}` : `/category/${cat}?page=${p}`);
 
-const capitalizedCategory = cat.charAt(0).toUpperCase() + cat.slice(1);
+const displayCategory =
+    allPosts[0]?.category ||
+    cat
+        .split('-')
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ');
 
 const getCategoryColor = (c: string) => {
-    const cc = c?.toLowerCase() || '';
+    const cc = slugifyCategory(c);
     if (cc === 'berita') return '!bg-[#c0e6ff] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
     if (cc === 'catatan') return '!bg-[#fae870] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
-    if (cc === 'panduan operator') return '!bg-[#e8dff5] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
+    if (cc === 'panduan-operator') return '!bg-[#e8dff5] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
     if (cc === 'inspirasi') return '!bg-pink-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
     return '!bg-emerald-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
 };
 ---
 
-<Layout title={`${capitalizedCategory} | Archive`} noindex={isPaged}>
+<Layout title={`${displayCategory} | Archive`} noindex={isPaged}>
   <Container>
     <main class="py-20 animate-fade-in">
       <header class="text-center mb-20">
           <span class="text-brand-primary text-xs font-bold uppercase tracking-widest mb-4 block">Archive Category</span>
-          <h1 class="text-5xl font-bold mb-6 tracking-tighter">Kategori: <span class="text-gradient">{capitalizedCategory}</span></h1>
-          <p class="text-slate-400 max-w-xl mx-auto text-lg">Menampilkan semua tulisan dalam kategori {capitalizedCategory}.</p>
+          <h1 class="text-5xl font-bold mb-6 tracking-tighter">Kategori: <span class="text-gradient">{displayCategory}</span></h1>
+          <p class="text-slate-400 max-w-xl mx-auto text-lg">Menampilkan semua tulisan dalam kategori {displayCategory}.</p>
       </header>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

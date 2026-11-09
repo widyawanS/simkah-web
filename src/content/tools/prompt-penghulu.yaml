@@ -1,0 +1,10 @@
+title: Prompt AI Penghulu & Penyuluh
+shortDescription: Generator prompt AI untuk menyusun naskah khutbah nikah, khutbah Jumat, materi bimbingan catin, nasihat pasca akad, dan doa pernikahan.
+category: generator
+icon: 🕌
+colorFrom: emerald-500
+colorTo: teal-500
+link: /tools/prompt-penghulu
+isActive: true
+showInMenu: true
+order: 3

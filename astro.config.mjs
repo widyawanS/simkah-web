@@ -27,8 +27,12 @@ export default defineConfig({
     "/blog/test-post-1": "/blog",
     "/blog/hello-world": "/blog",
     "/test-images": "/",
-    // Konsolidasi URL tool duplikat
+    "/redbubble": "/",
+    // Konsolidasi & pembersihan tool non-relevan
     "/tools/calculator": "/tools/calculators",
+    "/tools/converter": "/tools",
+    "/tools/konten-medsos": "/tools",
+    "/tools/prompt-generator": "/tools",
   },
   prefetch: true,
   image: {
