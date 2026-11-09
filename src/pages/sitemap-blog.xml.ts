@@ -5,6 +5,7 @@
 
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { isPublished } from '@lib/content';
 
 /** "a/b/SLUG/index.mdx" -> "SLUG" */
 function dirSlug(id: string): string {
@@ -14,7 +15,7 @@ function dirSlug(id: string): string {
 
 export const GET: APIRoute = async () => {
   const baseUrl = 'https://simkah.web.id';
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const posts = await getCollection('blog', ({ data }) => isPublished(data));
 
   const urls = posts
     .map((post) => ({

@@ -19,10 +19,18 @@ function dirSlug(id: string): string {
     return parts.length >= 2 ? parts[parts.length - 2] : id;
 }
 
+/**
+ * Artikel boleh tayang bila bukan draft DAN tanggal publikasinya sudah lewat.
+ * Tanggal di masa depan otomatis tampil begitu waktunya tiba (SSR, tanpa rebuild).
+ */
+export function isPublished(data: { draft?: boolean; pubDate?: Date }): boolean {
+    if (data.draft) return false;
+    if (data.pubDate && data.pubDate.getTime() > Date.now()) return false;
+    return true;
+}
+
 export async function getPosts(): Promise<BlogPost[]> {
-    const posts = await getCollection('blog', ({ data }) => {
-        return !data.draft;
-    });
+    const posts = await getCollection('blog', ({ data }) => isPublished(data));
 
     return posts
         .sort((a, b) => (b.data.pubDate?.getTime() || 0) - (a.data.pubDate?.getTime() || 0))
