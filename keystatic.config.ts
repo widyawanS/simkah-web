@@ -121,7 +121,7 @@ export default config({
                 }),
                 pubDate: fields.date({
                     label: 'Tanggal Publikasi',
-                    description: 'Artikel otomatis tayang saat tanggal ini tiba (selama Draft tidak dicentang). Tanggal di masa depan = terjadwal.',
+                    description: 'Artikel otomatis tayang pukul 00:00 WIB saat tanggal ini tiba (selama Draft tidak dicentang). Tanggal di masa depan = terjadwal.',
                     defaultValue: { kind: 'today' },
                 }),
                 author: fields.text({

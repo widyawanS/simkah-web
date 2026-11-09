@@ -19,13 +19,23 @@ function dirSlug(id: string): string {
     return parts.length >= 2 ? parts[parts.length - 2] : id;
 }
 
+/** Offset WIB (Asia/Jakarta, UTC+7) dalam milidetik. */
+const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
+
 /**
- * Artikel boleh tayang bila bukan draft DAN tanggal publikasinya sudah lewat.
- * Tanggal di masa depan otomatis tampil begitu waktunya tiba (SSR, tanpa rebuild).
+ * Artikel boleh tayang bila bukan draft DAN tanggal publikasinya (menurut WIB)
+ * sudah tiba. Artikel bertanggal WIB besok akan tayang tepat pukul 00:00 WIB.
  */
 export function isPublished(data: { draft?: boolean; pubDate?: Date }): boolean {
     if (data.draft) return false;
-    if (data.pubDate && data.pubDate.getTime() > Date.now()) return false;
+    if (data.pubDate) {
+        // Komponen tanggal kalender menurut WIB.
+        const wib = new Date(data.pubDate.getTime() + WIB_OFFSET_MS);
+        // Awal hari tersebut (00:00 WIB) dinyatakan dalam UTC.
+        const publishAt =
+            Date.UTC(wib.getUTCFullYear(), wib.getUTCMonth(), wib.getUTCDate()) - WIB_OFFSET_MS;
+        if (Date.now() < publishAt) return false;
+    }
     return true;
 }
 
