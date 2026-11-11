@@ -124,9 +124,27 @@ const globalJsonLd = toJsonLd({
   href={new URL("/rss.xml", Astro.site)}
 />
 
-<!-- Adsense Global -->
+<!-- Adsense Global (Lazy loaded on first user interaction or idle to protect Core Web Vitals) -->
 {ads.isActive && ads.adClient && (
-  <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ads.adClient}`} crossorigin="anonymous"></script>
+  <script is:inline define:vars={{ adClient: ads.adClient }}>
+    function loadAdsense() {
+      if (window.adsenseLoaded) return;
+      window.adsenseLoaded = true;
+      const adScript = document.createElement('script');
+      adScript.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`;
+      adScript.async = true;
+      adScript.crossOrigin = "anonymous";
+      document.head.appendChild(adScript);
+    }
+    const adTimer = setTimeout(loadAdsense, 3500);
+    const adEvents = ['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'];
+    adEvents.forEach(event => {
+      window.addEventListener(event, () => {
+        clearTimeout(adTimer);
+        loadAdsense();
+      }, { once: true, passive: true });
+    });
+  </script>
 )}
 
 <!-- Custom Injected Header -->
