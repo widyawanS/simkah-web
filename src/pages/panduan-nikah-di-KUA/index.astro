@@ -28,55 +28,68 @@ const pageJsonLd = toJsonLd({
     <div class="max-w-4xl mx-auto mb-20">
       <!-- Header -->
       <div class="text-center mb-12 mt-12 flex flex-col items-center">
-        <span class="inline-block px-4 py-2 brutal-badge bg-emerald-200 text-brutal-text text-sm font-bold mb-4 border-2 border-brutal-border">
+        <span class="inline-block px-4 py-2 brutal-badge bg-emerald-200 text-slate-900 text-sm font-bold mb-4 border-2 border-brutal-border">
           🕌 Panduan per Kecamatan
         </span>
         <h1 class="text-3xl md:text-5xl font-black text-brutal-text text-center mb-4 drop-shadow-md">
-          Cari <span class="text-emerald-600">KUA Kecamatan</span> Anda
+          Cari <span class="text-emerald-500">KUA Kecamatan</span> Anda
         </h1>
         <p class="text-center text-brutal-text-muted max-w-2xl mx-auto mb-8 text-lg font-medium">
           Panduan lengkap syarat, alur, biaya, dan jadwal pendaftaran nikah di{" "}
-          <strong>{totalKecamatan.toLocaleString("id-ID")}</strong> kecamatan
+          <strong class="text-brutal-text">{totalKecamatan.toLocaleString("id-ID")}</strong> kecamatan
           seluruh Indonesia — sesuai Permenag No. 30 Tahun 2024.
         </p>
         <AdSlot type="tools" />
       </div>
 
-      <!-- Search Box -->
-      <div class="brutal-card bg-[#c0e6ff] dark:bg-brutal-card rounded-3xl p-6 md:p-8 mb-8">
-        <label for="searchInput" class="block text-brutal-text font-bold text-lg mb-3">
+      <!-- Search Box Card -->
+      <div class="brutal-card bg-[#c0e6ff] dark:bg-slate-900 rounded-3xl p-6 md:p-8 mb-8 border-3 border-brutal-border">
+        <label for="searchInput" class="block text-slate-900 dark:text-white font-extrabold text-lg mb-3">
           🔍 Ketik nama kecamatan atau kota/kabupaten:
         </label>
-        <input
-          id="searchInput"
-          type="search"
-          placeholder="Contoh: Lowokwaru, Kebayoran Baru, Medan Kota…"
-          autocomplete="off"
-          class="w-full px-5 py-4 text-lg font-semibold rounded-2xl border-2 border-brutal-border bg-white text-brutal-text placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition"
-        />
-        <p id="searchHint" class="mt-3 text-sm text-brutal-text-muted font-medium">
-          Mulai ketik untuk mencari…
+        
+        <div class="relative">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Contoh: Penawar Tama, Lowokwaru, Kebayoran Baru…"
+            autocomplete="off"
+            class="w-full px-5 py-4 pr-12 text-lg font-semibold rounded-2xl border-2 border-brutal-border bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400 transition"
+          />
+          <button
+            id="clearBtn"
+            type="button"
+            class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center justify-center font-bold text-sm transition"
+            aria-label="Bersihkan pencarian"
+          >
+            ✕
+          </button>
+        </div>
+
+        <p id="searchHint" class="mt-3 text-sm text-slate-700 dark:text-slate-300 font-semibold">
+          Ketik minimal 2 huruf untuk mulai mencari…
         </p>
       </div>
 
-      <!-- Results -->
+      <!-- Results Grid -->
       <div id="resultsList" class="grid gap-3 md:grid-cols-2" aria-live="polite"></div>
 
-      <!-- Empty state -->
-      <div id="emptyState" class="hidden text-center py-12">
-        <p class="text-2xl mb-2">🤔</p>
-        <p class="text-brutal-text font-semibold">Kecamatan tidak ditemukan.</p>
-        <p class="text-brutal-text-muted text-sm mt-1">Coba nama kecamatan atau kota yang lebih singkat.</p>
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden text-center py-12 brutal-card bg-white dark:bg-slate-900 rounded-2xl p-8 border-2 border-brutal-border">
+        <p class="text-3xl mb-2">🤔</p>
+        <p class="text-slate-900 dark:text-white font-bold text-lg">Kecamatan tidak ditemukan.</p>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+          Coba gunakan ejaan nama kecamatan yang lebih pendek atau ketik nama kabupaten/kotanya.
+        </p>
       </div>
 
-      <!-- Info -->
-      <div class="mt-12 brutal-card bg-[#fae870] dark:bg-brutal-card rounded-2xl p-6">
-        <h2 class="font-bold text-brutal-text text-lg mb-2">ℹ️ Tentang halaman ini</h2>
-        <p class="text-brutal-text-muted text-sm leading-relaxed">
-          Setiap halaman kecamatan memuat syarat dokumen, alur pendaftaran, estimasi biaya, dan
-          informasi KUA setempat berdasarkan <strong>Permenag No. 30 Tahun 2024</strong> dan
-          <strong>Kepdirjen Bimas Islam No. 888 Tahun 2026</strong>. Data wilayah mencakup
-          {totalKecamatan.toLocaleString("id-ID")} kecamatan dari 38 provinsi di Indonesia.
+      <!-- Info Card -->
+      <div class="mt-12 brutal-card bg-[#fae870] dark:bg-slate-800 rounded-2xl p-6 border-3 border-brutal-border">
+        <h2 class="font-extrabold text-slate-900 dark:text-white text-lg mb-2 flex items-center gap-2">
+          <span>ℹ️</span> Tentang panduan kecamatan ini
+        </h2>
+        <p class="text-slate-800 dark:text-slate-300 text-sm leading-relaxed font-medium">
+          Setiap halaman kecamatan memuat syarat dokumen, alur pendaftaran, estimasi biaya resmi (Rp0 di KUA vs Rp600.000 di luar KUA), dan informasi KUA setempat berdasarkan <strong>Permenag No. 30 Tahun 2024</strong> serta <strong>Kepdirjen Bimas Islam No. 888 Tahun 2026</strong>.
         </p>
       </div>
     </div>
@@ -84,18 +97,24 @@ const pageJsonLd = toJsonLd({
 </Layout>
 
 <script>
-  // Embed data wilayah ringkas (hanya slug, kecamatan, kota) untuk search
-  const rawData: Array<{ slug: string; kecamatan: string; kota: string; provinsi: string }> =
-    (window as any).__wilayahIndex__ || [];
+  interface WilayahItem {
+    slug: string;
+    kecamatan: string;
+    kota: string;
+    provinsi: string;
+  }
+
+  const rawData: WilayahItem[] = (window as any).__wilayahIndex__ || [];
 
   const input = document.getElementById("searchInput") as HTMLInputElement;
+  const clearBtn = document.getElementById("clearBtn") as HTMLButtonElement;
   const hint = document.getElementById("searchHint") as HTMLParagraphElement;
   const list = document.getElementById("resultsList") as HTMLDivElement;
   const empty = document.getElementById("emptyState") as HTMLDivElement;
 
   let debounceTimer: ReturnType<typeof setTimeout>;
 
-  function render(items: typeof rawData) {
+  function render(items: WilayahItem[]) {
     list.innerHTML = "";
     empty.classList.add("hidden");
 
@@ -108,51 +127,68 @@ const pageJsonLd = toJsonLd({
       const a = document.createElement("a");
       a.href = `/panduan-nikah-di-KUA/${item.slug}`;
       a.className =
-        "group flex items-center justify-between gap-3 px-5 py-4 rounded-2xl border-2 border-brutal-border bg-white hover:bg-emerald-50 hover:border-emerald-500 transition font-semibold text-brutal-text";
+        "group flex items-center justify-between gap-3 px-5 py-4 rounded-2xl border-2 border-brutal-border bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-slate-700/80 hover:border-emerald-500 dark:hover:border-emerald-400 transition shadow-[2px_2px_0_var(--brutal-border-color)] hover:shadow-[4px_4px_0_var(--brutal-border-color)]";
       a.innerHTML = `
-        <span>
-          <span class="block text-base">${item.kecamatan}</span>
-          <span class="block text-xs text-brutal-text-muted font-normal mt-0.5">${item.kota}, ${item.provinsi}</span>
+        <span class="text-left">
+          <span class="block text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">${item.kecamatan}</span>
+          <span class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">${item.kota}, ${item.provinsi}</span>
         </span>
-        <span class="text-emerald-600 group-hover:translate-x-1 transition-transform">→</span>
+        <span class="text-emerald-600 dark:text-emerald-400 font-extrabold text-lg group-hover:translate-x-1 transition-transform">→</span>
       `;
       list.appendChild(a);
     });
 
     if (items.length > 30) {
       const note = document.createElement("p");
-      note.className = "col-span-2 text-center text-sm text-brutal-text-muted mt-2";
+      note.className = "col-span-full text-center text-sm font-semibold text-slate-600 dark:text-slate-400 mt-2 py-2";
       note.textContent = `Menampilkan 30 dari ${items.length} hasil. Perjelas kata kunci untuk hasil lebih spesifik.`;
       list.appendChild(note);
     }
   }
 
+  function doSearch() {
+    const q = input.value.trim().toLowerCase();
+    
+    if (q.length > 0) {
+      clearBtn.classList.remove("hidden");
+    } else {
+      clearBtn.classList.add("hidden");
+    }
+
+    if (q.length < 2) {
+      list.innerHTML = "";
+      empty.classList.add("hidden");
+      hint.textContent = q.length === 0 ? "Ketik minimal 2 huruf untuk mulai mencari…" : "Ketik minimal 2 huruf…";
+      return;
+    }
+
+    const results = rawData.filter(
+      (d) =>
+        d.kecamatan.toLowerCase().includes(q) ||
+        d.kota.toLowerCase().includes(q) ||
+        d.provinsi.toLowerCase().includes(q)
+    );
+
+    hint.textContent =
+      results.length > 0
+        ? `Ditemukan ${results.length} kecamatan`
+        : "Tidak ada kecamatan yang cocok";
+    render(results);
+  }
+
   input.addEventListener("input", () => {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      const q = input.value.trim().toLowerCase();
-      if (q.length < 2) {
-        list.innerHTML = "";
-        empty.classList.add("hidden");
-        hint.textContent = "Mulai ketik untuk mencari…";
-        return;
-      }
-      const results = rawData.filter(
-        (d) =>
-          d.kecamatan.toLowerCase().includes(q) ||
-          d.kota.toLowerCase().includes(q) ||
-          d.provinsi.toLowerCase().includes(q)
-      );
-      hint.textContent =
-        results.length > 0
-          ? `${results.length} kecamatan ditemukan`
-          : "Tidak ada hasil";
-      render(results);
-    }, 200);
+    debounceTimer = setTimeout(doSearch, 150);
+  });
+
+  clearBtn.addEventListener("click", () => {
+    input.value = "";
+    input.focus();
+    doSearch();
   });
 </script>
 
-<!-- Inject data wilayah ringkas sebagai JSON inline (search berjalan di client) -->
+<!-- Inject data wilayah ringkas sebagai JSON inline -->
 <script
   is:inline
   define:vars={{
@@ -165,10 +201,4 @@ const pageJsonLd = toJsonLd({
   }}
 >
   window.__wilayahIndex__ = wilayahIndex;
-  // Trigger re-init after page load (script order safety)
-  document.addEventListener("DOMContentLoaded", () => {
-    const script = document.querySelector("script[type='module'][src*='index']");
-    // Data already set above; nothing else needed
-  });
 </script>
-
