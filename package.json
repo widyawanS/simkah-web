@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "node ./dist/server/entry.mjs",
-    "build": "astro build && ln -sf ../../public/images ./dist/client/images",
+    "build": "node scripts/gen-responsive-images.mjs && astro build && ln -sf ../../public/images ./dist/client/images",
     "preview": "astro preview",
     "astro": "astro"
   },

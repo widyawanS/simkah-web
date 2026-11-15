@@ -5,6 +5,7 @@ import TableOfContents from "@components/blog/TableOfContents.astro";
 import SocialShare from "@components/blog/SocialShare.astro";
 import { getPostBySlug, getPosts } from "@lib/content";
 import { marked } from "marked";
+import blogImages from "../../data/blog-images";
 import { Image } from "astro:assets";
 import {
   SITE,
@@ -31,6 +32,18 @@ const relatedPosts = allPosts
   .slice(0, 3);
 
 const postUrl = new URL(`/blog/${post.slug}`, SITE.url).toString();
+// Hero: pakai varian responsif kalau manifest punya entrinya.
+// 896px = lebar maksimum kolom artikel (max-w-4xl).
+const HERO_SIZES = "(min-width: 1024px) 896px, 100vw";
+const heroSrc: string | null =
+  typeof post.image === "string" && post.image.startsWith("/images/blog/") ? post.image : null;
+const heroMeta = heroSrc ? (blogImages[heroSrc] ?? null) : null;
+const heroSrcSet =
+  heroSrc && heroMeta && heroMeta.variants.length > 0
+    ? heroMeta.variants
+        .map((w) => `${heroSrc.replace(/\.[a-z0-9]+$/i, `-${w}.webp`)} ${w}w`)
+        .join(", ")
+    : undefined;
 const publishedIso = post.pubDate.toISOString();
 const modifiedDate =
   post.updatedDate && post.updatedDate.getTime() > post.pubDate.getTime()
@@ -117,6 +130,9 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
   publishedTime={publishedIso}
   modifiedTime={modifiedIso}
   section={post.category}
+  heroImage={heroMeta ? heroSrc : undefined}
+  heroImageSet={heroSrcSet}
+  heroImageSizes={heroMeta ? HERO_SIZES : undefined}
 >
   <script type="application/ld+json" slot="head" set:html={postJsonLd} />
   <Container>
@@ -152,24 +168,22 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
 
         {post.image && (
             <div class="w-full aspect-video rounded-3xl overflow-hidden mb-12 glass shadow-2xl bg-slate-900">
-                {(() => {
-                    let imageSrc = post.image;
-                    
-                    // Jika path relatif (seperti "image.webp" atau "./image.webp"), 
-                    // kita asumsikan ini adalah file di src/content tapi karena kita tidak pakai image(),
-                    // kita butuh fallback atau cara lain. Untuk sekarang, kita coba tampilkan apa adanya.
-                    
-                    // Skenario 1: Path lama (dimulai dengan /)
-                    if (typeof imageSrc === 'string' && (imageSrc.startsWith('/') || imageSrc.startsWith('http'))) {
-                        return <img src={imageSrc} class="w-full h-full object-cover" alt={post.title} loading="eager" fetchpriority="high" decoding="async" />;
-                    }
-                    
-                    // Skenario 2: Path baru (relatif ke folder berita di src/content)
-                    // Karena kita simpan di src, tapi kita ingin tampil di public, 
-                    // Keystatic punya setting untuk memindahkan ini.
-                    
-                    return <img src={imageSrc} class="w-full h-full object-cover" alt={post.title} loading="eager" fetchpriority="high" decoding="async" />;
-                })()}
+                {heroMeta ? (
+                    <img
+                        src={post.image}
+                        srcset={heroSrcSet}
+                        sizes={HERO_SIZES}
+                        width={heroMeta.w}
+                        height={heroMeta.h}
+                        class="w-full h-full object-cover"
+                        alt={post.title}
+                        loading="eager"
+                        fetchpriority="high"
+                        decoding="async"
+                    />
+                ) : (
+                    <img src={post.image} class="w-full h-full object-cover" alt={post.title} loading="eager" fetchpriority="high" decoding="async" />
+                )}
             </div>
         )}
 
@@ -228,7 +242,7 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
                             <div class="aspect-video relative p-0 border-b-3 border-brutal-border !bg-white overflow-hidden">
                                 {p.image ? (
                                   typeof p.image === 'string' ? (
-                                    <img src={p.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" />
+                                    <img src={p.image} width={blogImages[p.image]?.w ?? 1200} height={blogImages[p.image]?.h ?? 675} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" />
                                   ) : (
                                     <Image src={p.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" width={400} height={225} />
                                   )

@@ -13,6 +13,8 @@ export interface Props {
   image?: string;
   ogType?: string;
   heroImage?: string;
+  heroImageSet?: string;
+  heroImageSizes?: string;
   author?: string;
   publishedTime?: string;
   modifiedTime?: string;
@@ -26,6 +28,8 @@ const {
   image,
   ogType,
   heroImage,
+  heroImageSet,
+  heroImageSizes,
   author,
   publishedTime,
   modifiedTime,
@@ -57,7 +61,14 @@ const {
       noindex={noindex}
     />
     {heroImage && (
-      <link rel="preload" as="image" href={heroImage} fetchpriority="high" />
+      <link
+        rel="preload"
+        as="image"
+        href={heroImage}
+        imagesrcset={heroImageSet}
+        imagesizes={heroImageSizes}
+        fetchpriority="high"
+      />
     )}
     <slot name="head" />
     <script is:inline>
