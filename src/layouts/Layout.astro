@@ -60,6 +60,38 @@ const {
       <link rel="preload" as="image" href={heroImage} fetchpriority="high" />
     )}
     <slot name="head" />
+    <script is:inline>
+      // Satu definisi untuk seluruh halaman. Sebelumnya script ini menempel di
+      // komponen ThemeToggle yang dirender dua kali (mobile + desktop), jadi
+      // fungsi yang sama dikirim dan diparse dua kali.
+      function setupThemeToggle() {
+        const btns = document.querySelectorAll('.theme-toggle-btn');
+        if (!btns.length) return;
+        function updateIcons() {
+          const isDark = document.documentElement.classList.contains('dark');
+          btns.forEach((btn) => {
+            btn.querySelector('.theme-toggle-dark-icon')?.classList.toggle('hidden', isDark);
+            btn.querySelector('.theme-toggle-light-icon')?.classList.toggle('hidden', !isDark);
+          });
+        }
+        updateIcons();
+        btns.forEach((btn) => {
+          btn.onclick = function () {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcons();
+          };
+        });
+      }
+      // Tunggu DOMContentLoaded agar tombol versi mobile DAN desktop sudah ada.
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupThemeToggle);
+      } else {
+        setupThemeToggle();
+      }
+      document.addEventListener('astro:after-swap', setupThemeToggle);
+    </script>
   </head>
   <body class="bg-brutal-bg text-brutal-text">
     <Navbar />

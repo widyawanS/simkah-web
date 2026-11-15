@@ -47,7 +47,7 @@ const analytics = settings?.analytics || {};
 
 const seoTitle = title ? `${title} | ${metadata.siteName}` : metadata.siteName;
 const seoDescription = description || metadata.description;
-const seoImage = new URL(image || metadata.ogImage || "/images/og-default.jpg", Astro.site).toString();
+const seoImage = new URL(image || metadata.ogImage || "/opengraph.jpg", Astro.site).toString();
 
 const sameAs = [settings?.footer?.telegram, settings?.footer?.facebook].filter(
   (url): url is string => typeof url === "string" && url.startsWith("http")
@@ -84,6 +84,7 @@ const globalJsonLd = toJsonLd({
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <meta name="generator" content={Astro.generator} />
 <meta name="profiton-domain-verification" content="50382d253cb280faf75095f4c840222162836e8c38822978e97020858016140c" />
 <!-- Canonical URL -->
@@ -127,23 +128,44 @@ const globalJsonLd = toJsonLd({
 <!-- Adsense Global (Lazy loaded on first user interaction or idle to protect Core Web Vitals) -->
 {ads.isActive && ads.adClient && (
   <script is:inline define:vars={{ adClient: ads.adClient }}>
-    function loadAdsense() {
-      if (window.adsenseLoaded) return;
-      window.adsenseLoaded = true;
-      const adScript = document.createElement('script');
-      adScript.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`;
-      adScript.async = true;
-      adScript.crossOrigin = "anonymous";
-      document.head.appendChild(adScript);
-    }
-    const adTimer = setTimeout(loadAdsense, 3500);
-    const adEvents = ['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'];
-    adEvents.forEach(event => {
-      window.addEventListener(event, () => {
-        clearTimeout(adTimer);
-        loadAdsense();
-      }, { once: true, passive: true });
-    });
+    (function () {
+      var loaded = false;
+      function loadAdsense() {
+        if (loaded) return;
+        loaded = true;
+        var el = document.createElement('script');
+        el.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + adClient;
+        el.async = true;
+        el.crossOrigin = 'anonymous';
+        document.head.appendChild(el);
+      }
+      // Diekspos supaya komponen slot iklan bisa memicu lebih awal bila perlu.
+      window.loadAdsense = loadAdsense;
+
+      // Muat hanya ketika slot iklan mendekati viewport, atau saat pengguna
+      // berinteraksi. Timer 3.5 s dihapus: slot iklan di bawah lipatan tidak
+      // lagi memblokir main thread sebelum pembaca sempat membaca konten.
+      function arm() {
+        var slots = document.querySelectorAll('ins.adsbygoogle');
+        if (!slots.length || !('IntersectionObserver' in window)) { loadAdsense(); return; }
+        var io = new IntersectionObserver(function (entries) {
+          for (var k = 0; k < entries.length; k++) {
+            if (entries[k].isIntersecting) { io.disconnect(); loadAdsense(); return; }
+          }
+        }, { rootMargin: '400px 0px' });
+        Array.prototype.forEach.call(slots, function (node) { io.observe(node); });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', arm);
+      } else {
+        arm();
+      }
+
+      ['mousedown', 'keydown', 'touchstart', 'scroll'].forEach(function (evt) {
+        window.addEventListener(evt, loadAdsense, { once: true, passive: true });
+      });
+    })();
   </script>
 )}
 

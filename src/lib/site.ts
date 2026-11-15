@@ -4,7 +4,7 @@ export const SITE = {
   description:
     "Panduan daftar nikah online via SIMKAH 2026: syarat N1-N4, alur KUA, biaya Rp0 vs Rp600rb, plus kalkulator dan skrining catin gratis.",
   logo: "https://simkah.web.id/logo-simkah.png",
-  ogImage: "https://simkah.web.id/images/og-default.jpg",
+  ogImage: "https://simkah.web.id/opengraph.jpg",
   language: "id-ID",
 } as const;
 

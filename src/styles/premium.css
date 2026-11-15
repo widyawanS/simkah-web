@@ -13,9 +13,22 @@
     --brutal-secondary: #004170;     /* Deep Navy */
     --brutal-accent: #fde047;        /* Vibrant Yellow */
     --brutal-success: #2dd4bf;       /* Teal/Mint */
-    --brutal-destructive: #ef4444;   /* Red */
+    --brutal-destructive: #dc2626;   /* Red */
     --brutal-warning: #fbbf24;       /* Amber */
     --brutal-info: #60a5fa;          /* Blue */
+
+    /* === Warna teks di atas permukaan brand (target WCAG AA >= 4.5:1) ===
+       Permukaan pastel selalu butuh teks GELAP. Jangan pakai --brutal-text
+       di sini: nilainya berubah menjadi hampir putih di mode gelap sehingga
+       kontras teks putih di atas tombol pastel jatuh ke ~2.7:1. */
+    --brutal-on-bright: #0f172a;
+    --brutal-primary-fg: var(--brutal-on-bright);
+    --brutal-secondary-fg: #ffffff;
+    --brutal-accent-fg: var(--brutal-on-bright);
+    --brutal-success-fg: var(--brutal-on-bright);
+    --brutal-warning-fg: var(--brutal-on-bright);
+    --brutal-info-fg: var(--brutal-on-bright);
+    --brutal-destructive-fg: #ffffff;
 
     /* === Structural Tokens === */
     --brutal-border-width: 3px;
@@ -62,9 +75,13 @@
     --brutal-secondary: #3b82f6;
     --brutal-accent: #fde047;
     --brutal-success: #2dd4bf;
-    --brutal-destructive: #ef4444;
+    --brutal-destructive: #dc2626;
     --brutal-warning: #f59e0b;
-    --brutal-info: #6366f1;
+    --brutal-info: #4f46e5;          /* #6366f1 gagal di putih (4.47) maupun gelap (4.00) */
+
+    /* === Warna teks di atas permukaan brand (mode gelap) === */
+    --brutal-secondary-fg: var(--brutal-on-bright);   /* #3b82f6 + teks gelap = 4.85:1 */
+    --brutal-info-fg: #ffffff;                        /* #4f46e5 + putih = 6.29:1 */
 
     --brutal-border-color: #312e81;  /* Deep Indigo border */
     --brutal-shadow-color: #4f46e5;  /* Bright Indigo shadow */
@@ -201,9 +218,9 @@ body {
 }
 
 /* Button Variants */
-.brutal-btn-primary { background-color: var(--brutal-primary); color: #fff; border-color: var(--brutal-border-color); }
-.brutal-btn-secondary { background-color: var(--brutal-secondary); color: #fff; }
-.brutal-btn-accent { background-color: var(--brutal-accent); color: var(--brutal-text); }
+.brutal-btn-primary { background-color: var(--brutal-primary); color: var(--brutal-primary-fg); border-color: var(--brutal-border-color); }
+.brutal-btn-secondary { background-color: var(--brutal-secondary); color: var(--brutal-secondary-fg); }
+.brutal-btn-accent { background-color: var(--brutal-accent); color: var(--brutal-accent-fg); }
 .brutal-btn-white { background-color: #ffffff; color: #0f172a; }
 
 /* Brutal Badge/Pill (Small tags) */
@@ -239,13 +256,13 @@ body {
 }
 
 /* Background Color Utilities for dynamic badges */
-.bg-brutal-primary { background-color: var(--brutal-primary); color: #fff; }
-.bg-brutal-secondary { background-color: var(--brutal-secondary); color: #fff; }
-.bg-brutal-accent { background-color: var(--brutal-accent); color: #0f172a; }
-.bg-brutal-success { background-color: var(--brutal-success); color: #0f172a; }
-.bg-brutal-warning { background-color: var(--brutal-warning); color: #0f172a; }
-.bg-brutal-info { background-color: var(--brutal-info); color: #fff; }
-.bg-brutal-destructive { background-color: var(--brutal-destructive); color: #fff; }
+.bg-brutal-primary { background-color: var(--brutal-primary); color: var(--brutal-primary-fg); }
+.bg-brutal-secondary { background-color: var(--brutal-secondary); color: var(--brutal-secondary-fg); }
+.bg-brutal-accent { background-color: var(--brutal-accent); color: var(--brutal-accent-fg); }
+.bg-brutal-success { background-color: var(--brutal-success); color: var(--brutal-success-fg); }
+.bg-brutal-warning { background-color: var(--brutal-warning); color: var(--brutal-warning-fg); }
+.bg-brutal-info { background-color: var(--brutal-info); color: var(--brutal-info-fg); }
+.bg-brutal-destructive { background-color: var(--brutal-destructive); color: var(--brutal-destructive-fg); }
 
 /* Typography Overrides */
 .text-gradient {
