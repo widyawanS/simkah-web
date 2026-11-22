@@ -254,16 +254,16 @@ a:focus-visible, button:focus-visible, [role="button"]:focus-visible,
     margin-top: var(--space-xl);
     padding: var(--space-sm);
     border: var(--brutal-border-width) solid var(--brutal-border-color);
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-card);
     background: var(--color-paper);
     color: var(--color-ink);
-    box-shadow: var(--brutal-shadow-offset-x) var(--brutal-shadow-offset-y) 0 var(--brutal-shadow-color);
+    box-shadow: 3px 3px 0 var(--brutal-shadow-color);
 }
 .hero-search__field { flex: 1; min-width: 0; }
 .hero-search__filters { justify-content: center; }
 .guide-search .search-btn-trigger { min-height: 48px; white-space: nowrap; }
 @media (min-width: 60rem) {
-    .hero-search { flex-direction: row; align-items: center; }
+    .hero-search { flex-direction: row; align-items: center; border-radius: var(--radius-pill); box-shadow: var(--brutal-shadow-offset-x) var(--brutal-shadow-offset-y) 0 var(--brutal-shadow-color); }
 }
 .filter-chip {
     display: inline-flex;
