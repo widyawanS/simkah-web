@@ -1,6 +1,15 @@
 ---
 import { Image } from "astro:assets";
 import type { BlogPost } from "@lib/content";
+import blogImages from "../../data/blog-images";
+
+const CARD_SIZES = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw";
+const cardSrcSet = (src: string) => {
+    const meta = blogImages[src];
+    return meta?.variants?.length
+        ? meta.variants.map((w) => `${src.replace(/\.[a-z0-9]+$/i, `-${w}.webp`)} ${w}w`).join(", ")
+        : undefined;
+};
 
 interface Props {
     post: BlogPost;
@@ -20,6 +29,8 @@ const hasImage = Boolean(post.image);
                 isString ? (
                     <img
                         src={post.image}
+                        srcset={cardSrcSet(post.image)}
+                        sizes={CARD_SIZES}
                         alt={post.title}
                         loading={index < 2 ? "eager" : "lazy"}
                         class="w-full h-full object-cover"

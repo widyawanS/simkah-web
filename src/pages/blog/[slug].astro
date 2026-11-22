@@ -55,6 +55,12 @@ const heroSrcSet =
         .map((w) => `${heroSrc.replace(/\.[a-z0-9]+$/i, `-${w}.webp`)} ${w}w`)
         .join(", ")
     : undefined;
+const relatedSrcSet = (src: string) => {
+  const meta = blogImages[src];
+  return meta?.variants?.length
+    ? meta.variants.map((w) => `${src.replace(/\.[a-z0-9]+$/i, `-${w}.webp`)} ${w}w`).join(", ")
+    : undefined;
+};
 const publishedIso = post.pubDate.toISOString();
 const modifiedDate =
   post.updatedDate && post.updatedDate.getTime() > post.pubDate.getTime()
@@ -153,7 +159,14 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
         if (sessionStorage.getItem(key)) return;
         sessionStorage.setItem(key, '1');
       } catch (e) {}
-      fetch('/api/views/' + encodeURIComponent(viewSlug), { method: 'POST', keepalive: true }).catch(function () {});
+      var record = function () {
+        fetch('/api/views/' + encodeURIComponent(viewSlug), { method: 'POST', keepalive: true }).catch(function () {});
+      };
+      if (document.readyState === 'complete') {
+        window.setTimeout(record, 0);
+      } else {
+        window.addEventListener('load', function () { window.setTimeout(record, 0); }, { once: true });
+      }
     })();
   </script>
   <Container>
@@ -269,7 +282,7 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
                       <a href={`/blog/${p.slug}`} class="related-post__link">
                         {p.image && (
                           typeof p.image === 'string' ? (
-                            <img src={p.image} width={blogImages[p.image]?.w ?? 1200} height={blogImages[p.image]?.h ?? 675} class="related-post__img" alt={p.title} loading="lazy" />
+                            <img src={p.image} srcset={relatedSrcSet(p.image)} sizes="96px" width={blogImages[p.image]?.w ?? 1200} height={blogImages[p.image]?.h ?? 675} class="related-post__img" alt={p.title} loading="lazy" />
                           ) : (
                             <Image src={p.image} class="related-post__img" alt={p.title} loading="lazy" width={400} height={225} />
                           )
