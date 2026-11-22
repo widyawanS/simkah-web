@@ -2,115 +2,120 @@
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import PostCard from "@components/blog/PostCard.astro";
-import { getPostsByCategory, slugifyCategory } from "@lib/content.ts";
+import AdSlot from "@components/ui/AdSlot.astro";
+import { getPostsByCategory } from "@lib/content.ts";
 
 const { category } = Astro.params;
 const cat = category as string;
 const allPosts = await getPostsByCategory(cat);
 
-// --- Pagination ---
-const pageSize = 9;
-const page = Math.max(1, Number(Astro.url.searchParams.get('page')) || 1);
-const start = (page - 1) * pageSize;
-const posts = allPosts.slice(start, start + pageSize);
-const totalPages = Math.ceil(allPosts.length / pageSize);
-// Halaman arsip >1 jangan diindeks agar tidak jadi duplikat konten tipis.
-const isPaged = page > 1;
-
-const visiblePages: (number | null)[] = [];
-let lastShown: number | null = null;
-for (let p = 1; p <= totalPages; p++) {
-    const show = p === 1 || p === totalPages || Math.abs(p - page) <= 2;
-    if (show) {
-        if (lastShown !== null && p > lastShown + 1) visiblePages.push(null);
-        visiblePages.push(p);
-        lastShown = p;
-    }
+const pageSize = 6;
+const catPages = [];
+for (let i = 0; i < allPosts.length; i += pageSize) {
+  catPages.push(allPosts.slice(i, i + pageSize));
 }
-
-const pageUrl = (p: number) => (p === 1 ? `/category/${cat}` : `/category/${cat}?page=${p}`);
+const totalCatPages = catPages.length;
 
 const displayCategory =
-    allPosts[0]?.category ||
-    cat
-        .split('-')
-        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(' ');
-
-const getCategoryColor = (c: string) => {
-    const cc = slugifyCategory(c);
-    if (cc === 'berita') return '!bg-[#c0e6ff] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
-    if (cc === 'catatan') return '!bg-[#fae870] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
-    if (cc === 'panduan-operator') return '!bg-[#e8dff5] !text-slate-900 shadow-[2px_2px_0_#0f172a]';
-    if (cc === 'inspirasi') return '!bg-pink-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
-    return '!bg-emerald-200 !text-slate-900 shadow-[2px_2px_0_#0f172a]';
-};
+  allPosts[0]?.category ||
+  cat
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
 ---
 
-<Layout title={`${displayCategory} | Archive`} noindex={isPaged}>
+<Layout title={`${displayCategory} | Archive`}>
   <Container>
     <main class="py-20 animate-fade-in">
-      <header class="text-center mb-20">
-          <span class="text-brand-primary text-xs font-bold uppercase tracking-widest mb-4 block">Archive Category</span>
-          <h1 class="text-5xl font-bold mb-6 tracking-tighter">Kategori: <span class="text-gradient">{displayCategory}</span></h1>
-          <p class="text-slate-400 max-w-xl mx-auto text-lg">Menampilkan semua tulisan dalam kategori {displayCategory}.</p>
+      <header class="text-center mb-16">
+        <h1 class="text-5xl font-bold mb-4 tracking-tighter">Kategori: <span class="text-gradient">{displayCategory}</span></h1>
+        <p class="text-brutal-text-muted max-w-xl mx-auto text-lg">Menampilkan semua tulisan dalam kategori {displayCategory}.</p>
       </header>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {
-          posts.map((post) => (
-            <PostCard post={post} />
-          ))
-        }
+      <div class="category-pages">
+        {catPages.map((pagePosts, pageIndex) => (
+          <div class="guide-posts" data-cat-page={pageIndex + 1} hidden={pageIndex > 0}>
+            {pagePosts.map((post, index) => (
+              <PostCard post={post} index={index} compact />
+            ))}
+          </div>
+        ))}
       </div>
 
-      {posts.length === 0 && (
-         <div class="text-center py-32 glass rounded-[3rem] border border-dashed border-slate-300 dark:border-slate-800">
-            <div class="w-20 h-20 bg-slate-100 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-            </div>
-            <p class="text-slate-500 italic text-lg">Belum ada artikel dalam kategori ini.</p>
-            <a href="/" class="mt-6 inline-block text-brand-primary font-bold hover:underline">Kembali ke Beranda →</a>
-         </div>
+      {allPosts.length > 0 && (
+        <div id="cat-ad-1" class="feed-ad">
+          <AdSlot type="home-2" />
+        </div>
       )}
 
-      {totalPages > 1 && (
-        <nav class="mt-16 flex flex-wrap justify-center items-center gap-2">
-          {page > 1 && (
-            <a href={pageUrl(page - 1)} class="brutal-pill px-6 py-2.5 text-sm font-extrabold uppercase tracking-wider text-brutal-text hover:bg-brand-primary hover:text-white transition-colors shadow-brutal-sm hover:shadow-brutal active:translate-y-[1px]">
-              ← Sebelumnya
-            </a>
-          )}
+      {allPosts.length === 0 && (
+        <div class="text-center py-32 glass rounded-[3rem] border border-dashed border-slate-300 dark:border-slate-800">
+          <p class="text-slate-500 italic text-lg">Belum ada artikel dalam kategori ini.</p>
+          <a href="/" class="mt-6 inline-block text-brand-primary font-bold hover:underline">Kembali ke Beranda</a>
+        </div>
+      )}
 
-          {visiblePages.map((p, i) => {
-            if (p === null) {
-              return (
-                <span key="ellipsis" class="px-3 py-2.5 text-slate-400 dark:text-slate-600 text-sm font-bold">…</span>
-              );
-            }
-            const isCurrent = p === page;
-            return (
-              <a
-                key={p}
-                href={pageUrl(p)}
-                class={`brutal-pill px-5 py-2.5 text-sm font-extrabold uppercase tracking-wider transition-colors shadow-brutal-sm active:translate-y-[1px] ${isCurrent
-                  ? 'bg-brutal-border text-white shadow-brutal'
-                  : 'text-brutal-text hover:bg-brand-primary hover:text-white'}`}
-              >
-                {p}
-              </a>
-            );
-          })}
-
-          {page < totalPages && (
-            <a href={pageUrl(page + 1)} class="brutal-pill px-6 py-2.5 text-sm font-extrabold uppercase tracking-wider text-brutal-text hover:bg-brand-primary hover:text-white transition-colors shadow-brutal-sm hover:shadow-brutal active:translate-y-[1px]">
-              Selanjutnya →
-            </a>
-          )}
+      {totalCatPages > 1 && (
+        <nav class="news-pagination mt-10 flex flex-wrap items-center justify-center gap-2" aria-label="Halaman artikel">
+          <span class="flex flex-wrap items-center justify-center gap-2" data-cat-pages></span>
+          <span class="visually-hidden" role="status" aria-live="polite" data-cat-status>Halaman 1 dari {totalCatPages}</span>
         </nav>
+      )}
+
+      {allPosts.length > 0 && (
+        <div id="cat-ad-2" class="feed-ad">
+          <AdSlot type="home" />
+        </div>
       )}
     </main>
   </Container>
 </Layout>
+
+<script>
+  const catPageEls = Array.from(document.querySelectorAll('[data-cat-page]'));
+  const catStatus = document.querySelector('[data-cat-status]');
+  const catPagesBox = document.querySelector('[data-cat-pages]');
+  let catCurrent = 1;
+
+  function renderCatNumbers() {
+    if (!catPagesBox) return;
+    const total = catPageEls.length;
+    let items;
+    if (total <= 4) {
+      items = Array.from({ length: total }, (_, i) => i + 1);
+    } else if (catCurrent <= 2) {
+      items = [1, 2, 3, 'gap', total];
+    } else if (catCurrent >= total - 2) {
+      items = [1, 'gap', total - 2, total - 1, total];
+    } else {
+      items = [1, catCurrent, catCurrent + 1, 'gap', total];
+    }
+    let html = '';
+    for (const item of items) {
+      if (item === 'gap') html += '<span class="page-gap" aria-hidden="true">…</span>';
+      else html += `<button type="button" class="page-num${item === catCurrent ? ' is-current' : ''}" data-cat-go="${item}"${item === catCurrent ? ' aria-current="page"' : ''}>${item}</button>`;
+    }
+    catPagesBox.innerHTML = html;
+  }
+
+  function showCatPage(n) {
+    catCurrent = Math.min(Math.max(n, 1), catPageEls.length);
+    catPageEls.forEach((el, i) => { el.hidden = i + 1 !== catCurrent; });
+    if (catStatus) catStatus.textContent = `Halaman ${catCurrent} dari ${catPageEls.length}`;
+    renderCatNumbers();
+    const active = catPageEls[catCurrent - 1];
+    if (!active) return;
+    const ad1 = document.getElementById('cat-ad-1');
+    if (ad1) {
+      const cards = active.querySelectorAll('.brutal-card');
+      if (cards.length > 3) active.insertBefore(ad1, cards[3]);
+      else active.appendChild(ad1);
+    }
+  }
+
+  catPagesBox?.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-cat-go]');
+    if (btn) showCatPage(Number(btn.getAttribute('data-cat-go')));
+  });
+  if (catPageEls.length) showCatPage(1);
+</script>

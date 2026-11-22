@@ -8,7 +8,9 @@
         "isActive": false,
         "adClient": "",
         "homeAd": "Iklan Slot",
+        "homeAd2": "",
         "postAd": "Iklan Slot",
+        "postAd2": "",
         "toolsAd": "Iklan Slot",
         "customInjectedHeader": ""
     },

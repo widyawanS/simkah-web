@@ -3,7 +3,9 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/container.astro";
 import TableOfContents from "@components/blog/TableOfContents.astro";
 import SocialShare from "@components/blog/SocialShare.astro";
+import AdSlot from "@components/ui/AdSlot.astro";
 import { getPostBySlug, getPosts } from "@lib/content";
+import { getViewCounts } from "@lib/views";
 import { marked } from "marked";
 import blogImages from "../../data/blog-images";
 import { Image } from "astro:assets";
@@ -24,17 +26,26 @@ if (!post || post.draft) {
 }
 
 const contentHtml = marked.parse(post.content);
+const firstParagraphEnd = contentHtml.indexOf('</p>');
+const introHtml = firstParagraphEnd > -1 ? contentHtml.slice(0, firstParagraphEnd + 4) : contentHtml;
+const bodyHtml = firstParagraphEnd > -1 ? contentHtml.slice(firstParagraphEnd + 4) : '';
 
-// Get Related Posts
 const allPosts = await getPosts();
 const relatedPosts = allPosts
   .filter(p => p.slug !== slug && p.category === post.category)
-  .slice(0, 3);
+  .slice(0, 4);
+
+const viewCounts = getViewCounts();
+const popularPosts = allPosts
+  .filter((p) => (viewCounts[p.slug] || 0) > 0)
+  .sort((a, b) => (viewCounts[b.slug] || 0) - (viewCounts[a.slug] || 0))
+  .slice(0, 5);
+const recentPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 5);
 
 const postUrl = new URL(`/blog/${post.slug}`, SITE.url).toString();
 // Hero: pakai varian responsif kalau manifest punya entrinya.
 // 896px = lebar maksimum kolom artikel (max-w-4xl).
-const HERO_SIZES = "(min-width: 1024px) 896px, 100vw";
+const HERO_SIZES = "(min-width: 1024px) 700px, 100vw";
 const heroSrc: string | null =
   typeof post.image === "string" && post.image.startsWith("/images/blog/") ? post.image : null;
 const heroMeta = heroSrc ? (blogImages[heroSrc] ?? null) : null;
@@ -135,72 +146,97 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
   heroImageSizes={heroMeta ? HERO_SIZES : undefined}
 >
   <script type="application/ld+json" slot="head" set:html={postJsonLd} />
+  <script is:inline define:vars={{ viewSlug: post.slug }}>
+    (function () {
+      var key = 'simkah-view:' + viewSlug;
+      try {
+        if (sessionStorage.getItem(key)) return;
+        sessionStorage.setItem(key, '1');
+      } catch (e) {}
+      fetch('/api/views/' + encodeURIComponent(viewSlug), { method: 'POST', keepalive: true }).catch(function () {});
+    })();
+  </script>
   <Container>
-    <article class="mx-auto max-w-4xl mt-20 animate-fade-in">
-        <header class="text-center mb-12 max-w-2xl mx-auto">
-            <span class="text-brand-primary uppercase tracking-[0.2em] text-xs font-bold mb-4 block">
-                {post.category}
-            </span>
-            <h1 class="text-3xl md:text-4xl font-bold mb-8 leading-tight dark:text-white">
-                {post.title}
-            </h1>
-            <div class="flex items-center justify-center gap-4 text-slate-500 dark:text-slate-400">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-lg border-2 border-brutal-border bg-brutal-warning flex items-center justify-center text-lg font-black !text-slate-900 uppercase shadow-[2px_2px_0_#0f172a] -rotate-3 hover:rotate-3 transition-transform cursor-default">
-                        {post.author[0]}
-                    </div>
-                    <span class="text-slate-900 dark:text-white font-extrabold text-lg">{post.author}</span>
-                </div>
-                <span>•</span>
-                <time datetime={post.pubDate.toISOString()}>
-                    {post.pubDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
-                </time>
-                {isUpdated && (
-                    <>
-                        <span>•</span>
-                        <span>
-                            Diperbarui {modifiedDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
-                        </span>
-                    </>
-                )}
-            </div>
-        </header>
-
-        {post.image && (
-            <div class="w-full aspect-video rounded-3xl overflow-hidden mb-12 glass shadow-2xl bg-slate-900">
-                {heroMeta ? (
-                    <img
-                        src={post.image}
-                        srcset={heroSrcSet}
-                        sizes={HERO_SIZES}
-                        width={heroMeta.w}
-                        height={heroMeta.h}
-                        class="w-full h-full object-cover"
-                        alt={post.title}
-                        loading="eager"
-                        fetchpriority="high"
-                        decoding="async"
-                    />
-                ) : (
-                    <img src={post.image} class="w-full h-full object-cover" alt={post.title} loading="eager" fetchpriority="high" decoding="async" />
-                )}
-            </div>
-        )}
-
-        <div class="grid lg:grid-cols-[1fr_250px] gap-12">
+    <article class="mx-auto max-w-5xl mt-16 animate-fade-in">
+        <div class="grid lg:grid-cols-[1fr_280px] gap-12">
           <!-- Main Content -->
           <div>
+            <nav class="breadcrumb flex flex-wrap justify-center items-center gap-2 text-sm text-brutal-text-muted mb-6" aria-label="Breadcrumb">
+              <a href="/" class="hover:text-brutal-text">Beranda</a>
+              <span aria-hidden="true">/</span>
+              <a href="/blog" class="hover:text-brutal-text">Artikel</a>
+              <span aria-hidden="true">/</span>
+              <span aria-current="page">{post.category}</span>
+            </nav>
+
+            <header class="text-center mb-10 w-full">
+                <h1 class="text-3xl md:text-4xl font-bold mb-8 leading-tight dark:text-white">
+                    {post.title}
+                </h1>
+                <div class="flex items-center justify-center gap-4 text-slate-500 dark:text-slate-400">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg border-2 border-brutal-border bg-brutal-warning flex items-center justify-center text-lg font-bold text-brutal-on-bright shadow-brutal-sm -rotate-3 hover:rotate-3 transition-transform cursor-default">
+                            {post.author[0]}
+                        </div>
+                        <span class="text-slate-900 dark:text-white font-extrabold text-lg">{post.author}</span>
+                    </div>
+                    <span>•</span>
+                    <time datetime={post.pubDate.toISOString()}>
+                        {post.pubDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
+                    </time>
+                    {isUpdated && (
+                        <>
+                            <span>•</span>
+                            <span>
+                                Diperbarui {modifiedDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
+                            </span>
+                        </>
+                    )}
+                </div>
+            </header>
+
+            {post.image && (
+                <div class="w-full aspect-video rounded-brutal overflow-hidden mb-10 glass shadow-2xl bg-slate-900">
+                    {heroMeta ? (
+                        <img
+                            src={post.image}
+                            srcset={heroSrcSet}
+                            sizes={HERO_SIZES}
+                            width={heroMeta.w}
+                            height={heroMeta.h}
+                            class="w-full h-full object-cover"
+                            alt={post.title}
+                            loading="eager"
+                            fetchpriority="high"
+                            decoding="async"
+                        />
+                    ) : (
+                        <img src={post.image} class="w-full h-full object-cover" alt={post.title} loading="eager" fetchpriority="high" decoding="async" />
+                    )}
+                </div>
+            )}
+
             <SocialShare title={post.title} url={postUrl} />
-            
+
+            <TableOfContents />
+
             <div class="prose dark:prose-invert prose-indigo prose-lg max-w-none prose-h2:text-2xl prose-h2:font-bold prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-loose prose-a:text-brand-primary">
-                <Fragment set:html={contentHtml} />
+                <Fragment set:html={introHtml} />
             </div>
+
+            <AdSlot type="post-2" class="my-8" />
+
+            {bodyHtml && (
+              <div class="prose dark:prose-invert prose-indigo prose-lg max-w-none prose-h2:text-2xl prose-h2:font-bold prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-loose prose-a:text-brand-primary">
+                <Fragment set:html={bodyHtml} />
+              </div>
+            )}
 
             <SocialShare title={post.title} url={postUrl} />
 
             <!-- Author Bio (E-E-A-T) -->
             <div class="mt-12 grid sm:grid-cols-[auto,1fr] gap-5 p-6 rounded-2xl border-2 border-brutal-border bg-brutal-card shadow-brutal-sm">
-              <div class="w-14 h-14 rounded-xl border-2 border-brutal-border bg-brutal-warning flex items-center justify-center text-xl font-black !text-slate-900 -rotate-3">
+              <div class="w-14 h-14 rounded-xl border-2 border-brutal-border bg-brutal-warning flex items-center justify-center text-xl font-bold text-brutal-on-bright shadow-brutal-sm -rotate-3">
                 W
               </div>
               <div>
@@ -214,7 +250,7 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
             </div>
 
             <!-- Internal links ke tools -->
-            <div class="mt-8 p-6 rounded-2xl border-2 border-brutal-border bg-[#c0b3ff]/40">
+            <div class="tools-callout mt-8 p-6 rounded-2xl border-2 border-brutal-border">
               <h3 class="font-extrabold mb-3 text-brutal-text">Alat bantu gratis</h3>
               <div class="flex flex-wrap gap-2 text-sm font-bold">
                 <a href="/tools/kalkulator-wedding" class="brutal-pill px-4 py-2 hover:bg-white transition-colors">Kalkulator Wedding</a>
@@ -225,80 +261,77 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
 
             <!-- Related Posts Section -->
             {relatedPosts.length > 0 && (
-              <div class="mt-24 pt-12 border-t-4 border-brutal-border">
-                <h3 class="text-2xl font-extrabold mb-8 text-brutal-text">Artikel Terkait</h3>
-                <div class="grid md:grid-cols-2 gap-8">
-                  {relatedPosts.map((p, index) => {
-                    const cardStyles = [
-                      { card: '!bg-[#fae870]', icon: '!bg-[#fef08a]', tag: '!bg-white' },
-                      { card: '!bg-[#c0e6ff]', icon: '!bg-[#7dd3fc]', tag: '!bg-[#bae6fd]' },
-                      { card: '!bg-[#f8ddb2]', icon: '!bg-[#fdba74]', tag: '!bg-[#fcd34d]' }
-                    ];
-                    const style = cardStyles[index % cardStyles.length];
-
-                    return (
-                    <article class="h-full">
-                        <a href={`/blog/${p.slug}`} class={`block h-full brutal-card overflow-hidden flex flex-col group ${style.card} transition-colors`}>
-                            <div class="aspect-video relative p-0 border-b-3 border-brutal-border !bg-white overflow-hidden">
-                                {p.image ? (
-                                  typeof p.image === 'string' ? (
-                                    <img src={p.image} width={blogImages[p.image]?.w ?? 1200} height={blogImages[p.image]?.h ?? 675} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" />
-                                  ) : (
-                                    <Image src={p.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={p.title} loading="lazy" width={400} height={225} />
-                                  )
-                                ) : (
-                                  <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-2xl font-bold">
-                                    {p.title.trim()[0].toUpperCase()}
-                                  </div>
-                                )}
-                            </div>
-                            <div class="p-5 flex flex-col flex-grow">
-                                <div class="flex items-start gap-3 mb-2">
-                                    <div class={`w-8 h-8 rounded-lg border-2 border-brutal-border flex items-center justify-center shrink-0 shadow-[2px_2px_0_#0f172a] group-hover:rotate-6 transition-transform ${style.icon}`}>
-                                        <svg class="w-4 h-4 !text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                                        </svg>
-                                    </div>
-                                    <h4 class="text-lg font-extrabold group-hover:text-blue-700 transition-colors line-clamp-2 leading-tight !text-slate-900">{p.title}</h4>
-                                </div>
-                                <p class="!text-slate-800 line-clamp-2 text-xs leading-relaxed mb-6 flex-grow font-bold">{p.description}</p>
-                                <div class="flex justify-between items-end mt-auto">
-                                    <span class={`px-2.5 py-1 border-2 border-brutal-border rounded-full text-[9px] font-extrabold uppercase tracking-widest !text-slate-900 shadow-[2px_2px_0_#0f172a] dark:shadow-[2px_2px_0_#0f172a] ${style.tag}`}>
-                                        {p.category}
-                                    </span>
-                                    <span class="bg-[#131b2d] text-white px-4 py-2 rounded-full text-[11px] font-extrabold border-2 border-transparent group-hover:scale-105 transition-transform flex items-center gap-1.5">
-                                        BACA <span>&rarr;</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </a>
+              <div class="mt-16">
+                <h3 class="text-2xl font-extrabold mb-6 text-brutal-text">Artikel Terkait</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {relatedPosts.map((p, index) => (
+                    <article class={`related-post related-post--${(index % 3) + 1}`}>
+                      <a href={`/blog/${p.slug}`} class="related-post__link">
+                        {p.image && (
+                          typeof p.image === 'string' ? (
+                            <img src={p.image} width={blogImages[p.image]?.w ?? 1200} height={blogImages[p.image]?.h ?? 675} class="related-post__img" alt={p.title} loading="lazy" />
+                          ) : (
+                            <Image src={p.image} class="related-post__img" alt={p.title} loading="lazy" width={400} height={225} />
+                          )
+                        )}
+                        <div class="related-post__body">
+                          <h4>{p.title.length > 78 ? p.title.slice(0, 78).trimEnd() + '…' : p.title}</h4>
+                        </div>
+                      </a>
                     </article>
-                  )})}
+                  ))}
                 </div>
               </div>
             )}
+
+            <!-- Ad B: above the footer line -->
+            <AdSlot type="post" class="my-10" />
           </div>
 
-          <!-- Sidebar -->
+          <!-- Sidebar: two widgets only -->
           <aside class="hidden lg:block">
-            <div class="sticky top-24">
-              <TableOfContents />
-              
-              <!-- Sidebar Ad Slot -->
-              <div class="mt-8 p-4 bg-slate-100 dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-center">
-                <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-2">Advertisement</span>
-                <slot name="post-sidebar-ad" />
+            <div class="sticky top-24 space-y-10">
+              <div class="sidebar-widget">
+                <h3 class="text-base font-extrabold mb-4">Post Terbaru</h3>
+                <ul class="space-y-3">
+                  {recentPosts.map((p) => (
+                    <li>
+                      <a href={`/blog/${p.slug}`} class="flex items-center gap-3 group">
+                        <span class="recent-thumb">
+                          {p.image ? (
+                            typeof p.image === 'string' ? (
+                              <img src={p.image} width={48} height={48} class="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
+                            ) : (
+                              <Image src={p.image} width={48} height={48} class="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
+                            )
+                          ) : null}
+                        </span>
+                        <span class="text-xs text-brutal-text group-hover:underline leading-snug">{p.title}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="sidebar-widget">
+                <h3 class="text-base font-extrabold mb-4">Post yang Sering Dibaca</h3>
+                {popularPosts.length > 0 ? (
+                  <ol class="space-y-3">
+                    {popularPosts.map((p, i) => (
+                      <li class="flex gap-3 text-sm">
+                        <span class="num text-brutal-primary font-bold">#{i + 1}</span>
+                        <a href={`/blog/${p.slug}`} class="text-brutal-text hover:underline leading-snug">{p.title}</a>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p class="text-sm text-brutal-text-muted">Peringkat muncul setelah artikel mulai dibaca.</p>
+                )}
               </div>
             </div>
           </aside>
         </div>
 
-        <div class="mt-20 pt-12 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center mb-20">
-            <a href="/blog" class="group flex items-center gap-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors">
-                <span class="transform group-hover:-translate-x-1 transition-transform">←</span>
-                Semua Artikel
-            </a>
-        </div>
     </article>
   </Container>
 </Layout>
@@ -308,6 +341,7 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
         margin-top: 2.5rem;
         margin-bottom: 1.5rem;
         scroll-margin-top: 100px;
+        text-wrap: balance;
     }
     .prose p {
         margin-bottom: 1.5rem;

@@ -71,6 +71,9 @@ const {
       />
     )}
     <slot name="head" />
+    <style is:global>
+      html, body { overflow-x: clip; }
+    </style>
     <script is:inline>
       // Satu definisi untuk seluruh halaman. Sebelumnya script ini menempel di
       // komponen ThemeToggle yang dirender dua kali (mobile + desktop), jadi

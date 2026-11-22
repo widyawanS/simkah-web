@@ -1,0 +1,127 @@
+/* Hallmark · brand tokens · neo-brutalism retained, converted to OKLCH
+ * The --brutal-* aliases keep every existing Tailwind utility and component working. */
+:root {
+  /* Scale from the Hallmark scaffold */
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
+  --text-xs: 0.8125rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.25rem; --text-xl: 1.5625rem; --text-2xl: 1.953rem; --text-3xl: 2.441rem;
+  --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem); --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
+  --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem); --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem); --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
+  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
+  --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
+  --color-error: oklch(42% 0.17 27); --color-success: oklch(78.5% 0.133 182);
+
+  /* Four layers, tinted toward the brand's warm paper and rose accent */
+  --color-paper: oklch(98% 0.005 78);
+  --color-paper-2: oklch(94.1% 0.014 85);
+  --color-paper-3: oklch(90.7% 0.022 81);
+  --color-ink: oklch(20.8% 0.04 266);
+  --color-ink-2: oklch(27.9% 0.037 260);
+  --color-muted: oklch(44.6% 0.037 257);
+  --color-rule: oklch(84% 0.016 82);
+  --color-accent: oklch(66.2% 0.173 13);
+  --color-accent-ink: oklch(20.8% 0.04 266);
+  --color-focus: oklch(35% 0.16 13);
+  --grid-line: oklch(20.8% 0.04 266 / 0.06);
+--grid-line: rgba(15, 23, 42, 0.09);
+  --grid-line-mobile: rgba(15, 23, 42, 0.13);
+  --masthead-bg: oklch(96% 0.012 85);
+  --masthead-ink: oklch(20.8% 0.04 266);
+--grid-glow: rgba(232, 93, 117, 0.06);
+--grid-tile: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='2400' height='2400'><g fill='%23F0EBE1'><rect x='0' y='80' width='80' height='80' fill-opacity='0.7'/><rect x='800' y='80' width='80' height='80' fill-opacity='0.66'/><rect x='1120' y='80' width='80' height='80' fill-opacity='0.7'/><rect x='1280' y='80' width='80' height='80' fill-opacity='0.35'/><rect x='1920' y='80' width='80' height='80' fill-opacity='0.62'/><rect x='160' y='160' width='80' height='80' fill-opacity='0.19'/><rect x='880' y='160' width='80' height='80' fill-opacity='0.6'/><rect x='1120' y='160' width='80' height='80' fill-opacity='0.37'/><rect x='0' y='240' width='80' height='80' fill-opacity='0.57'/><rect x='1360' y='240' width='80' height='80' fill-opacity='0.27'/><rect x='2000' y='240' width='80' height='80' fill-opacity='0.23'/><rect x='400' y='320' width='80' height='80' fill-opacity='0.44'/><rect x='1040' y='320' width='80' height='80' fill-opacity='0.2'/><rect x='1200' y='320' width='80' height='80' fill-opacity='0.61'/><rect x='1520' y='320' width='80' height='80' fill-opacity='0.54'/><rect x='400' y='400' width='80' height='80' fill-opacity='0.72'/><rect x='720' y='400' width='80' height='80' fill-opacity='0.68'/><rect x='2160' y='400' width='80' height='80' fill-opacity='0.55'/><rect x='400' y='480' width='80' height='80' fill-opacity='0.55'/><rect x='1440' y='480' width='80' height='80' fill-opacity='0.25'/><rect x='2160' y='560' width='80' height='80' fill-opacity='0.47'/><rect x='2240' y='560' width='80' height='80' fill-opacity='0.42'/><rect x='1760' y='640' width='80' height='80' fill-opacity='0.72'/><rect x='2240' y='640' width='80' height='80' fill-opacity='0.16'/><rect x='800' y='720' width='80' height='80' fill-opacity='0.39'/><rect x='880' y='720' width='80' height='80' fill-opacity='0.41'/><rect x='1200' y='720' width='80' height='80' fill-opacity='0.19'/><rect x='80' y='800' width='80' height='80' fill-opacity='0.37'/><rect x='2160' y='800' width='80' height='80' fill-opacity='0.27'/><rect x='320' y='880' width='80' height='80' fill-opacity='0.17'/><rect x='720' y='880' width='80' height='80' fill-opacity='0.71'/><rect x='1440' y='880' width='80' height='80' fill-opacity='0.34'/><rect x='1680' y='880' width='80' height='80' fill-opacity='0.71'/><rect x='1440' y='960' width='80' height='80' fill-opacity='0.4'/><rect x='1520' y='960' width='80' height='80' fill-opacity='0.25'/><rect x='2000' y='960' width='80' height='80' fill-opacity='0.29'/><rect x='0' y='1040' width='80' height='80' fill-opacity='0.72'/><rect x='400' y='1120' width='80' height='80' fill-opacity='0.23'/><rect x='560' y='1120' width='80' height='80' fill-opacity='0.35'/><rect x='640' y='1200' width='80' height='80' fill-opacity='0.31'/><rect x='960' y='1360' width='80' height='80' fill-opacity='0.18'/><rect x='1440' y='1360' width='80' height='80' fill-opacity='0.21'/><rect x='2320' y='1360' width='80' height='80' fill-opacity='0.3'/><rect x='1600' y='1440' width='80' height='80' fill-opacity='0.71'/><rect x='1840' y='1440' width='80' height='80' fill-opacity='0.34'/><rect x='2160' y='1440' width='80' height='80' fill-opacity='0.38'/><rect x='1600' y='1600' width='80' height='80' fill-opacity='0.61'/><rect x='1200' y='1680' width='80' height='80' fill-opacity='0.26'/><rect x='1280' y='1680' width='80' height='80' fill-opacity='0.2'/><rect x='2160' y='1680' width='80' height='80' fill-opacity='0.27'/><rect x='1040' y='1760' width='80' height='80' fill-opacity='0.29'/><rect x='1280' y='1760' width='80' height='80' fill-opacity='0.28'/><rect x='1360' y='1760' width='80' height='80' fill-opacity='0.7'/><rect x='2320' y='1760' width='80' height='80' fill-opacity='0.28'/><rect x='1360' y='1840' width='80' height='80' fill-opacity='0.15'/><rect x='2080' y='1840' width='80' height='80' fill-opacity='0.41'/><rect x='400' y='2000' width='80' height='80' fill-opacity='0.68'/><rect x='880' y='2000' width='80' height='80' fill-opacity='0.68'/><rect x='1280' y='2000' width='80' height='80' fill-opacity='0.7'/><rect x='240' y='2080' width='80' height='80' fill-opacity='0.35'/><rect x='320' y='2080' width='80' height='80' fill-opacity='0.74'/><rect x='1280' y='2080' width='80' height='80' fill-opacity='0.37'/><rect x='2080' y='2080' width='80' height='80' fill-opacity='0.24'/><rect x='2320' y='2080' width='80' height='80' fill-opacity='0.54'/><rect x='320' y='2160' width='80' height='80' fill-opacity='0.31'/><rect x='1600' y='2160' width='80' height='80' fill-opacity='0.64'/><rect x='1840' y='2160' width='80' height='80' fill-opacity='0.47'/><rect x='480' y='2240' width='80' height='80' fill-opacity='0.54'/><rect x='560' y='2240' width='80' height='80' fill-opacity='0.5'/><rect x='1600' y='2240' width='80' height='80' fill-opacity='0.39'/><rect x='1200' y='2320' width='80' height='80' fill-opacity='0.74'/></g></svg>");
+  --guide-feature-ring: var(--color-paper);
+
+  /* Faces: two families only. Playfair stays in the Tailwind stack for prose pages. */
+  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-outlier: var(--font-body);
+  --display-weight: 800;
+  --tracking-display: -0.025em;
+
+  --radius-card: 24px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: none;
+
+  /* Brand aliases — the project's own palette, unchanged in identity */
+  --brutal-primary: var(--color-accent);
+  --brutal-secondary: oklch(36.7% 0.099 248);
+  --brutal-accent: oklch(90.5% 0.166 98);
+  --brutal-success: var(--color-success);
+  --brutal-destructive: var(--color-error);
+  --brutal-warning: oklch(84% 0.14 85);
+  --brutal-info: oklch(70% 0.12 250);
+  --brutal-on-bright: oklch(20.8% 0.04 266);
+  --brutal-primary-fg: var(--brutal-on-bright);
+  --brutal-secondary-fg: var(--color-paper);
+  --brutal-accent-fg: var(--brutal-on-bright);
+  --brutal-success-fg: var(--brutal-on-bright);
+  --brutal-warning-fg: var(--brutal-on-bright);
+  --brutal-info-fg: var(--brutal-on-bright);
+  --brutal-destructive-fg: var(--color-paper);
+
+  --brutal-border-width: 3px;
+  --brutal-border-color: var(--color-ink);
+  --brutal-shadow-color: var(--color-ink);
+  --brutal-shadow-offset-x: 4px;
+  --brutal-shadow-offset-y: 4px;
+  --brutal-shadow-sm-x: 2px;
+  --brutal-shadow-sm-y: 2px;
+  --brutal-radius: var(--radius-card);
+  --brutal-radius-pill: var(--radius-pill);
+  --brutal-pressed-offset: 4px;
+
+  --brutal-bg: var(--color-paper);
+  --brutal-bg-alt: var(--color-paper-2);
+  --brutal-card-bg: var(--color-paper);
+  --brutal-text: var(--color-ink);
+  --brutal-text-muted: var(--color-muted);
+  --brutal-ring: var(--color-focus);
+
+  /* Dropdown panel: brand navy in light mode, bright blue in dark; always readable */
+  --nav-menu-bg: var(--brutal-secondary);
+  --nav-menu-fg: var(--color-paper);
+  --nav-menu-hover: color-mix(in oklab, var(--brutal-accent) 24%, var(--nav-menu-bg));
+
+  /* The rules panel: navy with light ink in light mode, blue with dark ink in dark */
+  --rule-panel-bg: var(--brutal-secondary);
+  --rule-panel-fg: var(--color-paper);
+
+  /* News cards: the brand's pastel field, tokenised (no hex in markup) */
+  --post-tint-1: color-mix(in oklab, var(--brutal-accent) 22%, var(--color-paper));
+  --post-tint-2: color-mix(in oklab, var(--brutal-info) 18%, var(--color-paper));
+  --post-tint-3: color-mix(in oklab, var(--brutal-warning) 22%, var(--color-paper));
+}
+
+.dark {
+  --color-paper: oklch(14.1% 0.004 286);
+  --color-paper-2: oklch(21% 0.006 286);
+  --color-paper-3: oklch(26% 0.008 283);
+  --color-ink: oklch(98.4% 0.003 248);
+  --color-ink-2: oklch(92% 0.007 250);
+  --color-muted: oklch(78% 0.026 257);
+  --color-rule: oklch(34% 0.02 286);
+  --color-accent: oklch(71.9% 0.169 13);
+  --color-accent-ink: oklch(14.1% 0.004 286);
+  --color-focus: oklch(86% 0.11 13);
+  --grid-line: oklch(98.4% 0.003 248 / 0.07);
+--grid-line: rgba(248, 250, 252, 0.07);
+  --grid-line-mobile: rgba(248, 250, 252, 0.1);
+--grid-glow: rgba(251, 113, 133, 0.07);
+--grid-tile: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='2400' height='2400'><g fill='%2318181B'><rect x='0' y='80' width='80' height='80' fill-opacity='0.82'/><rect x='800' y='80' width='80' height='80' fill-opacity='0.78'/><rect x='1120' y='80' width='80' height='80' fill-opacity='0.82'/><rect x='1280' y='80' width='80' height='80' fill-opacity='0.47'/><rect x='1920' y='80' width='80' height='80' fill-opacity='0.74'/><rect x='160' y='160' width='80' height='80' fill-opacity='0.31'/><rect x='880' y='160' width='80' height='80' fill-opacity='0.72'/><rect x='1120' y='160' width='80' height='80' fill-opacity='0.49'/><rect x='0' y='240' width='80' height='80' fill-opacity='0.69'/><rect x='1360' y='240' width='80' height='80' fill-opacity='0.39'/><rect x='2000' y='240' width='80' height='80' fill-opacity='0.35'/><rect x='400' y='320' width='80' height='80' fill-opacity='0.56'/><rect x='1040' y='320' width='80' height='80' fill-opacity='0.32'/><rect x='1200' y='320' width='80' height='80' fill-opacity='0.73'/><rect x='1520' y='320' width='80' height='80' fill-opacity='0.66'/><rect x='400' y='400' width='80' height='80' fill-opacity='0.84'/><rect x='720' y='400' width='80' height='80' fill-opacity='0.8'/><rect x='2160' y='400' width='80' height='80' fill-opacity='0.67'/><rect x='400' y='480' width='80' height='80' fill-opacity='0.67'/><rect x='1440' y='480' width='80' height='80' fill-opacity='0.37'/><rect x='2160' y='560' width='80' height='80' fill-opacity='0.59'/><rect x='2240' y='560' width='80' height='80' fill-opacity='0.54'/><rect x='1760' y='640' width='80' height='80' fill-opacity='0.84'/><rect x='2240' y='640' width='80' height='80' fill-opacity='0.28'/><rect x='800' y='720' width='80' height='80' fill-opacity='0.51'/><rect x='880' y='720' width='80' height='80' fill-opacity='0.53'/><rect x='1200' y='720' width='80' height='80' fill-opacity='0.31'/><rect x='80' y='800' width='80' height='80' fill-opacity='0.49'/><rect x='2160' y='800' width='80' height='80' fill-opacity='0.39'/><rect x='320' y='880' width='80' height='80' fill-opacity='0.29'/><rect x='720' y='880' width='80' height='80' fill-opacity='0.83'/><rect x='1440' y='880' width='80' height='80' fill-opacity='0.46'/><rect x='1680' y='880' width='80' height='80' fill-opacity='0.83'/><rect x='1440' y='960' width='80' height='80' fill-opacity='0.52'/><rect x='1520' y='960' width='80' height='80' fill-opacity='0.37'/><rect x='2000' y='960' width='80' height='80' fill-opacity='0.41'/><rect x='0' y='1040' width='80' height='80' fill-opacity='0.84'/><rect x='400' y='1120' width='80' height='80' fill-opacity='0.35'/><rect x='560' y='1120' width='80' height='80' fill-opacity='0.47'/><rect x='640' y='1200' width='80' height='80' fill-opacity='0.43'/><rect x='960' y='1360' width='80' height='80' fill-opacity='0.3'/><rect x='1440' y='1360' width='80' height='80' fill-opacity='0.33'/><rect x='2320' y='1360' width='80' height='80' fill-opacity='0.42'/><rect x='1600' y='1440' width='80' height='80' fill-opacity='0.83'/><rect x='1840' y='1440' width='80' height='80' fill-opacity='0.46'/><rect x='2160' y='1440' width='80' height='80' fill-opacity='0.5'/><rect x='1600' y='1600' width='80' height='80' fill-opacity='0.73'/><rect x='1200' y='1680' width='80' height='80' fill-opacity='0.38'/><rect x='1280' y='1680' width='80' height='80' fill-opacity='0.32'/><rect x='2160' y='1680' width='80' height='80' fill-opacity='0.39'/><rect x='1040' y='1760' width='80' height='80' fill-opacity='0.41'/><rect x='1280' y='1760' width='80' height='80' fill-opacity='0.4'/><rect x='1360' y='1760' width='80' height='80' fill-opacity='0.82'/><rect x='2320' y='1760' width='80' height='80' fill-opacity='0.4'/><rect x='1360' y='1840' width='80' height='80' fill-opacity='0.27'/><rect x='2080' y='1840' width='80' height='80' fill-opacity='0.53'/><rect x='400' y='2000' width='80' height='80' fill-opacity='0.8'/><rect x='880' y='2000' width='80' height='80' fill-opacity='0.8'/><rect x='1280' y='2000' width='80' height='80' fill-opacity='0.82'/><rect x='240' y='2080' width='80' height='80' fill-opacity='0.47'/><rect x='320' y='2080' width='80' height='80' fill-opacity='0.86'/><rect x='1280' y='2080' width='80' height='80' fill-opacity='0.49'/><rect x='2080' y='2080' width='80' height='80' fill-opacity='0.36'/><rect x='2320' y='2080' width='80' height='80' fill-opacity='0.66'/><rect x='320' y='2160' width='80' height='80' fill-opacity='0.43'/><rect x='1600' y='2160' width='80' height='80' fill-opacity='0.76'/><rect x='1840' y='2160' width='80' height='80' fill-opacity='0.59'/><rect x='480' y='2240' width='80' height='80' fill-opacity='0.66'/><rect x='560' y='2240' width='80' height='80' fill-opacity='0.62'/><rect x='1600' y='2240' width='80' height='80' fill-opacity='0.51'/><rect x='1200' y='2320' width='80' height='80' fill-opacity='0.86'/></g></svg>");
+  --guide-feature-ring: var(--brutal-on-bright);
+  --brutal-destructive-fg: var(--color-ink);
+
+  --brutal-secondary: oklch(72% 0.13 248);
+  --brutal-secondary-fg: var(--brutal-on-bright);
+  --brutal-info: oklch(72% 0.13 277);
+  --brutal-info-fg: var(--brutal-on-bright);
+  --brutal-border-color: oklch(72% 0.15 285);
+  --brutal-shadow-color: oklch(72% 0.15 285);
+  --brutal-card-bg: var(--color-paper-2);
+  --brutal-ring: var(--color-focus);
+  --nav-menu-fg: var(--brutal-on-bright);
+  --rule-panel-fg: var(--brutal-on-bright);
+
+  /* Dark mode: the masthead becomes an ink bar instead of the cream paper bar */
+  --masthead-bg: var(--color-paper-2);
+  --masthead-ink: var(--color-ink);
+}

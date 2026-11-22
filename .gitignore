@@ -31,3 +31,6 @@ public/images/blog/**/*-1600.webp
 
 # log scrape lokal
 enrich_nasional*.log
+
+# penghitung pembacaan artikel (data runtime)
+.data/

@@ -2,7 +2,6 @@
 import Container from "@components/container.astro";
 import { Astronav, MenuItems, MenuIcon, Dropdown, DropdownItems } from "astro-navbar";
 import ThemeToggle from "@components/ui/ThemeToggle.astro";
-import Search from "@components/ui/Search.astro";
 import SearchModal from "@components/ui/SearchModal.astro";
 import { getMenuTools } from "@lib/keystatic";
 
@@ -47,18 +46,17 @@ const menuitems = [
 ];
 ---
 
-<header class="pt-6 pb-2 sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 lg:px-6">
-    <div class="flex flex-col lg:flex-row justify-between items-center brutal-pill brutal-pill-mobile-card lg:brutal-pill-desktop px-4 lg:px-6 py-2.5 dark:bg-brutal-card">
+<header class="site-masthead sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="flex items-center justify-between gap-4 py-3">
       <Astronav>
         <div class="flex w-full lg:w-auto items-center justify-between gap-4">
-          <a href="/" class="text-lg font-extrabold dark:text-brutal-text flex items-center gap-2 shrink-0 group">
-            <img src="/logo-simkah-72.webp" alt="Logo Simkah" width="36" height="36" class="w-9 h-9 rounded-full border-2 border-brutal-border group-hover:rotate-6 transition-transform shadow-brutal-sm bg-white dark:shadow-[2px_2px_0_#f8fafc]">
+          <a href="/" aria-label="SIMKAH, beranda" class="text-lg font-extrabold dark:text-brutal-text flex items-center gap-2 shrink-0 group">
+            <img src="/logo-simkah-72.webp" alt="Logo Simkah" width="36" height="36" class="w-9 h-9 rounded-full border-2 border-brutal-border logo-mark">
             <span class="tracking-tighter">SIMKAH</span>
           </a>
           
           <div class="flex lg:hidden items-center gap-1.5 flex-1 justify-end">
-            <Search />
             <ThemeToggle />
             <MenuIcon class="w-10 h-10 text-brutal-text-muted p-2 rounded-full hover:bg-brutal-primary/20 transition-colors" />
           </div>
@@ -71,7 +69,7 @@ const menuitems = [
                 <li class="relative group px-1">
                   {item.children ? (
                     <Dropdown class="group">
-                      <button class="flex w-full items-center justify-between lg:justify-start gap-1 px-3 py-3 lg:py-1.5 text-sm font-bold text-brutal-text-muted hover:text-brutal-text hover:bg-brutal-primary/20 transition-colors rounded-full">
+                      <button class="flex w-full items-center justify-between lg:justify-start gap-1 px-3 py-3 lg:py-1.5 text-sm font-bold whitespace-nowrap text-brutal-text-muted hover:text-brutal-text hover:bg-brutal-primary/20 transition-colors rounded-full">
                         <span>{item.title}</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -79,17 +77,18 @@ const menuitems = [
                           viewBox="0 0 24 24"
                           stroke-width="2"
                           stroke="currentColor"
+                          aria-hidden="true"
                           class="w-4 h-4 transition-transform group-open:rotate-180">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
                       </button>
                       <DropdownItems>
                         <div class="lg:absolute lg:top-full lg:left-0 lg:mt-2 w-full lg:w-56 z-50">
-                          <div class="brutal-card bg-brutal-primary p-2 mt-2 lg:mt-0">
+                          <div class="nav-menu-panel mt-2 lg:mt-0">
                             {item.children.map((child) => (
                               <a
                                 href={child.path}
-                                class="block px-4 py-2.5 lg:py-2 text-sm text-white/90 hover:text-white hover:bg-black/20 transition-all rounded-full mb-1 last:mb-0 font-bold">
+                                class="block px-4 py-2.5 lg:py-2 text-sm transition-colors rounded-full mb-1 last:mb-0 font-bold">
                                 {child.title}
                               </a>
                             ))}
@@ -102,7 +101,7 @@ const menuitems = [
                       href={item.path}
                       target={item.external ? "_blank" : "_self"}
                       rel={item.external ? "noopener noreferrer" : ""}
-                      class="block px-3 py-3 lg:py-1.5 text-sm font-bold text-brutal-text-muted hover:text-brutal-text hover:bg-brutal-primary/20 transition-colors rounded-full">
+                      class="block px-3 py-3 lg:py-1.5 text-sm font-bold whitespace-nowrap text-brutal-text-muted hover:text-brutal-text hover:bg-brutal-primary/20 transition-colors rounded-full">
                       {item.title}
                     </a>
                   )}
@@ -120,7 +119,6 @@ const menuitems = [
 
       <!-- Desktop Actions Section -->
       <div class="hidden lg:flex items-center gap-4">
-        <Search />
         <ThemeToggle />
         <div class="h-6 w-[2px] bg-brutal-border/30 mx-1"></div>
         <a href="/contact" class="brutal-btn brutal-btn-primary px-6 py-2 text-sm">
