@@ -172,8 +172,8 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
   <Container>
     <article class="mx-auto max-w-5xl mt-16 animate-fade-in">
         <div class="grid lg:grid-cols-[1fr_280px] gap-12">
-          <!-- Main Content -->
-          <div>
+          <!-- Main Content: min-w-0 mencegah grid item melebar akibat konten (tabel) di layar sempit -->
+          <div class="min-w-0">
             <nav class="breadcrumb flex flex-wrap justify-center items-center gap-2 text-sm text-brutal-text-muted mb-6" aria-label="Breadcrumb">
               <a href="/" class="hover:text-brutal-text">Beranda</a>
               <span aria-hidden="true">/</span>
@@ -186,7 +186,7 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
                 <h1 class="text-3xl md:text-4xl font-bold mb-8 leading-tight dark:text-white">
                     {post.title}
                 </h1>
-                <div class="flex items-center justify-center gap-4 text-slate-500 dark:text-slate-400">
+                <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-slate-500 dark:text-slate-400">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-lg border-2 border-brutal-border bg-brutal-warning flex items-center justify-center text-lg font-bold text-brutal-on-bright shadow-brutal-sm -rotate-3 hover:rotate-3 transition-transform cursor-default">
                             {post.author[0]}
@@ -233,14 +233,14 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
 
             <TableOfContents />
 
-            <div class="prose dark:prose-invert prose-indigo prose-lg max-w-none prose-h2:text-2xl prose-h2:font-bold prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-loose prose-a:text-brand-primary">
+            <div class="article-prose prose dark:prose-invert prose-indigo prose-lg max-w-none prose-h2:text-2xl prose-h2:font-bold prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-loose prose-a:text-brand-primary">
                 <Fragment set:html={introHtml} />
             </div>
 
             <AdSlot type="post-2" class="my-8" />
 
             {bodyHtml && (
-              <div class="prose dark:prose-invert prose-indigo prose-lg max-w-none prose-h2:text-2xl prose-h2:font-bold prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-loose prose-a:text-brand-primary">
+              <div class="article-prose prose dark:prose-invert prose-indigo prose-lg max-w-none prose-h2:text-2xl prose-h2:font-bold prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-loose prose-a:text-brand-primary">
                 <Fragment set:html={bodyHtml} />
               </div>
             )}
@@ -358,6 +358,27 @@ const postJsonLd = toJsonLd({ "@context": "https://schema.org", "@graph": graph 
     }
     .prose p {
         margin-bottom: 1.5rem;
+    }
+
+    /* Kata/URL panjang di dalam prose tidak boleh menembus lebar kolom. */
+    .prose :where(p, li, td, th, blockquote) {
+        overflow-wrap: break-word;
+    }
+    @media (max-width: 640px) {
+        /* Tipografi artikel lebih nyaman dibaca di layar kecil. */
+        .article-prose { font-size: 1rem; }
+        /* Tombol share cukup sebesar ikon agar bar tidak memakan dua baris. */
+        .share-bar .brutal-btn { padding: 0.5rem !important; min-height: 40px !important; }
+        /* Tabel Markdown mendapat scroll horizontal di dalam kolomnya sendiri,
+           tidak memaksa grid item melebar dan meng-clip halaman. */
+        .prose :where(table) {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+        }
     }
 </style>
 
